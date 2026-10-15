@@ -1,0 +1,81 @@
+
+[01] Vérification du service : Gitea, Atlantis, MinIO
+     ✔ Gitea répond, le dépôt acme/infra-demo existe et alice y a accès
+     ✔ Atlantis répond (/healthz : HTTP 200)
+     ✔ MinIO : bucket d'état « tfstate » présent
+
+━━━ SCÉNARIO 1 : un changement conforme, de la pull request à la production de l'état ━━━
+
+[02] alice crée une branche et ajoute un bucket « logs » dans envs/dev
+     ✔ branche feature/logs-bucket-005451 poussée
+
+[03] alice ouvre la pull request → Atlantis planifie automatiquement (autoplan)
+     ✔ PR #1 ouverte
+     ✔ Atlantis a publié le plan dans la PR :
+       │ Ran Plan for project: `dev` dir: `envs/dev` workspace: `default`
+       │ Plan: 2 to add, 0 to change, 0 to destroy.
+       │ Plan: 2 to add, 0 to change, 0 to destroy.
+
+[04] Politiques du service (Conftest) sur le plan
+     ✔ Politiques passées (UE, labels obligatoires, pas d'accès public)
+
+[05] alice tente « atlantis apply » SANS approbation → refusé par le service
+     ✔ Refus d'Atlantis (apply_requirements: approved) :
+       │ Ran Apply for project: `dev` dir: `envs/dev` workspace: `default`
+       │ **Apply Failed**: Pull request must be approved according to the project's approval rules before running apply.
+
+[06] bob (sécurité) relit et APPROUVE la pull request
+     ✔ revue « Approved » enregistrée dans Gitea
+
+[07] alice relance « atlantis apply -p dev » → Atlantis applique LE plan approuvé
+     ✔ Apply réussi :
+       │ Ran Apply for project: `dev` dir: `envs/dev` workspace: `default`
+       │ Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+[08] L'état distant (MinIO ≈ Cloud Storage) contient la nouvelle ressource
+     ✔ état dev/terraform.tfstate : serial 1, 2 ressource(s), 5 version(s) conservée(s)
+     ✔ verrou libéré après l'apply (aucun fichier .tflock restant)
+
+[09] alice libère le verrou (atlantis unlock) puis fusionne la PR (main protégée : 1 approbation requise)
+     ✔ verrou du projet dev libéré
+     ✔ PR #1 fusionnée : main = ce qui est déployé
+
+━━━ SCÉNARIO 2 : un changement NON conforme est arrêté par les politiques ━━━
+
+[10] alice propose un bucket en us-central1, sans label cost_center, dans envs/prod
+     ✔ PR #2 ouverte
+     ✔ plan calculé (la syntaxe est valide…)
+     ✔ …mais les politiques ÉCHOUENT :
+       │ **Policy Check Failed**: Some policy sets did not pass.
+       │ FAIL - <redacted plan file> - main - module.analytics_005451.terraform_data.bucket : label obligatoire 'cost_center' manquant
+       │ FAIL - <redacted plan file> - main - module.analytics_005451.terraform_data.bucket : localisation 'us-central1' interdite (UE uniquement)
+       │ 3 tests, 1 passed, 0 warnings, 2 failures, 0 exceptions
+
+[11] Même approuvée par un pair, la PR ne peut pas être appliquée tant que la politique échoue
+     ✔ apply refusé par le service :
+       │ **Apply Failed**: All policies must pass for project before running apply.
+     ✔ PR #2 fermée sans rien déployer ; la production est intacte
+     ✔ vérifié : l'état prod ne contient pas la ressource refusée
+
+━━━ SCÉNARIO 3 : deux pull requests sur le même projet → verrou ━━━
+
+[12] alice ouvre deux PR qui modifient toutes les deux envs/dev
+     ✔ PR #3 planifiée : Atlantis VERROUILLE le projet dev pour cette PR
+     ✔ PR #4 : Atlantis refuse de planifier, le projet est verrouillé par la PR #3 :
+       │ **Plan Failed**: This project is currently locked by an unapplied plan from pull #3. To continue, delete the lock from #3 or apply that plan and merge
+
+[13] La PR #3 est abandonnée (atlantis unlock + fermeture) → la PR #4 peut planifier
+     ✔ PR #4 planifiée après libération du verrou
+     ✔ PR #4 fermée (nettoyage)
+
+━━━ BILAN : toutes les vérifications sont passées ━━━
+
+  PR #1  conforme   → plan auto, politiques OK, apply refusé sans approbation, approuvé, appliqué, fusionné
+  PR #2  non conf.  → politiques en échec (UE + label manquant), apply bloqué, PR fermée, prod intacte
+  PR #3/#4  verrou → la 2e PR attend que la 1re libère le projet dev
+
+  À voir dans le navigateur :
+    Gitea     http://localhost:3000/acme/infra-demo/pulls?state=all   (connexion : alice, mot de passe dans .env)
+    Atlantis  http://localhost:4141
+    MinIO     http://localhost:9001  → bucket tfstate (états dev/prod versionnés)
+

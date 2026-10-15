@@ -1,0 +1,197 @@
+#!/usr/bin/env python3
+"""ragkit : piloter le kit RAG en une commande (bibliothèque standard seulement).
+
+  ./ragkit status                          configuration, briques actives, déploiement, dernière synchro
+  ./ragkit briques                         liste des briques activables et leur état
+  ./ragkit activer push | layout | planif  active une brique (dans le fichier .env), puis « deploy »
+  ./ragkit desactiver push | layout | planif
+  ./ragkit set MODEL gemini-3.5-flash      change une valeur du .env
+  ./ragkit deploy [--shell] [--plan]       Terraform (défaut) ou script gcloud ; --plan : montre sans appliquer
+  ./ragkit ouvrir                          ouvre l'interface (http://localhost:8080)
+  ./ragkit sync                            lance une synchro et attend la fin
+  ./ragkit logs [job|web|hook]             derniers journaux
+  ./ragkit google <client_secret.json>     configure la connexion Google (docs/04-bis)
+  ./ragkit test [URL]                      test de bout en bout (interface ouverte)
+  ./ragkit detruire [--shell]              supprime tout (demande confirmation)
+
+Fichier de configuration : -c config/xxx.env (défaut : $RAGKIT_CONFIG, sinon config/test.env).
+"""
+
+import argparse
+import json
+import os
+import re
+import shlex
+import subprocess
+import sys
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Une brique = une variable du .env. Ajouter une brique : une ligne ici (+ la variable côté Terraform/script).
+BRIQUES = {
+    "push":   ("PUSH", "true", "false", "Notifications push Google Drive (service public <prefix>-hook) : synchro en secondes"),
+    "layout": ("LAYOUT_PARSER", "true", "false", "Document AI Layout Parser : tableaux et titres des PDF (payant à la page)"),
+    "planif": ("SYNC_SCHEDULE", '"*/5 * * * *"', '""', "Passe planifiée (filet de sécurité) ; « set SYNC_SCHEDULE » pour la fréquence"),
+}
+
+
+def read_env(path: str) -> dict:
+    out = {}
+    for line in open(path, encoding="utf-8"):
+        m = re.match(r'\s*([A-Z_]+)=("([^"]*)"|(\S*))', line)
+        if m:
+            out[m.group(1)] = m.group(3) if m.group(3) is not None else m.group(4)
+    return out
+
+
+def set_env(path: str, key: str, value: str) -> None:
+    """Remplace la valeur en gardant le commentaire de fin de ligne ; ajoute la ligne si absente."""
+    if " " in value and not value.startswith('"'):
+        value = f'"{value}"'
+    lines, done = open(path, encoding="utf-8").read().splitlines(), False
+    for i, line in enumerate(lines):
+        m = re.match(r'(\s*)([A-Z_]+)=("[^"]*"|\S*)(.*)$', line)
+        if m and m.group(2) == key:
+            lines[i] = f"{m.group(1)}{key}={value}{m.group(4)}"
+            done = True
+    if not done:
+        lines.append(f"{key}={value}")
+    open(path, "w", encoding="utf-8").write("\n".join(lines) + "\n")
+
+
+def sh(cmd: str, cfg: str, check: bool = True, capture: bool = False):
+    """Lance une commande bash dans le dossier du kit, configuration chargée (scripts/config.sh)."""
+    full = f"source scripts/config.sh {shlex.quote(cfg)} >/dev/null && {cmd}"
+    r = subprocess.run(["bash", "-c", full], cwd=ROOT, text=True, capture_output=capture)
+    if check and r.returncode:
+        sys.exit(r.returncode)
+    return r
+
+
+def tf_output(cfg: str) -> dict:
+    r = sh("terraform -chdir=terraform output -json 2>/dev/null", cfg, check=False, capture=True)
+    try:
+        return {k: v["value"] for k, v in json.loads(r.stdout or "{}").items()}
+    except json.JSONDecodeError:
+        return {}
+
+
+def is_on(env: dict, brique: str) -> bool:
+    var, on, _, _ = BRIQUES[brique]
+    val = env.get(var, "")
+    return bool(val) if brique == "planif" else val == on.strip('"')
+
+
+def cmd_status(a):
+    env = read_env(a.c)
+    print(f"Configuration : {a.c}")
+    print(f"  Projet {env.get('PROJECT_ID')} · région {env.get('REGION')} · préfixe {env.get('PREFIX')}")
+    print(f"  Modèle {env.get('MODEL')} ({env.get('MODEL_LOCATION')}) · planification « {env.get('SYNC_SCHEDULE') or 'aucune'} »")
+    print("Briques :")
+    for b, (_, _, _, desc) in BRIQUES.items():
+        print(f"  [{'x' if is_on(env, b) else ' '}] {b:7} {desc}")
+    out = tf_output(a.c)
+    if out:
+        print(f"Déployé (Terraform) : {out.get('url')}")
+        print(f"  corpus {out.get('corpus')}")
+        if out.get("hook_url"):
+            print(f"  push   {out['hook_url']}")
+    if env.get("GE_SERVING_CONFIG"):
+        print(f"Hybride : + app Gemini Enterprise {env['GE_SERVING_CONFIG'].split('/engines/')[-1].split('/')[0]} (sous-projet 3)")
+    else:
+        print("Déploiement Terraform : aucun (ou déployé par le script shell)")
+    r = sh('gcloud storage cat "gs://$BUCKET/sync/last.json" 2>/dev/null', a.c, check=False, capture=True)
+    if r.returncode == 0 and r.stdout:
+        last = json.loads(r.stdout)
+        print(f"Dernière synchro : {last['debut']} · {last['statut']} · {last['documents']} document(s)")
+        for e in last.get("erreurs", []):
+            print(f"  ! {e}")
+
+
+def cmd_briques(a):
+    env = read_env(a.c)
+    for b, (var, _, _, desc) in BRIQUES.items():
+        print(f"{b:7} {'activée  ' if is_on(env, b) else 'désactivée'}  {var}={env.get(var, '')!r:16} {desc}")
+
+
+def toggle(a, on: bool):
+    if a.brique not in BRIQUES:
+        sys.exit(f"Brique inconnue « {a.brique} ». Disponibles : {', '.join(BRIQUES)}")
+    var, yes, no, _ = BRIQUES[a.brique]
+    set_env(a.c, var, yes if on else no)
+    print(f"{a.brique} {'activée' if on else 'désactivée'} ({var} dans {a.c}). Appliquez : ./ragkit deploy")
+
+
+def cmd_set(a):
+    set_env(a.c, a.var, a.valeur)
+    print(f"{a.var} = {a.valeur} ({a.c}). Appliquez : ./ragkit deploy")
+
+
+def cmd_deploy(a):
+    if a.shell:
+        sh("bash scripts/deployer_shell.sh", a.c)
+    else:
+        sh("cd terraform && terraform init -input=false >/dev/null && terraform " + ("plan" if a.plan else "apply"), a.c)
+
+
+def cmd_ouvrir(a):
+    sh("bash scripts/ouvrir_interface.sh", a.c)
+
+
+def cmd_sync(a):
+    sh('gcloud run jobs execute "$SYNC_JOB" --region="$REGION" --wait && gcloud storage cat "gs://$BUCKET/sync/last.json"', a.c)
+
+
+def cmd_logs(a):
+    flt = {"job": 'resource.type="cloud_run_job" AND resource.labels.job_name="$SYNC_JOB" AND (jsonPayload.statut:* OR severity>=ERROR)',
+           "web": 'resource.type="cloud_run_revision" AND resource.labels.service_name="$SERVICE"',
+           "hook": 'resource.type="cloud_run_revision" AND resource.labels.service_name="$PREFIX-hook"'}[a.quoi]
+    sh(f"gcloud logging read \"{flt}\" --limit=30 --freshness=1d --format='value(timestamp,textPayload,jsonPayload.statut)'", a.c)
+
+
+def cmd_google(a):
+    sh(f"bash scripts/connexion_google.sh {shlex.quote(os.path.abspath(a.fichier))}", a.c)
+
+
+def cmd_test(a):
+    sys.exit(subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "test_e2e.py"), a.url] + a.reste).returncode)
+
+
+def cmd_detruire(a):
+    if a.shell:
+        sh("bash scripts/supprimer_shell.sh", a.c)
+    else:
+        sh("cd terraform && terraform destroy", a.c)
+
+
+def main():
+    p = argparse.ArgumentParser(prog="ragkit", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("-c", default=os.environ.get("RAGKIT_CONFIG", os.path.join(ROOT, "config", "test.env")),
+                   help="fichier de configuration .env")
+    sub = p.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("status").set_defaults(f=cmd_status)
+    sub.add_parser("briques").set_defaults(f=cmd_briques)
+    for name, on in (("activer", True), ("desactiver", False)):
+        s = sub.add_parser(name)
+        s.add_argument("brique", choices=list(BRIQUES))
+        s.set_defaults(f=lambda a, on=on: toggle(a, on))
+    s = sub.add_parser("set"); s.add_argument("var"); s.add_argument("valeur"); s.set_defaults(f=cmd_set)
+    s = sub.add_parser("deploy"); s.add_argument("--shell", action="store_true"); s.add_argument("--plan", action="store_true")
+    s.set_defaults(f=cmd_deploy)
+    sub.add_parser("ouvrir").set_defaults(f=cmd_ouvrir)
+    sub.add_parser("sync").set_defaults(f=cmd_sync)
+    s = sub.add_parser("logs"); s.add_argument("quoi", nargs="?", default="job", choices=["job", "web", "hook"])
+    s.set_defaults(f=cmd_logs)
+    s = sub.add_parser("google"); s.add_argument("fichier"); s.set_defaults(f=cmd_google)
+    s = sub.add_parser("test"); s.add_argument("url", nargs="?", default="http://localhost:8080")
+    s.add_argument("reste", nargs="*", help="question Drive et texte attendu (facultatif)"); s.set_defaults(f=cmd_test)
+    s = sub.add_parser("detruire"); s.add_argument("--shell", action="store_true"); s.set_defaults(f=cmd_detruire)
+    a = p.parse_args()
+    a.c = os.path.abspath(a.c)
+    if not os.path.exists(a.c):
+        sys.exit(f"Configuration introuvable : {a.c}")
+    a.f(a)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,12 @@
+# État et caches Terraform (l'état contient des informations du projet : ne pas le publier)
+terraform/.terraform/
+terraform/terraform.tfstate*
+terraform/tfplan
+# Python
+__pycache__/
+*.pyc
+.venv/
+# Configurations personnelles (gardez test.env / exemple.env comme modèles)
+config/*.local.env
+**/.adk/
+.pytest_cache/

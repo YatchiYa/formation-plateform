@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parcours 12-1 : agents → Gemini Enterprise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Parcours 12-1 : déployer des agents dans un projet « des agents », puis les brancher sur l'app Gemini Enterprise.
+   1) Vos valeurs (fichier de configuration généré) ; 2) Comprendre ; 3) Les guides en onglets ; 4) L'exercice guidé. */
+:root {
+  --blue: #3643BA; --blue-deep: #1E2A7A; --hero: #3643BA; --sky: #E9ECFB; --track: #F5F6FB; --surface: #FFFFFF;
+  --ink: #161B33; --muted: #59607F; --line: #D9DEF0;
+  --go: #0F8A5F; --go-bg: #E4F5EE; --warn: #B4570A; --warn-bg: #FCF0E3; --stop: #B42318; --stop-bg: #FDECEA;
+  --code-bg: #10163A; --code-fg: #E3E7FA; --sun: #FFD34E;
+  --p-laptop: #59607F; --p-agents: #0F7B8A; --p-app: #8A3FB8; --p-console: #B4570A;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #8D97F5; --blue-deep: #0D1236; --hero: #232C8F; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA;
+    --muted: #A3AACC; --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80;
+    --stop-bg: #3B1716; --code-bg: #070A1E; --p-laptop: #A3AACC; --p-agents: #4FC7D6; --p-app: #C99BEA; --p-console: #F2A35C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --blue: #8D97F5; --blue-deep: #0D1236; --hero: #232C8F; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA;
+  --muted: #A3AACC; --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80;
+  --stop-bg: #3B1716; --code-bg: #070A1E; --p-laptop: #A3AACC; --p-agents: #4FC7D6; --p-app: #C99BEA; --p-console: #F2A35C;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body { margin: 0; background: var(--track); color: var(--ink); font: 400 15.5px/1.6 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-style: italic; text-transform: uppercase; color: var(--blue); }
+h3 { font-size: 1.22rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--blue); }
+code { font-family: var(--font-mono); font-size: .84em; background: var(--sky); padding: .08em .35em; border-radius: 4px; word-break: break-word; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+ul, ol { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+
+.topbar { position: sticky; top: 0; z-index: 20; background: var(--blue-deep); color: #fff; }
+.topbar-in { max-width: 1180px; margin: 0 auto; padding: 8px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1.15rem; text-transform: uppercase; white-space: nowrap; }
+.brand span { color: var(--sun); }
+.nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; flex: 1; }
+.nav a { color: #C9CFF3; text-decoration: none; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 6px 9px; border-radius: 6px; white-space: nowrap; }
+.nav a:hover, .nav a.on { background: rgba(255,255,255,.12); color: #fff; }
+.tbtn { background: transparent; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 6px; padding: 4px 9px; cursor: pointer; font-size: .82rem; font-weight: 600; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; }
+section { padding-block: 34px 6px; }
+.eyebrow { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: .86rem; color: var(--muted); margin-bottom: 4px; }
+.lead { color: var(--muted); max-width: 80ch; margin-top: 8px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; min-width: 0; display: grid; gap: 10px; align-content: start; }
+.card > * { min-width: 0; }
+
+.hero { background: var(--hero); color: #fff; position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-58deg, transparent 0 46px, rgba(255,255,255,.06) 46px 50px); pointer-events: none; }
+.hero .wrap { position: relative; padding-block: 28px 26px; display: grid; gap: 12px; }
+.hero h1 { font-size: clamp(1.9rem, 4.8vw, 3rem); font-weight: 800; font-style: italic; text-transform: uppercase; }
+.hero h1 em { color: var(--sun); font-style: italic; }
+.hero p { color: #E4E8FF; max-width: 82ch; }
+.path { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.path div { background: #fff; color: #161B33; border-radius: 10px; padding: 10px 14px; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+.path b { font-family: var(--font-display); font-size: 1.15rem; font-style: italic; text-transform: uppercase; color: #3643BA; display: block; }
+.path small { color: #4E5682; display: block; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.mtable { overflow-x: auto; }
+table.t { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 560px; }
+table.t th, table.t td { padding: 8px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+table.t thead th { background: var(--blue-deep); color: #fff; font-family: var(--font-display); text-transform: uppercase; letter-spacing: .04em; }
+
+.cfg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-top: 16px; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.field { display: grid; gap: 3px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-weight: 700; font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.field input, .field select { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; background: var(--track); font-family: var(--font-mono); font-size: .83rem; }
+.field input:focus, .field select:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px var(--sky); }
+.field small { color: var(--muted); font-size: .76rem; line-height: 1.35; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 4px 11px; cursor: pointer; font-size: .85rem; font-weight: 600; }
+.chip[aria-pressed="true"] { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+.where { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 99px; color: #fff; white-space: nowrap; }
+.where.laptop { background: var(--p-laptop); } .where.agents { background: var(--p-agents); } .where.app { background: var(--p-app); } .where.console { background: var(--p-console); }
+pre.cmd { position: relative; margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 9px; padding: 10px 13px; padding-right: 74px; overflow-x: auto; font: 400 .79rem/1.6 var(--font-mono); white-space: pre; }
+pre.out { background: var(--sky); color: var(--ink); padding-top: 26px; }
+pre.out::before { content: "Attendu"; position: absolute; top: 5px; left: 13px; font: 700 .64rem/1 var(--font-body); text-transform: uppercase; letter-spacing: .08em; color: var(--go); }
+.copy { position: absolute; top: 7px; right: 7px; border: 1px solid #39407A; background: #1D2557; color: #DDE2FF; border-radius: 6px; padding: 3px 9px; font-size: .74rem; cursor: pointer; font-weight: 600; }
+pre.out .copy { display: none; }
+.note { border-left: 4px solid var(--blue); background: var(--sky); padding: 9px 12px; border-radius: 0 8px 8px 0; font-size: .92rem; }
+.note.warn { border-color: var(--warn); background: var(--warn-bg); }
+.note.go { border-color: var(--go); background: var(--go-bg); }
+.note.stop { border-color: var(--stop); background: var(--stop-bg); }
+details { border: 1px solid var(--line); border-radius: 9px; padding: 7px 12px; background: var(--surface); }
+details summary { cursor: pointer; font-weight: 700; }
+details[open] summary { margin-bottom: 8px; }
+
+/* Onglets des guides */
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 16px; border-bottom: 2px solid var(--line); }
+.tabs button { border: 0; background: transparent; padding: 9px 12px 7px; cursor: pointer; font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; text-transform: uppercase; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -2px; text-align: left; }
+.tabs button small { display: block; font-family: var(--font-body); font-size: .7rem; text-transform: none; font-weight: 600; }
+.tabs button[aria-selected="true"] { color: var(--blue); border-color: var(--blue); }
+.panel { margin-top: 16px; display: grid; gap: 12px; }
+.gstep { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 13px 16px; display: grid; gap: 8px; }
+.gstep-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.gstep-head b { font-family: var(--font-display); font-size: 1.05rem; font-style: italic; color: var(--blue); }
+.gstep-head h3 { font-size: 1.12rem; }
+.why { color: var(--muted); font-size: .93rem; }
+
+/* Exercice guidé */
+.ex { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 16px; margin-top: 16px; }
+.ex-list { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: grid; gap: 2px; align-content: start; max-height: 76vh; overflow-y: auto; position: sticky; top: 64px; }
+.ex-list .ph { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; color: var(--muted); padding: 8px 8px 2px; }
+.ex-list button { border: 0; background: transparent; text-align: left; padding: 6px 8px; border-radius: 7px; cursor: pointer; display: flex; gap: 8px; align-items: baseline; font-size: .88rem; }
+.ex-list button i { font-style: normal; width: 1.3em; flex: none; text-align: center; color: var(--muted); }
+.ex-list button.cur { background: var(--sky); font-weight: 700; }
+.ex-list button.ok i { color: var(--go); }
+.progress { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.progress div { height: 100%; background: var(--go); width: 0; transition: width .3s; }
+.ex-step { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 12px; align-content: start; }
+.ex-step h3 { font-size: 1.5rem; font-style: italic; text-transform: uppercase; color: var(--blue); }
+.checks { display: grid; gap: 6px; }
+.checks label { display: flex; gap: 9px; align-items: flex-start; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; background: var(--track); }
+.checks label.ok { border-color: var(--go); background: var(--go-bg); }
+.checks input { width: 18px; height: 18px; accent-color: var(--go); margin-top: 3px; flex: none; }
+.ex-nav { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; align-items: center; }
+.btn { border: 0; border-radius: 8px; padding: 9px 16px; font-weight: 700; cursor: pointer; background: var(--blue); color: #fff; }
+.btn.ghost { background: transparent; color: var(--blue); border: 1px solid var(--line); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.done-banner { background: var(--go); color: #fff; border-radius: 12px; padding: 16px 20px; font-family: var(--font-display); font-size: 1.4rem; font-style: italic; text-transform: uppercase; }
+
+footer { margin-top: 40px; background: var(--blue-deep); color: #C9CFF3; }
+footer .wrap { padding-block: 18px; display: grid; gap: 6px; font-size: .88rem; }
+footer a { color: #fff; }
+@media (max-width: 900px) {
+  .cfg, .grid2, .grid3, .path, .ex { grid-template-columns: minmax(0, 1fr); }
+  .fields { grid-template-columns: minmax(0, 1fr); }
+  .ex-list { position: static; max-height: none; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">Agents <span>×</span> Gemini Enterprise · 12-1</div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#valeurs">1. Vos valeurs</a><a href="#comprendre">2. Comprendre</a><a href="#guides">3. Les guides</a><a href="#exercice">4. L'exercice</a>
+    </nav>
+    <button class="tbtn" id="theme-btn" type="button">Thème</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:#C9CFF3">Parcours 12-1 · Acme</div>
+    <h1>Des agents dans un projet, <em>utilisés</em> dans l'app Gemini Enterprise</h1>
+    <p>Vos agents vivent dans un <b>projet des agents</b> (un projet Google Cloud « X »). L'app Gemini Enterprise vit dans
+      un autre projet, le <b>projet de l'app</b>. Ce parcours fait le chemin complet : déployer les agents, prouver que
+      l'app pourra les appeler, les brancher sur l'app, et les agents qui agissent avec le compte de l'utilisateur.
+      Chaque commande et chaque résultat de cette page a été testé pour de vrai.</p>
+    <div class="path">
+      <div><b>① Déployer</b><small>12-1-1 shell · 12-1-2 Terraform · 12-1-3 console : les agents dans le projet des agents (Cloud Run A2A, Agent Runtime, Agent Registry, Dialogflow)</small></div>
+      <div><b>② Prouver</b><small>12-1-5 : simuler l'appel de l'app, refusé puis accepté, sans toucher à l'app</small></div>
+      <div><b>③ Brancher</b><small>12-1-4 droits et ajout · 12-1-6 console de l'app · 12-1-7 OAuth, identité, outils</small></div>
+    </div>
+  </div>
+</div>
+
+<main>
+<!-- 1. VOS VALEURS -->
+<section id="valeurs"><div class="wrap">
+  <div class="eyebrow">Étape 0 · une fois</div>
+  <h2>1. Vos valeurs</h2>
+  <p class="lead">Remplissez ces champs : ils produisent votre <b>fichier de configuration</b> (à mettre dans
+    <code>config/12-1-agents-dans-projet-exp.env</code>), et toute la page s'adapte : résultats attendus, adresses,
+    écrans de console. Tout reste dans votre navigateur.</p>
+  <div class="cfg">
+    <div class="card">
+      <h3>Le projet des agents</h3>
+      <div class="fields">
+        <div class="field"><label for="f-PROJET_AGENTS">ID du projet des agents</label><input id="f-PROJET_AGENTS" data-v="PROJET_AGENTS"><small>Console → sélecteur de projet → colonne <b>ID</b> (pas le nom)</small></div>
+        <div class="field"><label for="f-NUM_AGENTS">Son numéro</label><input id="f-NUM_AGENTS" data-v="NUM_AGENTS" inputmode="numeric"><small>Même écran, colonne <b>Numéro</b> (12 chiffres)</small></div>
+        <div class="field"><label for="f-REGION">Région des agents</label><input id="f-REGION" data-v="REGION"><small><code>europe-west1</code> pour une app <code>eu</code></small></div>
+        <div class="field"><label for="f-AGENTS">Agents (clés)</label><input id="f-AGENTS" data-v="AGENTS"><small>Séparées par des espaces ; vide = tous. Clés : meteo redaction traduction taille retour identite</small></div>
+      </div>
+      <h3>Le projet de l'app Gemini Enterprise</h3>
+      <div class="fields">
+        <div class="field"><label for="f-PROJET_APP">ID du projet de l'app</label><input id="f-PROJET_APP" data-v="PROJET_APP"><small>Vide tant qu'il n'y a pas d'app (déploiement seul)</small></div>
+        <div class="field"><label for="f-NUM_APP">Son numéro</label><input id="f-NUM_APP" data-v="NUM_APP" inputmode="numeric"><small>Donne l'adresse du compte de l'app</small></div>
+        <div class="field"><label for="f-APP_ID">ID de l'app</label><input id="f-APP_ID" data-v="APP_ID"><small>Gemini Enterprise → Apps → colonne <b>ID</b> ; ou <code>connecter_app.sh apps</code></small></div>
+        <div class="field"><label for="f-GE_LOCATION">Localisation de l'app</label><select id="f-GE_LOCATION" data-v="GE_LOCATION"><option>eu</option><option>us</option><option>global</option></select><small>Même écran, colonne Emplacement</small></div>
+        <div class="field full"><label for="f-GROUPE">Groupe des utilisateurs (e-mail)</label><input id="f-GROUPE" data-v="GROUPE_UTILISATEURS"><small>Un groupe Google (groups.google.com), ou votre adresse pour un 1er test : c'est la valeur du rôle <b>Agent User</b></small></div>
+        <div class="field full"><label for="f-OAUTH">Agents OAuth (option)</label><input id="f-OAUTH" data-v="AGENTS_OAUTH"><small>« clé=ID_autorisation », ex. <code>identite=acces-identite</code> (12-1-7). Vide sinon</small></div>
+        <div class="field full"><label for="f-DOSSIER">Dossier du projet sur votre poste</label><input id="f-DOSSIER" data-v="DOSSIER"></div>
+      </div>
+      <div class="field full"><label>Comment déployer les agents ?</label>
+        <div class="chips" id="methode">
+          <button class="chip" type="button" data-m="script">Shell, avec le script</button>
+          <button class="chip" type="button" data-m="terraform">Terraform</button>
+          <button class="chip" type="button" data-m="console">Console</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Votre fichier de configuration</h3>
+      <pre class="cmd" id="cfg-out"></pre>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" type="button" id="dl">Télécharger le fichier .env</button>
+        <button class="btn ghost" type="button" id="reset">Valeurs d'exemple</button>
+      </div>
+      <p class="why">Puis, dans un terminal, dans le dossier du projet (à refaire dans chaque nouveau terminal) :</p>
+      <pre class="cmd">cd <span data-x="DOSSIER"></span> &amp;&amp; source .venv/bin/activate
+source scripts/config.sh config/12-1-agents-dans-projet-exp.env</pre>
+      <div class="note" id="derives"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 2. COMPRENDRE -->
+<section id="comprendre"><div class="wrap">
+  <div class="eyebrow">Avant de taper quoi que ce soit</div>
+  <h2>2. Comprendre</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Deux projets, un seul sens d'appel</h3>
+      <pre class="cmd" id="schema" style="padding-right:13px"></pre>
+      <p class="why">L'app appelle les agents avec <b>son</b> compte de service. Le projet des agents
+        <b>l'autorise</b> (deux droits), puis l'app <b>ajoute</b> les agents. Ces droits ne donnent rien aux
+        utilisateurs : qui peut <b>utiliser</b> un agent, c'est le rôle <b>Agent User</b>, donné dans l'app.</p>
+    </div>
+    <div class="card">
+      <h3>Les deux droits (tous dans le projet des agents)</h3>
+      <div class="mtable"><table class="t">
+        <thead><tr><th>#</th><th>Rôle</th><th>Sur quoi</th><th>Pour</th></tr></thead>
+        <tbody>
+          <tr><td>①</td><td><b>Demandeur Cloud Run</b><br><code>roles/run.invoker</code></td><td>Un service Cloud Run</td><td>Chaque agent A2A</td></tr>
+          <tr><td>②</td><td><b>Agent de service Discovery Engine</b><br><code>roles/discoveryengine.serviceAgent</code></td><td>Le projet entier</td><td>Les agents Agent Runtime (une fois)</td></tr>
+        </tbody>
+      </table></div>
+      <p class="why">Qui les donne ? Celui qui possède le projet des agents : <b>l'équipe de l'agent</b>. Délai : 2 à
+        3 minutes. Le circuit avec une équipe cliente (messages à envoyer) : 12-1-4, partie 3.5.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>Les modalités : comment un agent entre dans l'app</h3>
+    <div class="mtable"><table class="t">
+      <thead><tr><th>Hébergement</th><th>Déployé par</th><th>Ce que l'app demande</th><th>Depuis un autre projet ?</th><th>Droit</th></tr></thead>
+      <tbody>
+        <tr><td><b>Cloud Run (A2A)</b></td><td>12-1-1 / 12-1-2 / 12-1-3</td><td>La <b>carte</b> de l'agent (JSON)</td><td>✅ Oui</td><td>①</td></tr>
+        <tr><td><b>Agent Runtime</b></td><td>12-1-1 / 12-1-2 / 12-1-3</td><td>Le <b>nom de ressource</b> <code>projects/…/reasoningEngines/ID</code></td><td>✅ Oui</td><td>②</td></tr>
+        <tr><td><b>Agent Registry</b> (import)</td><td>Automatique / déclaré</td><td>—</td><td>❌ Seulement le registre du projet de l'app → 12-2</td><td>—</td></tr>
+        <tr><td><b>Dialogflow</b></td><td>12-1-1 partie 10</td><td>La source <code>projects/…/agents/ID</code></td><td>⚠ Non documenté → projet de l'app (12-2)</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="grid3">
+    <div class="card"><h3>1. Le compte de l'app</h3><p class="why">Appelle l'agent (le droit d'entrer) : <code data-x="GE_SA"></code></p></div>
+    <div class="card"><h3>2. Le compte de l'agent</h3><p class="why">Ce que l'agent fait pour lui-même : Gemini, Model Armor. Un par agent : <code>&lt;clé&gt;-a2a-shell-sa</code>…</p></div>
+    <div class="card"><h3>3. L'utilisateur (OAuth)</h3><p class="why">Optionnel : agir au nom de l'utilisateur après « Autoriser » (12-1-7).</p></div>
+  </div>
+</div></section>
+
+<!-- 3. LES GUIDES -->
+<section id="guides"><div class="wrap">
+  <div class="eyebrow">Chaque guide, étape par étape</div>
+  <h2>3. Les guides</h2>
+  <p class="lead">Le résumé fidèle de chaque guide, avec les commandes testées. Le détail complet (chaque option,
+    chaque erreur) est dans le fichier Markdown indiqué en haut de chaque onglet.</p>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="panel" id="panel" role="tabpanel"></div>
+</div></section>
+
+<!-- 4. L'EXERCICE -->
+<section id="exercice"><div class="wrap">
+  <div class="eyebrow">Le parcours complet, guidé</div>
+  <h2>4. L'exercice final</h2>
+  <p class="lead">Du poste vide à l'agent utilisable dans l'app. Une étape à la fois : faites-la, comparez avec
+    le résultat attendu, <b>cochez</b>, passez à la suite. La progression est gardée dans ce navigateur. Les étapes
+    de déploiement suivent la méthode choisie en partie 1.</p>
+  <div class="progress" style="margin-top:14px"><div id="prog"></div></div>
+  <div class="ex">
+    <nav class="ex-list" id="ex-list" aria-label="Étapes"></nav>
+    <div class="ex-step" id="ex-step" aria-live="polite"></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div>Les guides : <a href="docs/12-1-1-deployer-agents-shell.md">12-1-1</a> · <a href="docs/12-1-2-deployer-agents-terraform.md">12-1-2</a> ·
+    <a href="docs/12-1-3-deployer-agents-console.md">12-1-3</a> · <a href="docs/12-1-4-connecter-agents-app-gemini-enterprise.md">12-1-4</a> ·
+    <a href="docs/12-1-5-simuler-appel-gemini-enterprise.md">12-1-5</a> · <a href="docs/12-1-6-ajouter-agent-console-gemini-enterprise.md">12-1-6</a> ·
+    <a href="docs/12-1-7-agents-oauth-identite-outils.md">12-1-7</a> · vue d'ensemble <a href="docs/12-1-agents-projet-exp-vers-app.md">12-1</a> ·
+    agents dans le projet de l'app <a href="docs/12-2-agents-dans-projet-app.md">12-2</a> · ajouter des agents <a href="docs/12-3-ajouter-des-agents-un-par-un.md">12-3</a></div>
+  <div>Les scripts : <a href="scripts/README.md">scripts/README.md</a> · Autres pages : <a href="parcours-12.html">parcours 12</a> · <a href="guide-interactif.html">guide interactif</a></div>
+  <div>Exécution depuis votre poste (Linux, Mac) ou Cloud Shell. Pas besoin de Docker : les images sont construites par Cloud Build.</div>
+</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  // --- Stockage sûr (navigation privée : on fait sans) ---
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem("p121." + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem("p121." + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  var EXEMPLE = { PROJET_AGENTS: "aiml-gemini-ent-exp-0zga", NUM_AGENTS: "433175138344", REGION: "europe-west1", AGENTS: "meteo",
+    PROJET_APP: "acme-gemini-prod", NUM_APP: "523307489860", APP_ID: "dev_gemini-entreprise-app", GE_LOCATION: "eu",
+    GROUPE_UTILISATEURS: "equipe-agents@acme.example", AGENTS_OAUTH: "", DOSSIER: "~/Desktop/09-agents-multi-projets-gemini-enterprise" };
+  var V = Object.assign({}, EXEMPLE, store.get("vals", {}));
+  var methode = store.get("methode", "script");
+
+  function K1() { return (V.AGENTS || "meteo").trim().split(/\s+/)[0] || "meteo"; }   // 1er agent : celui des exemples
+  function derive() {
+    var d = Object.assign({}, V);
+    d.GE_SA = V.NUM_APP ? "service-" + V.NUM_APP + "@gcp-sa-discoveryengine.iam.gserviceaccount.com" : "(NUM_APP vide : pas encore d'app)";
+    d.K = K1();
+    d.URL = "https://" + d.K + "-a2a-shell-" + (V.NUM_AGENTS || "NUM") + "." + (V.REGION || "europe-west1") + ".run.app";
+    d.SIMU = "ge-simulateur@" + (V.PROJET_APP || "PROJET_APP") + ".iam.gserviceaccount.com";
+    return d;
+  }
+  // {VAR} -> valeur (dans les textes : résultats attendus, écrans, consignes)
+  function sub(t) {   // « ${K} » (variable shell) n'est pas touché : seulement « {K} »
+    var d = derive();
+    return t.replace(/(^|[^$])\{([A-Z_]+)\}/g, function (m, avant, k) { return avant + (d[k] !== undefined && d[k] !== "" ? d[k] : "{" + k + "}"); });
+  }
+
+  // --- Blocs de rendu (le texte des commandes passe par textContent : jamais interprété comme HTML) ---
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; }
+  function pre(text, out) {
+    var p = el("pre", out ? "cmd out" : "cmd"); p.appendChild(document.createTextNode(sub(text)));
+    if (!out) {
+      var b = el("button", "copy"); b.type = "button"; b.textContent = "Copier";
+      b.addEventListener("click", function () {
+        var t = sub(text);
+        (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { b.textContent = "Copié ✓"; },
+          function () { b.textContent = "Sélectionnez"; });
+        setTimeout(function () { b.textContent = "Copier"; }, 1600);
+      });
+      p.appendChild(b);
+    }
+    return p;
+  }
+  var OU = { laptop: "Votre poste", agents: "Projet des agents", app: "Projet de l'app", console: "Console" };
+  function bloc(s, n) {   // une étape de guide : {t, ou, why, cmd, out, note, warn, html}
+    var g = el("div", "gstep");
+    var h = el("div", "gstep-head"); h.appendChild(el("b", "", n + "."));
+    var h3 = el("h3"); h3.textContent = s.t; h.appendChild(h3);
+    if (s.ou) { var w = el("span", "where " + s.ou); w.textContent = OU[s.ou]; h.appendChild(w); }
+    g.appendChild(h);
+    if (s.why) g.appendChild(el("p", "why", sub(s.why)));
+    if (s.html) g.appendChild(el("div", "", sub(s.html)));
+    (s.cmd ? [].concat(s.cmd) : []).forEach(function (c) { g.appendChild(pre(c)); });
+    if (s.out) g.appendChild(pre(s.out, true));
+    if (s.note) g.appendChild(el("div", "note", sub(s.note)));
+    if (s.warn) g.appendChild(el("div", "note warn", sub(s.warn)));
+    return g;
+  }
+
+  // ======================= CONTENU DES GUIDES (résumé fidèle des fichiers docs/12-1-*.md) =======================
+  var GUIDES = [
+  { id: "g1", t: "12-1-1 Shell", s: "déployer, en commandes", md: "docs/12-1-1-deployer-agents-shell.md", intro:
+    "Déployer un, plusieurs ou tous les agents dans le projet des agents, depuis un terminal. <b>Façon 1</b> : le script <code>deployer_shell.sh</code> (une commande par étape, lit <code>AGENTS</code>). Les commandes une à une (façon 2) sont dans le fichier Markdown.",
+    steps: [
+    { t: "Préparer le poste (une fois)", ou: "laptop", why: "gcloud, uv, Python 3.12 à 3.14. Pas de Docker : Cloud Build construit les images.",
+      warn: "Mac Acme, erreur « Failed building wheel for watchdog » : <code>python3 -m venv .venv && source .venv/bin/activate && pip install --no-deps -r agents/trio/requirements-poste.txt</code> (mêmes paquets, sans watchdog, rien à compiler). Test local d'un agent : <code>adk run &lt;agent&gt;</code> au lieu de <code>adk web</code>.",
+      cmd: "cd {DOSSIER}\nuv venv -p '>=3.12' .venv && source .venv/bin/activate\nuv pip install -r agents/trio/requirements.txt\npython scripts/test_trio.py",
+      out: "tests trio OK (9 scénarios, 6 agents)" },
+    { t: "Charger la configuration", ou: "laptop", why: "Le fichier de la partie 1, enregistré dans config/12-1-agents-dans-projet-exp.env.",
+      cmd: "source scripts/config.sh config/12-1-agents-dans-projet-exp.env",
+      out: "== Configuration chargée : config/12-1-agents-dans-projet-exp.env\n   Projet des agents     : {PROJET_AGENTS} (numéro {NUM_AGENTS}), région {REGION}\n   Agents à déployer     : {AGENTS}\n   …\n   OK",
+      warn: "Toujours avec <code>source</code>, jamais derrière un <code>|</code>. À refaire dans chaque nouveau terminal." },
+    { t: "Se connecter, vérifier le projet et vos droits", ou: "laptop",
+      cmd: "gcloud auth login\ngcloud auth application-default login\ngcloud projects describe $PROJET_AGENTS --format='value(projectNumber)'",
+      out: "{NUM_AGENTS}", note: "Il faut <b>Propriétaire</b> sur le projet des agents, ou les rôles listés dans 12-1-1, partie 4." },
+    { t: "Vérifier et activer les API", ou: "agents",
+      cmd: "./scripts/verifier_api.sh $PROJET_AGENTS cloudresourcemanager.googleapis.com serviceusage.googleapis.com iam.googleapis.com \\\n  aiplatform.googleapis.com agentregistry.googleapis.com modelarmor.googleapis.com logging.googleapis.com \\\n  run.googleapis.com artifactregistry.googleapis.com cloudbuild.googleapis.com",
+      out: "OK        cloudresourcemanager.googleapis.com\n…\nOK        cloudbuild.googleapis.com\nrien à activer" },
+    { t: "Préparer : filtres Model Armor, dépôt d'images, compte de construction", ou: "agents",
+      cmd: "./scripts/deployer_shell.sh preparer",
+      out: "Created template [agents-prompt-shield].\nCreated template [agents-response-shield].\nCreated repository [agents-shell].\nCreated service account [agents-build-sa].\n  agents-build-sa : roles/storage.objectViewer\n  agents-build-sa : roles/artifactregistry.writer\n  agents-build-sa : roles/logging.logWriter\nPrêt. Attendez 1 à 2 minutes …",
+      note: "Les 3 lignes de rôles doivent apparaître. Le script réessaie seul si un compte tout neuf n'est pas encore visible." },
+    { t: "Cloud Run (A2A) : image, compte, service", ou: "agents", why: "Pour chaque agent de AGENTS (ou une clé : <code>cloudrun taille</code>). Environ 1 min 20 s par image.",
+      cmd: "./scripts/deployer_shell.sh cloudrun",
+      out: "== {K} (Cloud Run)   image …/agents-shell/{K}:v1   adresse {URL}\n-- 1/3 l'image, construite par Cloud Build\n… SUCCESS\n-- 2/3 son compte de service et ses 3 rôles\n-- 3/3 le service Cloud Run (privé)\nService URL: {URL}" },
+    { t: "Agent Runtime", ou: "agents", cmd: "./scripts/deployer_shell.sh runtime",
+      out: "== {K} (Agent Runtime, nom {K}-shell)\n…\ndéployé : projects/{NUM_AGENTS}/locations/{REGION}/reasoningEngines/<ID>",
+      note: "Relancé : « déjà déployé » (aucun doublon). Nouvelle version : supprimer d'abord (nettoyer.py)." },
+    { t: "Agent Registry : le catalogue", ou: "agents", why: "Les agents Agent Runtime y sont inscrits seuls ; les agents Cloud Run sont déclarés avec leur carte.",
+      cmd: "./scripts/deployer_shell.sh registre",
+      out: "Created service [{K}-a2a-shell].\nDISPLAY_NAME     AGENT_ID\n{K}_agent       urn:agent:…:agentregistry:services:{K}-a2a-shell\n{K}-shell       urn:agent:…:aiplatform:reasoningEngines:<ID>" },
+    { t: "Tester (3 à 5 minutes après)", ou: "agents", cmd: "./scripts/deployer_shell.sh tester",
+      out: "== {K}, Cloud Run\n…\nOK : les agents répondent en A2A v0.3, avec mémoire de conversation\n== {K}, Agent Runtime\n  -> outil : …\nagent : …",
+      warn: "« bloquée par Model Armor » juste après le déploiement : attendre 2 à 5 minutes (droits des nouveaux comptes)." },
+    { t: "La carte de l'agent (pour l'app, mode A2A)", ou: "laptop",
+      cmd: "python3 scripts/carte_a2a.py {K} {URL} > carte-{K}.json\npython3 -m json.tool --no-ensure-ascii carte-{K}.json",
+      out: "{\n    \"protocolVersion\": \"0.3\",\n    \"name\": \"{K}_agent\",\n    \"url\": \"{URL}\",\n    …\n}",
+      note: "C'est ce qu'on colle dans Gemini Enterprise (Agent personnalisé via A2A). Le champ <code>url</code> = l'adresse du service." },
+    { t: "Dialogflow (option)", ou: "agents", why: "Un autre type d'agent, construit à la souris. Pour l'app, de préférence dans le projet de l'app (12-2).",
+      cmd: "./scripts/verifier_api.sh $PROJET_AGENTS dialogflow.googleapis.com\n# créer : la commande curl de 12-1-1 partie 10.2, puis :\nAGENT=$(cat agent-dialogflow.txt) ./04-bis-dialogflow/test.sh \"Bonjour\"",
+      out: "  agent pas encore prêt, nouvel essai dans 5 s…\nintention : Default Welcome Intent\nréponse   : Bonjour !" },
+    { t: "Inventaire, nettoyage", ou: "agents", cmd: "python scripts/nettoyer.py              # inventaire, ne supprime rien\npython scripts/nettoyer.py --supprimer  # tapez l'ID du projet pour confirmer",
+      out: "Rien à nettoyer." } ] },
+
+  { id: "g2", t: "12-1-2 Terraform", s: "déployer, reproductible", md: "docs/12-1-2-deployer-agents-terraform.md", intro:
+    "Terraform lit le catalogue et la ligne <code>AGENTS</code> : <b>une clé = un agent = ses propres ressources</b> (<code>for_each</code>). Ajouter une clé crée seulement cet agent ; la retirer le supprime. <b>Lisez toujours la ligne <code>Plan:</code> avant <code>yes</code>.</b>",
+    steps: [
+    { t: "Configuration et API préalables", ou: "laptop",
+      cmd: "source scripts/config.sh config/12-1-agents-dans-projet-exp.env\n./scripts/verifier_api.sh $PROJET_AGENTS cloudresourcemanager.googleapis.com serviceusage.googleapis.com",
+      out: "OK        cloudresourcemanager.googleapis.com\nOK        serviceusage.googleapis.com\nrien à activer", note: "Terraform active lui-même les autres API." },
+    { t: "Cloud Run (A2A), dossier 01-bis", ou: "agents",
+      cmd: "cd {DOSSIER}/01-bis-cloud-run-a2a/terraform\nterraform init\nterraform plan\nterraform apply\ncd .. && ./test.sh",
+      out: "Plan: 22 to add, 0 to change, 0 to destroy.      (1 agent, sans app ; +7 par agent ; 23 / +8 avec l'app)\nApply complete! Resources: 22 added, 0 changed, 0 destroyed.\n…\nOK : les agents répondent en A2A v0.3, avec mémoire de conversation" },
+    { t: "Ajouter un agent", ou: "agents", why: "AGENTS=\"meteo taille\" (la liste COMPLÈTE de ce qui doit exister), recharger.",
+      cmd: "terraform plan", out: "  # google_cloud_run_v2_service.agent[\"taille\"] will be created\n  …   (uniquement des lignes [\"taille\"])\nPlan: 7 to add, 0 to change, 0 to destroy.",
+      warn: "AGENTS=\"taille\" seul supprimerait les autres : le plan le montrerait (destroy). Répondez no." },
+    { t: "Agent Runtime, dossier 02-bis", ou: "agents",
+      cmd: "cd {DOSSIER}/02-bis-agent-runtime/terraform\nterraform init && terraform plan && terraform apply\ncd .. && ./test.sh",
+      out: "Plan: 13 to add, 0 to change, 0 to destroy.      (1 agent ; +7 par agent)\nagents = {\n  \"{K}\" = \"projects/{PROJET_AGENTS}/locations/{REGION}/reasoningEngines/<ID>\"\n}" },
+    { t: "Modifier, retirer, supprimer", ou: "agents", html:
+      "<ul><li>Nouveau code d'un agent : seul cet agent est mis à jour, <b>sur place</b> (même URL, même ID).</li><li>Retirer une clé de AGENTS : <code>N to destroy</code>, uniquement cette clé.</li><li>Tout supprimer : <code>terraform destroy</code> dans chaque dossier.</li></ul>",
+      cmd: "terraform -chdir={DOSSIER}/01-bis-cloud-run-a2a/terraform destroy\nterraform -chdir={DOSSIER}/02-bis-agent-runtime/terraform destroy" } ] },
+
+  { id: "g3", t: "12-1-3 Console", s: "déployer, à la souris", md: "docs/12-1-3-deployer-agents-console.md", intro:
+    "Tout à la souris, sauf deux commandes dans Cloud Shell (construire l'image, envoyer le code à Agent Runtime). Projet <b>{PROJET_AGENTS}</b> sélectionné en haut de la console.",
+    steps: [
+    { t: "API", ou: "console", html: "🔎 « API et services » → <b>API et services activés</b> ; activer celles qui manquent : Cloud Run Admin, Artifact Registry, <b>Cloud Build</b>, Vertex AI, Model Armor, Agent Registry, IAM, Cloud Logging." },
+    { t: "Filtres Model Armor (une fois)", ou: "console", html: "🔎 « Model Armor » → <b>Créer un template</b>, deux fois : <code>console-prompt-shield</code> et <code>console-response-shield</code>, région <b>eu</b>, filtres activés (confiance <b>Moyenne et supérieure</b>)." },
+    { t: "Dépôt d'images et compte de construction (une fois)", ou: "console", html: "🔎 « Artifact Registry » → <b>Créer un dépôt</b> <code>agents-console</code>, format Docker, région {REGION}. Puis 🔎 « Comptes de service » → <code>agents-build-sa</code> avec <b>Lecteur des objets Storage</b>, <b>Rédacteur Artifact Registry</b>, <b>Rédacteur de journaux</b>." },
+    { t: "L'image de l'agent (Cloud Shell)", ou: "agents",
+      cmd: "K={K}\ngcloud builds submit --region=$REGION --project=$PROJET_AGENTS \\\n  --service-account=projects/$PROJET_AGENTS/serviceAccounts/agents-build-sa@$PROJET_AGENTS.iam.gserviceaccount.com \\\n  --config=01-bis-cloud-run-a2a/cloudbuild.yaml \\\n  --substitutions=_AGENT_DIR=${K}_agent,_IMAGE=$REGION-docker.pkg.dev/$PROJET_AGENTS/agents-console/$K:v1 .\npython3 scripts/carte_a2a.py $K https://$K-a2a-console-$NUM_AGENTS.$REGION.run.app",
+      out: "… europe-west1-docker.pkg.dev/{PROJET_AGENTS}/agents-console/{K}:v1  SUCCESS\n{\"protocolVersion\": \"0.3\", \"name\": \"{K}_agent\", …}      ← la carte : copiez-la" },
+    { t: "Compte de service et service Cloud Run", ou: "console", html:
+      "🔎 « Comptes de service » → <code>{K}-a2a-console-sa</code> avec <b>Utilisateur Vertex AI</b>, <b>Rédacteur de journaux</b>, <b>Utilisateur Model Armor</b>.<br>🔎 « Cloud Run » → <b>Déployer un conteneur</b> : image <code>agents-console/{K}:v1</code>, nom <code>{K}-a2a-console</code>, <b>Exiger l'authentification</b>, 1 Gio / 1 processeur, instances 0 à 1, compte <code>{K}-a2a-console-sa</code>, variables <code>AGENT={K}_agent</code>, <code>AGENT_CARD</code>=la carte, <code>GOOGLE_CLOUD_PROJECT</code>, <code>MODEL=gemini-3.5-flash</code>, <code>PROMPT_TEMPLATE</code>, <code>RESPONSE_TEMPLATE</code>." },
+    { t: "Agent Runtime (Cloud Shell) et Playground", ou: "agents",
+      cmd: "python3 scripts/deployer_agent_runtime.py --projet $PROJET_AGENTS --region $REGION --agent {K}_agent --nom {K}-console \\\n  --compte-service {K}-console-sa@$PROJET_AGENTS.iam.gserviceaccount.com \\\n  --env PROMPT_TEMPLATE=$PROMPT_TEMPLATE --env RESPONSE_TEMPLATE=$RESPONSE_TEMPLATE",
+      out: "déployé : projects/{NUM_AGENTS}/locations/{REGION}/reasoningEngines/<ID>",
+      note: "Tester : 🔎 « Agent Runtime » → Déploiements → <code>{K}-console</code> → <b>Playground</b>. Copiez le nom de ressource en haut de la page." },
+    { t: "Agent Registry", ou: "console", html: "Les agents Agent Runtime y sont déjà. Cloud Run : 🔎 « Agent Registry » → région {REGION} → <b>Enregistrer</b> → spécification <b>Carte d'agent A2A</b> → coller la carte." } ] },
+
+  { id: "g4", t: "12-1-4 Connecter", s: "droits et ajout dans l'app", md: "docs/12-1-4-connecter-agents-app-gemini-enterprise.md", intro:
+    "Le projet des agents <b>autorise</b> le compte de l'app (droits ① ②), puis l'app <b>ajoute</b> les agents. Le script <code>connecter_app.sh</code> montre la liste et vous fait <b>taper l'ID</b> avant chaque changement. Pas encore d'app ? Faites 12-1-5 (simulation).",
+    steps: [
+    { t: "Trouver l'ID de l'app (lecture seule)", ou: "app", cmd: "./scripts/connecter_app.sh apps",
+      out: "{APP_ID}   {GE_LOCATION}   …      (1re colonne = APP_ID, 2e = GE_LOCATION)" },
+    { t: "Tout vérifier (lecture seule)", ou: "laptop", cmd: "./scripts/connecter_app.sh verifier",
+      out: "  OK   numéro du projet de l'app : {NUM_APP}\n  OK   {APP_ID} existe : « … » ({GE_LOCATION})\n  À FAIRE  discoveryengine.serviceAgent sur {PROJET_AGENTS}\n  {K}  Cloud Run {K}-a2a-shell : À FAIRE : run.invoker ; « … (A2A) » : À AJOUTER\nRien n'a été changé." },
+    { t: "Donner les droits ① ② (projet des agents)", ou: "agents", cmd: "./scripts/connecter_app.sh droits",
+      out: "== Droits à donner à {GE_SA}, dans le projet des agents {PROJET_AGENTS} :\n   - projet {PROJET_AGENTS} : roles/discoveryengine.serviceAgent\n   - service {K}-a2a-shell : roles/run.invoker\nTapez « {PROJET_AGENTS} » pour confirmer : …\n  fait\nDroits donnés. Ils s'appliquent en 2 à 3 minutes.",
+      html: "<details><summary>À la souris (console, projet {PROJET_AGENTS})</summary><ul><li><b>① :</b> 🔎 « Cloud Run » → <b>cocher</b> <code>{K}-a2a-shell</code> → <b>Autorisations</b> → <b>Ajouter un compte principal</b> → <code>{GE_SA}</code> → <b>Demandeur Cloud Run</b> → Enregistrer.</li><li><b>② :</b> 🔎 « IAM » → <b>Accorder l'accès</b> → <code>{GE_SA}</code> → <b>Agent de service Discovery Engine</b> → Enregistrer (si la console ne le propose pas : la commande de 12-1-4, 3.4).</li><li><b>Voir :</b> IAM avec la case <b>« Inclure les attributions de rôles fournies par Google »</b> cochée, filtre <code>gcp-sa-discoveryengine</code>.</li></ul></details>" },
+    { t: "Ajouter les agents dans l'app", ou: "app", cmd: "./scripts/connecter_app.sh ajouter\n./scripts/connecter_app.sh lister",
+      out: "Tapez « {APP_ID} » pour confirmer : …\najouté : projects/…/engines/{APP_ID}/assistants/default_assistant/agents/<ID>",
+      note: "Noms dans l'app : « Nom » (Agent Runtime) et « Nom (A2A) ». Aucun doublon. Ou à la souris : onglet 12-1-6." },
+    { t: "Terraform (si déployé avec 12-1-2)", ou: "agents", html: "App renseignée, <code>PUBLIER=non</code> → <code>terraform plan</code> : une ligne <code>ge_invokes[\"clé\"]</code> par agent (01-bis), <code>ge_uses_agents_project[0]</code> (02-bis). Puis <code>PUBLIER=oui</code> → <code>terraform_data.publish[\"clé\"]</code>." },
+    { t: "Revenir en arrière", ou: "laptop", cmd: "./scripts/connecter_app.sh retirer          # retirer de l'app + run.invoker\n./scripts/connecter_app.sh retirer --tout    # + le droit sur le projet",
+      out: "retiré : run.invoker sur {K}-a2a-shell\nretiré : discoveryengine.serviceAgent sur {PROJET_AGENTS}",
+      note: "Le plus rapide pour masquer un agent : retirer le groupe de ses <b>Autorisations utilisateur</b> dans la console de l'app." } ] },
+
+  { id: "g5", t: "12-1-5 Simuler", s: "prouver avant la prod", md: "docs/12-1-5-simuler-appel-gemini-enterprise.md", intro:
+    "Un compte <b>ge-simulateur</b> (projet de l'app) reçoit <b>les mêmes droits</b> que le compte de l'app et appelle les agents <b>de la même façon</b>. Accepté pour lui = accepté pour l'app. Marche même sans Gemini Enterprise activé.",
+    steps: [
+    { t: "Préparer le simulateur (une fois)", ou: "app", cmd: "./scripts/simuler_gemini_enterprise.sh preparer",
+      out: "Created service account [ge-simulateur].\nsimulateur prêt : {SIMU}\nLes jetons peuvent mettre 1 à 2 minutes à fonctionner après la création." },
+    { t: "Sans droit : doit être REFUSÉ", ou: "agents", cmd: "./scripts/simuler_gemini_enterprise.sh tout",
+      out: "REFUSÉ (403) : le compte de Gemini Enterprise n'a pas roles/run.invoker sur ce service.\n…\n== Bilan\n   REFUSÉ   {K}  Cloud Run (A2A)\n   REFUSÉ   {K}  Agent Runtime", note: "Normal : vos agents sont privés." },
+    { t: "Donner les droits au simulateur", ou: "agents", cmd: "./scripts/simuler_gemini_enterprise.sh droits",
+      out: "▶ gcloud projects add-iam-policy-binding {PROJET_AGENTS} --role=roles/discoveryengine.serviceAgent --member=serviceAccount:{SIMU}\n  fait\n▶ gcloud run services add-iam-policy-binding {K}-a2a-shell --role=roles/run.invoker …\n  fait", warn: "Attendez 2 à 3 minutes." },
+    { t: "Avec les droits : doit être ACCEPTÉ", ou: "agents", cmd: "./scripts/simuler_gemini_enterprise.sh tout",
+      out: "ACCEPTÉ (A2A v0.3) : …\nACCEPTÉ (Agent Runtime) : …\n== Bilan\n   ACCEPTÉ  {K}  Cloud Run (A2A)\n   ACCEPTÉ  {K}  Agent Runtime" },
+    { t: "Agent OAuth (option)", ou: "agents", why: "AGENTS_OAUTH=\"identite=acces-identite\", agent identite déployé (cloudrun / runtime identite), droits donnés.",
+      cmd: "./scripts/simuler_gemini_enterprise.sh oauth identite\n./scripts/simuler_gemini_enterprise.sh oauth identite --sans-jeton",
+      out: "ACCEPTÉ (A2A v0.3) : Oui, vous êtes authentifié auprès de Gemini Enterprise. Compte : … Portées : …\nACCEPTÉ (A2A v0.3) : Non, vous n'êtes pas authentifié. … Cliquez sur le bouton « Autoriser »" },
+    { t: "Retour arrière : doit redevenir REFUSÉ", ou: "agents", cmd: "./scripts/simuler_gemini_enterprise.sh retirer-droits\n# 3 minutes après :\n./scripts/simuler_gemini_enterprise.sh tout",
+      out: "   REFUSÉ   {K}  Cloud Run (A2A)\n   REFUSÉ   {K}  Agent Runtime" } ] },
+
+  { id: "g6", t: "12-1-6 Console de l'app", s: "ajouter, partager, tester", md: "docs/12-1-6-ajouter-agent-console-gemini-enterprise.md", intro:
+    "Uniquement le côté Gemini Enterprise, à la souris, dans le projet <b>{PROJET_APP}</b>. Les agents tournent, les droits sont donnés (12-1-4), la simulation est ACCEPTÉ (12-1-5).",
+    steps: [
+    { t: "Récupérer ce que l'app demande", ou: "agents", html: "<ul><li><b>Agent Runtime :</b> le nom de ressource : 🔎 « Agent Runtime » → l'agent → en haut de la page (<code>projects/{NUM_AGENTS}/locations/{REGION}/reasoningEngines/ID</code>).</li><li><b>A2A :</b> la carte : <code>cat carte-{K}.json</code> (onglet 12-1-1), une seule ligne, tout copier.</li></ul>" },
+    { t: "Ouvrir l'app", ou: "app", html: "Projet <code>{PROJET_APP}</code> en haut → 🔎 « Gemini Enterprise » → <b>Apps</b> → <code>{APP_ID}</code> → <b>Agents</b> → <b>+ Ajouter un agent</b>." },
+    { t: "Agent Runtime", ou: "app", html: "<b>Agent personnalisé via Agent Runtime</b> → (écran <b>Autorisations</b> : <b>Suivant</b>, sauf OAuth) → nom (« Météo & équipement »), description, <b>chemin de ressource</b> → <b>Créer</b>." },
+    { t: "A2A", ou: "app", html: "<b>Agent personnalisé via A2A</b> → coller la carte → <b>Prévisualiser les détails de l'agent</b> → <b>Suivant</b> → <i>Authentification</i> : <b>Ignorer et terminer</b> (sauf OAuth, 12-1-7). Renommer en « … (A2A) » si besoin (Modifier)." },
+    { t: "Donner l'accès : Agent User", ou: "app", html: "L'agent → <b>Autorisations utilisateur</b> → <b>Ajouter</b> → <code>{GROUPE_UTILISATEURS}</code> → rôle <b>Agent User</b> → <b>Enregistrer</b>. Les membres doivent avoir une <b>licence</b> Gemini Enterprise. Un groupe pilote d'abord." },
+    { t: "Tester dans le chat", ou: "app", html: "L'app → <b>Intégration</b> → lien de l'app web, compte du groupe → <b>Agents</b> → l'agent → une question d'exemple. 20 à 40 s la 1re fois. Côté agents : Cloud Run → <b>Journaux</b> ; Agent Runtime → <b>Sessions</b>." } ] },
+
+  { id: "g7", t: "12-1-7 OAuth & outils", s: "compte de l'utilisateur", md: "docs/12-1-7-agents-oauth-identite-outils.md", intro:
+    "Un agent qui agit <b>avec le compte de l'utilisateur</b> : bouton « Autoriser », fenêtre de consentement, jeton transmis à chaque appel. Entre deux projets, rien de spécial : le jeton voyage dans l'appel.",
+    steps: [
+    { t: "Le déroulé pour l'utilisateur", ou: "app", html: "<ol><li>1re question à l'agent → bouton <b>Autoriser</b>.</li><li>Fenêtre Google (portées demandées) → <b>Autoriser</b>.</li><li>À chaque appel, l'app envoie le jeton de <b>cet</b> utilisateur : A2A dans <code>Authorization</code> (le droit d'entrer est dans <code>X-Serverless-Authorization</code>) ; Agent Runtime dans <code>authorizations</code> → l'état <code>temp:AUTH_ID</code>.</li><li>L'outil lit le jeton (<code>commun.jeton_utilisateur</code>) et appelle l'API <b>en son nom</b>.</li></ol>" },
+    { t: "Client OAuth et autorisation (projet de l'app)", ou: "app", html: "🔎 « Google Auth Platform » : type <b>Interne</b>. 🔎 « Identifiants » → <b>ID client OAuth</b>, Application Web, URI de redirection <code>https://vertexaisearch.cloud.google.com/oauth-redirect</code> et <code>https://vertexaisearch.cloud.google.com/static/oauth/oauth.html</code> → télécharger le JSON.",
+      cmd: "./scripts/autorisation_oauth.sh create acces-identite ~/Downloads/client_secret_XXXX.json \"openid email https://www.googleapis.com/auth/cloud-platform\"",
+      out: "autorisation créée : projects/{NUM_APP}/locations/{GE_LOCATION}/authorizations/acces-identite" },
+    { t: "Déployer l'agent avec son autorisation", ou: "agents", why: "Dans le fichier : AGENTS_OAUTH=\"identite=acces-identite\", recharger.",
+      cmd: "./scripts/deployer_shell.sh cloudrun identite\n./scripts/deployer_shell.sh runtime identite", out: "  autorisation OAuth : AUTH_ID=acces-identite" },
+    { t: "L'ajouter dans l'app AVEC l'autorisation", ou: "app", cmd: "AUTH_ID=acces-identite ./scripts/add_agent_to_ge.sh a2a carte-identite.json \"Identité utilisateur (A2A)\"",
+      note: "Console : étape <i>Authentification</i> (A2A) ou écran <i>Authorizations</i> (Agent Runtime). Dans le chat : « Suis-je authentifié ? » → Autoriser → « Oui, … acme.example »." },
+    { t: "Les outils de Gemini Enterprise (e-mail, Outlook, Slack…)", ou: "app", html: "<b>Pas directement</b> : les actions des connecteurs sont faites par l'assistant de l'app et le Workflow Builder. Votre agent peut : lire les sources de l'app avec le jeton de l'utilisateur (<code>commun.recherche_gemini_enterprise</code>), appeler lui-même l'API (ex. Gmail <code>gmail.send</code>) ou le serveur MCP d'un outil. Les nouveautés (Gemini agent, Spark) : 12-1-7, partie 5." } ] }
+  ];
+
+  // ======================= EXERCICE GUIDÉ =======================
+  function exSteps() {
+    var dep = {
+      script: [
+        { ph: "Déployer", t: "Préparer le projet des agents", ou: "agents", cmd: "./scripts/deployer_shell.sh preparer", out: "  agents-build-sa : roles/storage.objectViewer\n  agents-build-sa : roles/artifactregistry.writer\n  agents-build-sa : roles/logging.logWriter", checks: ["Les 3 rôles de agents-build-sa sont affichés", "J'ai attendu 1 à 2 minutes"] },
+        { ph: "Déployer", t: "Déployer sur Cloud Run", ou: "agents", cmd: "./scripts/deployer_shell.sh cloudrun", out: "… SUCCESS\nService URL: {URL}", checks: ["La construction finit par SUCCESS", "Service URL = {URL}"] },
+        { ph: "Déployer", t: "Déployer sur Agent Runtime", ou: "agents", cmd: "./scripts/deployer_shell.sh runtime", out: "déployé : projects/{NUM_AGENTS}/locations/{REGION}/reasoningEngines/<ID>", checks: ["« déployé : projects/…/reasoningEngines/… » affiché"] },
+        { ph: "Déployer", t: "Déclarer au registre et tester", ou: "agents", cmd: "./scripts/deployer_shell.sh registre\n# 3 à 5 minutes après :\n./scripts/deployer_shell.sh tester", out: "OK : les agents répondent en A2A v0.3, avec mémoire de conversation\n…\nagent : …", checks: ["Le registre liste l'agent Cloud Run et l'agent Agent Runtime", "Le test Cloud Run finit par OK", "L'agent Agent Runtime répond (avec « -> outil »)"] } ],
+      terraform: [
+        { ph: "Déployer", t: "Cloud Run avec Terraform", ou: "agents", cmd: "cd {DOSSIER}/01-bis-cloud-run-a2a/terraform\nterraform init && terraform plan\nterraform apply\ncd .. && ./test.sh", out: "Plan: 22 to add, 0 to change, 0 to destroy.   (1 agent)\n…\nOK : les agents répondent en A2A v0.3, avec mémoire de conversation", checks: ["Le plan ne contient que des créations (0 to destroy)", "Apply complete!", "test.sh finit par OK"] },
+        { ph: "Déployer", t: "Agent Runtime avec Terraform", ou: "agents", cmd: "cd {DOSSIER}/02-bis-agent-runtime/terraform\nterraform init && terraform plan && terraform apply\ncd .. && ./test.sh", out: "Plan: 13 to add, 0 to change, 0 to destroy.   (1 agent)", checks: ["Apply complete!", "L'agent répond avec ses outils"] },
+        { ph: "Déployer", t: "La carte de l'agent", ou: "laptop", cmd: "terraform -chdir={DOSSIER}/01-bis-cloud-run-a2a/terraform output -json cards", out: "{\"{K}\": \"{\\\"protocolVersion\\\":\\\"0.3\\\", …}\"}", checks: ["J'ai la carte de chaque agent"] } ],
+      console: [
+        { ph: "Déployer", t: "API, filtres, dépôt, compte de construction", ou: "console", html: "Onglet <b>12-1-3</b>, étapes 1 à 3.", checks: ["API activées (dont Cloud Build)", "2 templates Model Armor en eu", "Dépôt agents-console et compte agents-build-sa avec 3 rôles"] },
+        { ph: "Déployer", t: "Image (Cloud Shell) et service Cloud Run", ou: "agents", html: "Onglet <b>12-1-3</b>, étapes 4 et 5.", checks: ["La construction finit par SUCCESS", "Le service {K}-a2a-console a une coche verte", "test.sh (Cloud Shell) finit par OK"] },
+        { ph: "Déployer", t: "Agent Runtime et registre", ou: "agents", html: "Onglet <b>12-1-3</b>, étapes 6 et 7.", checks: ["Le Playground répond", "J'ai copié le nom de ressource", "L'agent Cloud Run est déclaré au registre"] } ]
+    }[methode];
+    return [
+      { ph: "Préparer", t: "Le poste", ou: "laptop", note: "Mac Acme, erreur « Failed building wheel for watchdog » : <code>python3 -m venv .venv && source .venv/bin/activate && pip install --no-deps -r agents/trio/requirements-poste.txt</code> (sans watchdog ; test local : <code>adk run</code> au lieu de <code>adk web</code>).", cmd: "cd {DOSSIER}\nuv venv -p '>=3.12' .venv && source .venv/bin/activate\nuv pip install -r agents/trio/requirements.txt\npython scripts/test_trio.py", out: "tests trio OK (9 scénarios, 6 agents)", checks: ["gcloud et uv installés", "tests trio OK (9 scénarios, 6 agents)"] },
+      { ph: "Préparer", t: "La configuration", ou: "laptop", html: "Partie 1 de cette page : remplir, <b>télécharger</b> le fichier, le mettre dans <code>config/12-1-agents-dans-projet-exp.env</code>.", cmd: "source scripts/config.sh config/12-1-agents-dans-projet-exp.env", out: "   Projet des agents     : {PROJET_AGENTS} (numéro {NUM_AGENTS}), région {REGION}\n   Agents à déployer     : {AGENTS}\n   …\n   OK", checks: ["Le résumé finit par OK", "« Agents à déployer » montre mes agents"] },
+      { ph: "Préparer", t: "Connexion, droits, API", ou: "agents", cmd: "gcloud auth login && gcloud auth application-default login\ngcloud projects describe $PROJET_AGENTS --format='value(projectNumber)'\n./scripts/verifier_api.sh $PROJET_AGENTS cloudresourcemanager.googleapis.com serviceusage.googleapis.com iam.googleapis.com \\\n  aiplatform.googleapis.com agentregistry.googleapis.com modelarmor.googleapis.com logging.googleapis.com \\\n  run.googleapis.com artifactregistry.googleapis.com cloudbuild.googleapis.com", out: "{NUM_AGENTS}\n…\nrien à activer", checks: ["Le numéro affiché est {NUM_AGENTS}", "Toutes les API sont OK (ou activées)"] }
+    ].concat(dep).concat([
+      { ph: "Prouver", t: "Simulateur : préparer", ou: "app", cmd: "./scripts/simuler_gemini_enterprise.sh preparer", out: "simulateur prêt : {SIMU}", checks: ["« simulateur prêt » affiché", "J'ai attendu 1 à 2 minutes"] },
+      { ph: "Prouver", t: "Sans droit : REFUSÉ", ou: "agents", cmd: "./scripts/simuler_gemini_enterprise.sh tout" + (methode === "console" ? " --methode console" : ""), out: "   REFUSÉ   {K}  Cloud Run (A2A)\n   REFUSÉ   {K}  Agent Runtime", checks: ["Le bilan est REFUSÉ partout (agents privés)"],
+        note: methode === "terraform" ? "Agents Terraform : commandes <code>a2a</code> / <code>runtime</code> du simulateur, avec les URL et noms de <code>terraform output</code> (12-1-5, partie 8)." : "" },
+      { ph: "Prouver", t: "Droits au simulateur, puis ACCEPTÉ", ou: "agents", cmd: "./scripts/simuler_gemini_enterprise.sh droits\n# 2 à 3 minutes après :\n./scripts/simuler_gemini_enterprise.sh tout", out: "   ACCEPTÉ  {K}  Cloud Run (A2A)\n   ACCEPTÉ  {K}  Agent Runtime", checks: ["Le bilan est ACCEPTÉ partout"] },
+      { ph: "Prouver", t: "Retirer les droits du simulateur", ou: "agents", cmd: "./scripts/simuler_gemini_enterprise.sh retirer-droits", out: "  fait", checks: ["Les droits du simulateur sont retirés"] },
+      { ph: "Brancher", t: "Vérifier l'app (lecture seule)", ou: "app", cmd: "./scripts/connecter_app.sh apps\n./scripts/connecter_app.sh verifier", out: "  OK   {APP_ID} existe : « … » ({GE_LOCATION})", checks: ["L'app {APP_ID} est trouvée", "Je suis Gemini Enterprise Admin sur {PROJET_APP}"],
+        note: "Pas d'app (projet de test) ? Arrêtez-vous ici : la simulation a prouvé l'appel. La suite se fait sur le projet où l'app existe." },
+      { ph: "Brancher", t: "Donner les droits ① ② à l'app", ou: "agents", cmd: "./scripts/connecter_app.sh droits", out: "== Droits à donner à {GE_SA} …\n  fait", checks: ["J'ai tapé l'ID du projet pour confirmer", "« Droits donnés » affiché"] },
+      { ph: "Brancher", t: "Ajouter les agents dans l'app", ou: "app", cmd: "./scripts/connecter_app.sh ajouter\n./scripts/connecter_app.sh lister", out: "ajouté : projects/…/engines/{APP_ID}/assistants/default_assistant/agents/<ID>", checks: ["Chaque agent est « ajouté »", "« lister » montre les agents"], note: "Ou à la souris : onglet 12-1-6." },
+      { ph: "Brancher", t: "Agent User pour un groupe pilote", ou: "app", html: "Console de l'app → l'agent → <b>Autorisations utilisateur</b> → <code>{GROUPE_UTILISATEURS}</code> (ou un groupe pilote) → <b>Agent User</b> → Enregistrer.", checks: ["Le groupe a Agent User sur chaque agent", "Les membres ont une licence Gemini Enterprise"] },
+      { ph: "Brancher", t: "Tester dans le chat", ou: "app", html: "L'app → <b>Intégration</b> → lien de l'app web → <b>Agents</b> → l'agent → une question d'exemple.", checks: ["L'agent répond dans le chat", "L'appel est visible côté agents (journaux / sessions)"] },
+      { ph: "Option", t: "Un agent avec OAuth", ou: "app", html: "Onglet <b>12-1-7</b> : client OAuth, autorisation, <code>AGENTS_OAUTH</code>, déploiement, simulation <code>oauth</code>, ajout avec <code>AUTH_ID</code>, « Autoriser » dans le chat.", checks: ["La simulation oauth dit « Oui, vous êtes authentifié »", "Dans le chat : Autoriser → « … acme.example »"] }
+    ]);
+  }
+
+  // ======================= RENDU =======================
+  function renderCfg() {
+    var lines = ["# Généré par parcours-12-1.html — le seul fichier à modifier.",
+      "# Projet de l'app Gemini Enterprise (vide tant qu'il n'y a pas d'app)",
+      "PROJET_APP=" + V.PROJET_APP, "NUM_APP=" + V.NUM_APP, "APP_ID=" + V.APP_ID, "GE_LOCATION=" + V.GE_LOCATION, "",
+      "# Projet des agents", "PROJET_AGENTS=" + V.PROJET_AGENTS, "NUM_AGENTS=" + V.NUM_AGENTS, "REGION=" + V.REGION, "",
+      "# Les agents (clés de agents/trio/catalogue.json ; vide = tous)", 'AGENTS="' + V.AGENTS + '"', "",
+      "PUBLIER=non", 'AGENTS_OAUTH="' + V.AGENTS_OAUTH + '"', "GROUPE_UTILISATEURS=" + V.GROUPE_UTILISATEURS, "DOSSIER=" + V.DOSSIER];
+    var o = document.getElementById("cfg-out"); o.textContent = lines.join("\n");
+    var d = derive();
+    document.getElementById("derives").innerHTML = "Calculé pour vous : compte de l'app <code></code>, adresse du 1er agent <code></code>.";
+    var cs = document.getElementById("derives").querySelectorAll("code"); cs[0].textContent = d.GE_SA; cs[1].textContent = d.URL;
+    document.querySelectorAll("[data-x]").forEach(function (e) { e.textContent = d[e.getAttribute("data-x")] || ""; });
+    document.getElementById("schema").textContent =
+      " Projet de l'app : " + (V.PROJET_APP || "(pas encore)") + "\n   app " + (V.APP_ID || "?") + " (" + V.GE_LOCATION + ")\n   son compte : " + d.GE_SA +
+      "\n        │  appelle\n        ▼\n Projet des agents : " + V.PROJET_AGENTS + " (" + V.REGION + ")\n   Cloud Run  " + d.K + "-a2a-shell   ← droit ① run.invoker\n   Agent Runtime " + d.K + "-shell     ← droit ② (sur le projet)";
+  }
+  var tabCur = store.get("tab", "g1");
+  function renderGuides() {
+    var tabs = document.getElementById("tabs"); tabs.innerHTML = "";
+    GUIDES.forEach(function (g) {
+      var b = el("button", "", ""); b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", g.id === tabCur ? "true" : "false");
+      b.appendChild(document.createTextNode(g.t)); var sm = el("small"); sm.textContent = g.s; b.appendChild(sm);
+      b.addEventListener("click", function () { tabCur = g.id; store.set("tab", tabCur); renderGuides(); });
+      tabs.appendChild(b);
+    });
+    var g = GUIDES.filter(function (x) { return x.id === tabCur; })[0] || GUIDES[0];
+    var p = document.getElementById("panel"); p.innerHTML = "";
+    var head = el("div", "note go", sub(g.intro) + ' <br>Le guide complet : <a href="' + g.md + '"><code>' + g.md + "</code></a>");
+    p.appendChild(head);
+    g.steps.forEach(function (s, i) { p.appendChild(bloc(s, i + 1)); });
+  }
+  var exCur = store.get("exCur", 0);
+  function renderEx() {
+    var S = exSteps(), checks = store.get("checks", {});
+    if (exCur >= S.length) exCur = S.length - 1;
+    var key = function (i, j) { return methode + ":" + S[i].t + ":" + j; };
+    var stepOk = function (i) { return S[i].checks.every(function (c, j) { return checks[key(i, j)]; }); };
+    var nOk = S.filter(function (s, i) { return stepOk(i); }).length;
+    document.getElementById("prog").style.width = Math.round(100 * nOk / S.length) + "%";
+    var list = document.getElementById("ex-list"); list.innerHTML = ""; var ph = "";
+    S.forEach(function (s, i) {
+      if (s.ph !== ph) { ph = s.ph; var h = el("div", "ph"); h.textContent = ph; list.appendChild(h); }
+      var b = el("button", (i === exCur ? "cur " : "") + (stepOk(i) ? "ok" : "")); b.type = "button";
+      var ic = el("i"); ic.textContent = stepOk(i) ? "✓" : String(i + 1); b.appendChild(ic);
+      var sp = el("span"); sp.textContent = s.t; b.appendChild(sp);
+      b.addEventListener("click", function () { exCur = i; store.set("exCur", i); renderEx(); });
+      list.appendChild(b);
+    });
+    var s = S[exCur], box = document.getElementById("ex-step"); box.innerHTML = "";
+    var eb = el("div", "eyebrow"); eb.textContent = "Étape " + (exCur + 1) + " / " + S.length + " · " + s.ph; box.appendChild(eb);
+    var h3 = el("h3"); h3.textContent = s.t; box.appendChild(h3);
+    if (s.ou) { var w = el("span", "where " + s.ou); w.textContent = OU[s.ou]; w.style.justifySelf = "start"; box.appendChild(w); }
+    if (s.html) box.appendChild(el("div", "", sub(s.html)));
+    if (s.cmd) box.appendChild(pre(s.cmd));
+    if (s.out) box.appendChild(pre(s.out, true));
+    if (s.note) box.appendChild(el("div", "note", sub(s.note)));
+    var ck = el("div", "checks"); var t = el("p", "why"); t.innerHTML = "<b>Vérifié ?</b> Cochez quand vous avez vu le résultat :"; box.appendChild(t);
+    s.checks.forEach(function (c, j) {
+      var l = el("label", checks[key(exCur, j)] ? "ok" : ""); var inp = el("input"); inp.type = "checkbox"; inp.checked = !!checks[key(exCur, j)];
+      inp.addEventListener("change", function () { checks[key(exCur, j)] = inp.checked; store.set("checks", checks); renderEx(); });
+      l.appendChild(inp); var sp = el("span"); sp.textContent = sub(c); l.appendChild(sp); ck.appendChild(l);
+    });
+    box.appendChild(ck);
+    var nav = el("div", "ex-nav");
+    var prev = el("button", "btn ghost"); prev.type = "button"; prev.textContent = "← Précédent"; prev.disabled = exCur === 0;
+    prev.addEventListener("click", function () { exCur--; store.set("exCur", exCur); renderEx(); });
+    var mid = el("span", "why"); mid.textContent = nOk + " / " + S.length + " étapes vérifiées";
+    var next = el("button", "btn"); next.type = "button";
+    next.textContent = exCur === S.length - 1 ? "Terminer" : (stepOk(exCur) ? "Vérifié, étape suivante →" : "Cochez pour continuer");
+    next.disabled = !stepOk(exCur);
+    next.addEventListener("click", function () { if (exCur < S.length - 1) { exCur++; store.set("exCur", exCur); renderEx(); document.getElementById("exercice").scrollIntoView(); } else renderEx(); });
+    nav.appendChild(prev); nav.appendChild(mid); nav.appendChild(next); box.appendChild(nav);
+    if (nOk === S.length) box.appendChild(el("div", "done-banner", "Parcours terminé : vos agents sont dans l'app ✓"));
+    var rs = el("button", "btn ghost"); rs.type = "button"; rs.textContent = "Recommencer l'exercice"; rs.style.justifySelf = "start";
+    rs.addEventListener("click", function () { store.set("checks", {}); exCur = 0; store.set("exCur", 0); renderEx(); });
+    box.appendChild(rs);
+  }
+  function renderAll() { renderCfg(); renderGuides(); renderEx(); }
+
+  // --- Événements ---
+  document.querySelectorAll("[data-v]").forEach(function (inp) {
+    var k = inp.getAttribute("data-v"); inp.value = V[k] || "";
+    inp.addEventListener("input", function () { V[k] = inp.value.trim(); store.set("vals", V); renderAll(); });
+  });
+  document.querySelectorAll("#methode .chip").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.getAttribute("data-m") === methode ? "true" : "false");
+    b.addEventListener("click", function () {
+      methode = b.getAttribute("data-m"); store.set("methode", methode);
+      document.querySelectorAll("#methode .chip").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      exCur = 0; store.set("exCur", 0); renderAll();
+    });
+  });
+  document.getElementById("dl").addEventListener("click", function () {
+    var blob = new Blob([document.getElementById("cfg-out").textContent + "\n"], { type: "text/plain" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "12-1-agents-dans-projet-exp.env";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  document.getElementById("reset").addEventListener("click", function () {
+    V = Object.assign({}, EXEMPLE); store.set("vals", V);
+    document.querySelectorAll("[data-v]").forEach(function (inp) { inp.value = V[inp.getAttribute("data-v")] || ""; });
+    renderAll();
+  });
+  var theme = store.get("theme", "");
+  if (theme) document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("theme-btn").addEventListener("click", function () {
+    var dark = document.documentElement.getAttribute("data-theme") === "dark" ||
+      (!document.documentElement.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    theme = dark ? "light" : "dark"; document.documentElement.setAttribute("data-theme", theme); store.set("theme", theme);
+  });
+  renderAll();
+})();
+</script>
+</body>
+</html>

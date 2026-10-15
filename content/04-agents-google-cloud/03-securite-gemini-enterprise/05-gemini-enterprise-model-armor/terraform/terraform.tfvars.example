@@ -1,0 +1,25 @@
+# cp terraform.tfvars.example terraform.tfvars
+project_id = "your-project-id"
+
+# ge_location    = "eu"            # eu | us | global  (immutable!)
+# armor_location = "eu"            # must match: eu->eu, us->us, global->eu or us
+# region         = "europe-west1"  # custom agent region (EU for an eu app)
+
+users  = ["user:yarab@novagen.tech"] # or "group:everyone@novagen.tech"
+admins = ["user:yarab@novagen.tech"]
+
+# app_display_name   = "Company Assistant"
+# assistant_language = "fr"
+# banned_phrases     = ["project nightingale"]
+# logo_url           = "https://www.novagen.tech/logo.png"
+
+# --- Security ---
+security_admins    = ["group:security@novagen.tech"]  # own Model Armor (not the GE admins)
+alert_email        = "security@novagen.tech"          # alert on Model Armor block spikes
+# floor_setting_mode = "INSPECT_ONLY"   # OFF | INSPECT_ONLY | INSPECT_AND_BLOCK (target)
+# web_grounding      = "WEB_GROUNDING_TYPE_DISABLED"  # default: no queries sent to the public web
+# enforce_eu_locations = true           # needs roles/orgpolicy.policyAdmin
+
+# Licences are BILLED. Leave 0 and use the console, or:
+# license_count      = 5
+# license_free_trial = true

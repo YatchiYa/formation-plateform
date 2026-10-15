@@ -1,0 +1,123 @@
+# cp terraform.tfvars.example terraform.tfvars   (ne jamais committer terraform.tfvars)
+
+project_id = "acme-gemini-enterprise-prd"
+# ge_location = "eu"   # IMMUABLE
+
+user_groups     = ["group:gemini-utilisateurs@acme.example"]
+admin_groups    = ["group:gemini-admins@acme.example"]
+security_groups = ["group:securite-ia@acme.example"]
+viewer_groups   = ["group:gemini-pilotage@acme.example"]
+alert_email     = "securite-ia@acme.example"
+
+# banned_phrases = ["nom de code projet confidentiel"]
+
+# -----------------------------------------------------------------------------
+# CONNECTEURS - une entrée par source. La clé (ex. "gdrive") devient l'ID de collection.
+# Les secrets sont créés AVANT par l'équipe sécurité dans Secret Manager ;
+# ici on ne met que le NOM du secret.
+#   gcloud secrets create sharepoint-client-secret --replication-policy=user-managed --locations=europe-west1
+#   printf '%s' 'VALEUR' | gcloud secrets versions add sharepoint-client-secret --data-file=-
+# Les noms exacts de paramètres d'une source sont à confirmer dans la page du connecteur
+# (docs.cloud.google.com/gemini/enterprise/docs/connectors/...) : marqués [à confirmer].
+# -----------------------------------------------------------------------------
+connectors = {
+  # Google Workspace : application OAuth gérée par Google, aucun paramètre.
+  gdrive = {
+    data_source  = "google_drive"
+    display_name = "Google Drive"
+  }
+  gcalendar = {
+    data_source  = "google_calendar"
+    display_name = "Google Agenda"
+  }
+  # gmail = { data_source = "google_mail", display_name = "Gmail" }   # sur décision explicite (minimisation)
+
+  # Microsoft 365 : application Entra ID (mono-tenant, consentement admin).
+  # Avec l'identité Google, les sources Microsoft sont en FEDERATED (l'ingestion exigerait Entra ID).
+  sharepoint = {
+    data_source  = "sharepoint" # [à confirmer] la doc montre aussi "sharepoint_federated_search"
+    display_name = "SharePoint"
+    params = {
+      instance_uri = "https://acme.sharepoint.com"
+      tenant_id    = "00000000-0000-0000-0000-000000000000"
+    }
+    secret_params = {
+      client_id     = "sharepoint-client-id"
+      client_secret = "sharepoint-client-secret"
+    }
+    entities  = [{ name = "file" }]
+    static_ip = true
+  }
+  teams = {
+    data_source  = "teams" # recherche fédérée uniquement
+    display_name = "Microsoft Teams"
+    params       = { tenant_id = "00000000-0000-0000-0000-000000000000" } # [à confirmer]
+    secret_params = {
+      client_id     = "teams-client-id"
+      client_secret = "teams-client-secret"
+    }
+    static_ip = true
+  }
+
+  # GitHub : une GitHub App (pas de jeton personnel), installée sur l'organisation.
+  github = {
+    data_source   = "github"
+    display_name  = "GitHub"
+    params        = { organization = "acme" } # [à confirmer]
+    secret_params = { client_id = "github-client-id", client_secret = "github-client-secret" }
+    static_ip     = true
+  }
+
+  # Jira : exemple d'ingestion (copie indexée, chiffrée CMEK, droits Jira synchronisés).
+  # jira = {
+  #   data_source  = "jira"
+  #   display_name = "Jira"
+  #   modes        = ["DATA_INGESTION"]
+  #   params       = { instance_uri = "https://acme.atlassian.net", instance_id = "...", auth_type = "OAUTH" }
+  #   secret_params = { client_id = "jira-client-id", client_secret = "jira-client-secret", refresh_token = "jira-refresh-token" }
+  #   entities     = [{ name = "project" }, { name = "issue" }, { name = "comment" }]
+  #   static_ip    = true
+  # }
+
+  # Databricks : pas de connecteur natif. Voir le guide, section "Databricks".
+}
+
+# -----------------------------------------------------------------------------
+# JOURNALISATION (voir guide §10.4)
+# -----------------------------------------------------------------------------
+# log_prompts_responses       = false  # texte complet des questions/réponses : décision DPO/CSE
+# security_log_retention_days = 365
+# usage_log_retention_days    = 90
+# lock_security_logs          = false  # true en production : rétention non modifiable (irréversible)
+# link_logs_to_bigquery       = false  # true pour des tableaux de bord Looker Studio
+
+# -----------------------------------------------------------------------------
+# MESURES DE LA NOTE DE SÉCURITÉ (projet 08) — activer palier par palier, voir docs/02
+# -----------------------------------------------------------------------------
+# Palier A (sans prérequis org)
+armor_agent_platform_mode = "inspect" # 2 semaines en observation, puis "block"
+agent_developer_groups    = ["group:gcp-ia-developpeurs@acme.example"]
+deploy_secure_agent       = false     # true pour déployer l'agent exemple (Model Armor + validation humaine)
+
+# Palier B (avec le SOC)
+enable_siem_export = false
+# siem_subscriber  = "serviceAccount:siem-connector@soc-projet.iam.gserviceaccount.com"
+
+# Palier C (droits organisation requis : orgpolicy.policyAdmin, accesscontextmanager.policyAdmin)
+enforce_org_policies  = false
+# workspace_customer_id = "C0xxxxxxx"
+# vpc_sc_access_policy  = "123456789012"
+# vpc_sc_enforce        = false            # true après 2 semaines de dry-run sans violation légitime
+# corporate_ip_ranges   = ["203.0.113.0/24"]   # IP de sortie Acme (proxy / VPN)
+# access_approval_emails = ["securite-gcp@acme.example"]  # exige Access Transparency (support Enhanced/Premium)
+
+# Palier D (si des agents sortent par votre VPC)
+# agent_gateway_allowed_mcp_servers = ["sheets-mcp"]   # avec enable_agent_gateway = true : MCP joignables, tout le reste refusé
+
+# swp = {
+#   network         = "projects/acme-ge-prod/global/networks/agents"
+#   subnetwork      = "projects/acme-ge-prod/regions/europe-west1/subnetworks/agents"
+#   proxy_only_cidr = "10.129.0.0/23"
+#   address         = "10.128.0.99"
+#   allowed_hosts   = ["*.googleapis.com", "api.github.com", "*.acme.example"]
+# }

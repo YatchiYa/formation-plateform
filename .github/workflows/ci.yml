@@ -1,0 +1,66 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Types
+        run: npm run typecheck
+      - name: No client names / secrets in content
+        env:
+          # Comma-separated client terms, kept out of this public file (Settings › Secrets › FORBIDDEN_TERMS).
+          FORBIDDEN_TERMS: ${{ secrets.FORBIDDEN_TERMS }}
+        run: |
+          if [ -n "$FORBIDDEN_TERMS" ] && grep -rliE "$(echo "$FORBIDDEN_TERMS" | sed 's/,/|/g')" content; then echo "::error::client term found in content/"; exit 1; fi
+          if grep -rlE 'AIza[0-9A-Za-z_\-]{35}|ya29\.[0-9A-Za-z_\-]{20,}|ghp_[0-9A-Za-z]{36}' content; then echo "::error::secret found in content/"; exit 1; fi
+      - run: npx playwright install --with-deps chromium
+      - name: End-to-end tests (production build)
+        run: npm run e2e
+        env: { CI: "1" }
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-report, path: playwright-report, retention-days: 7 }
+
+  deploy:
+    needs: build-and-test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: https://formation.caeky.com
+    concurrency: { group: production, cancel-in-progress: false }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Join the tailnet (the server has no public SSH)
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TS_AUTHKEY }}
+          tags: tag:ci
+      - name: SSH key
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+      - name: Build, ship, switch, health-check (auto rollback)
+        run: scripts/deploy.sh
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || '100.110.83.13' }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER || 'gpnops' }}
+          IMAGE_TAG: ${{ github.sha }}
+      - name: Public smoke test
+        run: curl -fsS --retry 5 --retry-delay 3 https://formation.caeky.com/api/health

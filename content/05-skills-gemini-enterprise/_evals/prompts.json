@@ -1,0 +1,1602 @@
+[
+ {
+  "skill": "weekly-review",
+  "lang": "fr",
+  "prompt": "On est vendredi, fais-moi le bilan de ma semaine : ce qui est fait, ce qui a glissé, et ce que je dois caler pour lundi."
+ },
+ {
+  "skill": "weekly-review",
+  "lang": "en",
+  "prompt": "wrap up my week pls - what got done, what slipped, what carries over, and is next week's calendar sane?"
+ },
+ {
+  "skill": "inbox-triage",
+  "lang": "fr",
+  "prompt": "J'ai 140 mails non lus après le séminaire. Aide-moi à trier : à répondre, à déléguer, à archiver."
+ },
+ {
+  "skill": "inbox-triage",
+  "lang": "en",
+  "prompt": "my inbox is a disaster. sort it out for me - what needs a reply today, what can I hand off, what can I just archive"
+ },
+ {
+  "skill": "email-reply-drafter",
+  "lang": "fr",
+  "prompt": "Réponds au mail de Sophie Marchal sur le retard de livraison des tentes Quechua, ton cordial mais ferme, et vérifie que je ne promets pas une date que je ne peux pas tenir."
+ },
+ {
+  "skill": "email-reply-drafter",
+  "lang": "en",
+  "prompt": "Can you draft my answer to Karim's email about the Kipsta jersey reprint? Give me a short version and a longer one."
+ },
+ {
+  "skill": "thread-catchup",
+  "lang": "fr",
+  "prompt": "Il y a un fil de 60 messages sur le projet caisse libre-service dans Chat, j'ai rien suivi. Qu'est-ce qui a été décidé et qu'est-ce qu'on attend de moi ?"
+ },
+ {
+  "skill": "thread-catchup",
+  "lang": "en",
+  "prompt": "I was out for 2 days and the email chain about the winter catalog photoshoot exploded. TL;DR? who owes what?"
+ },
+ {
+  "skill": "meeting-prep",
+  "lang": "fr",
+  "prompt": "J'ai un point demain 10h avec le directeur régional et la responsable logistique. Prépare-moi : qui ils sont, ce qu'on s'est dit dernièrement, ce que je devrais demander."
+ },
+ {
+  "skill": "meeting-prep",
+  "lang": "en",
+  "prompt": "prep me for my 3pm with the Company Pro team from Lyon"
+ },
+ {
+  "skill": "meeting-agenda-builder",
+  "lang": "fr",
+  "prompt": "Je dois animer une réunion d'1h avec les 6 responsables de rayon jeudi sur la préparation de Noël. Fais-moi un ordre du jour minuté avec le texte de l'invitation."
+ },
+ {
+  "skill": "meeting-agenda-builder",
+  "lang": "en",
+  "prompt": "Need an agenda for a 45-min kickoff with the e-commerce and store teams on click&collect lockers. Include pre-reads and who does what."
+ },
+ {
+  "skill": "meeting-notes-to-actions",
+  "lang": "fr",
+  "prompt": "Voici mes notes en vrac de la réunion d'hier :\n- stock ski en retard, Paul relance fournisseur\n- on décale l'ouverture du rayon glisse au 2/11 ?? à confirmer par Inès\n- budget PLV ok 3k€\n- Marc fait le planning vendredi\nTu peux en sortir les décisions, les actions et un mail de compte rendu ?"
+ },
+ {
+  "skill": "meeting-notes-to-actions",
+  "lang": "en",
+  "prompt": "Turn the Meet transcript from this morning's ops sync (it's in my Drive) into decisions, owners and dates, and a recap email to send to everyone."
+ },
+ {
+  "skill": "focus-time-planner",
+  "lang": "fr",
+  "prompt": "Ma semaine est blindée de réunions et j'ai le budget 2027 à rendre jeudi. Aide-moi à bloquer du temps et dis-moi quelles réunions je pourrais sauter."
+ },
+ {
+  "skill": "focus-time-planner",
+  "lang": "en",
+  "prompt": "help me plan tomorrow so I actually get deep work done, I have 4 tasks and like 6 meetings"
+ },
+ {
+  "skill": "follow-up-tracker",
+  "lang": "fr",
+  "prompt": "Quels mails j'ai envoyés sans réponse depuis 2 semaines ? Et est-ce que j'ai promis des trucs que j'ai pas faits ?"
+ },
+ {
+  "skill": "follow-up-tracker",
+  "lang": "en",
+  "prompt": "what am I still waiting on from people? and did I say 'I'll send it' somewhere and forget? draft nudges if needed"
+ },
+ {
+  "skill": "handover-before-leave",
+  "lang": "fr",
+  "prompt": "Je pars en congé maternité dans 10 jours. Il me faut un document de passation pour l'équipe, qui reprend quoi, et mon message d'absence."
+ },
+ {
+  "skill": "handover-before-leave",
+  "lang": "en",
+  "prompt": "Going on vacation for 3 weeks from Friday. Help me set up a handover for my B2B accounts and an out-of-office message."
+ },
+ {
+  "skill": "back-from-leave-catchup",
+  "lang": "fr",
+  "prompt": "Je rentre de 3 semaines de vacances. Qu'est-ce qui s'est passé, qu'est-ce qui a été décidé sans moi, et par quoi je commence ?"
+ },
+ {
+  "skill": "back-from-leave-catchup",
+  "lang": "en",
+  "prompt": "back from paternity leave today 😅 what did I miss and what actually needs me first?"
+ },
+ {
+  "skill": "prioritization-coach",
+  "lang": "fr",
+  "prompt": "Voilà ma to-do : inventaire rayon randonnée, recrutement 2 CDD, réponse appel d'offres mairie, formation caisse, refaire le planogramme vélos, entretien annuel Léa. Je fais quoi en premier ? Qu'est-ce que je peux lâcher ?"
+ },
+ {
+  "skill": "prioritization-coach",
+  "lang": "en",
+  "prompt": "I have way too much on my plate this month. Here's the list: Q4 forecast, onboarding 3 new hires, fix the returns process doc, prepare Black Friday staffing, answer 2 tenders. Help me decide what to do, delegate or drop."
+ },
+ {
+  "skill": "executive-summary-writer",
+  "lang": "fr",
+  "prompt": "Ce rapport de 35 pages sur la performance du rayon cycle en Hauts-de-France, il me faut une synthèse d'une page pour le comité de direction."
+ },
+ {
+  "skill": "executive-summary-writer",
+  "lang": "en",
+  "prompt": "Boil this long Slack thread + the attached doc on the new returns policy down to something my VP can read in 2 minutes. Bottom line first."
+ },
+ {
+  "skill": "internal-announcement-writer",
+  "lang": "fr",
+  "prompt": "On annonce l'arrivée de Camille Fournier comme directrice du magasin de Villeneuve-d'Ascq le 4 novembre. Il me faut un mail, un message Chat et un texte pour l'intranet, avec une petite FAQ."
+ },
+ {
+  "skill": "internal-announcement-writer",
+  "lang": "en",
+  "prompt": "We're switching the store teams to a new scheduling app in January. Write the announcement for all staff - email version and a short chat version."
+ },
+ {
+  "skill": "message-rewriter",
+  "lang": "fr",
+  "prompt": "Tu peux rendre ce message plus diplomate ? Il part au fournisseur :\n\"Encore une fois les cartons sont arrivés abîmés, c'est la 3e fois, ça devient n'importe quoi, on va devoir revoir notre collaboration.\""
+ },
+ {
+  "skill": "message-rewriter",
+  "lang": "en",
+  "prompt": "make this shorter and less stiff, it's for my store team on WhatsApp: 'Please be informed that from Monday onwards the stockroom access procedure will be modified in accordance with the new security guidelines.'"
+ },
+ {
+  "skill": "translation-localizer",
+  "lang": "fr",
+  "prompt": "Traduis en anglais cette fiche de procédure SAV pour nos collègues de l'entrepôt en Belgique néerlandophone... en fait en néerlandais si possible, et garde bien les noms de produits."
+ },
+ {
+  "skill": "translation-localizer",
+  "lang": "en",
+  "prompt": "Translate this product training deck intro into French for the store teams. Keep Kiprun, Quechua, Rockrider etc. as-is and flag anything that's ambiguous."
+ },
+ {
+  "skill": "presentation-storyline",
+  "lang": "fr",
+  "prompt": "Je dois présenter les résultats de la saison ski à la direction régionale, 10 slides max. Tu peux me construire le déroulé slide par slide avec les notes ?"
+ },
+ {
+  "skill": "presentation-storyline",
+  "lang": "en",
+  "prompt": "Outline a Google Slides deck to pitch a rental service for camping gear to leadership. One message per slide, speaker notes."
+ },
+ {
+  "skill": "document-reviewer",
+  "lang": "fr",
+  "prompt": "Relis mon doc de proposition de réorganisation des horaires du magasin et dis-moi ce qui cloche : logique, trous, clarté. Sois franc."
+ },
+ {
+  "skill": "document-reviewer",
+  "lang": "en",
+  "prompt": "Can you critique this Google Doc before I send it to my director? It's the plan for the new kids' sports zone. Numbered comments please."
+ },
+ {
+  "skill": "faq-builder",
+  "lang": "fr",
+  "prompt": "Tous les jours les vendeurs me posent les mêmes questions sur la nouvelle carte fidélité. Fais une FAQ à partir des docs et des fils de discussion."
+ },
+ {
+  "skill": "faq-builder",
+  "lang": "en",
+  "prompt": "Build a Q&A doc for store staff about the new bike leasing offer, based on the policy doc and the questions in our Chat space. Cite where each answer comes from."
+ },
+ {
+  "skill": "change-communication-plan",
+  "lang": "fr",
+  "prompt": "On passe à l'étiquetage électronique dans les 12 magasins de la région en mars. Comment je communique ça aux équipes, managers et clients ? Plan avec étapes et calendrier."
+ },
+ {
+  "skill": "change-communication-plan",
+  "lang": "en",
+  "prompt": "We're closing the in-store repair workshop on Sundays starting next quarter. Need a plan for telling staff and customers: who, what message, which channels, when, how we collect feedback."
+ },
+ {
+  "skill": "team-newsletter",
+  "lang": "fr",
+  "prompt": "Fais la newsletter mensuelle de l'équipe data : ce qu'on a livré, ce qui arrive, quelques bravos. Regarde dans Jira et le Drive."
+ },
+ {
+  "skill": "team-newsletter",
+  "lang": "en",
+  "prompt": "put together this fortnight's update for the marketing team - wins, what shipped, what's next, shout-outs"
+ },
+ {
+  "skill": "talking-points-writer",
+  "lang": "fr",
+  "prompt": "J'inaugure samedi le nouveau magasin de Roubaix, j'ai 3 minutes de discours devant les équipes, le maire et des clubs locaux. Tu m'aides ?"
+ },
+ {
+  "skill": "talking-points-writer",
+  "lang": "en",
+  "prompt": "I need a few bullet points to say at the all-hands when we give the 'best store team' award to the Annecy store. 2 min max."
+ },
+ {
+  "skill": "skill-builder",
+  "lang": "fr",
+  "prompt": "J'aimerais créer ma propre compétence pour préparer les inventaires tournants dans le magasin. Tu peux m'aider à la rédiger ?"
+ },
+ {
+  "skill": "skill-builder",
+  "lang": "en",
+  "prompt": "I keep doing the same weekly supplier scorecard by hand. Can we turn that into a reusable skill for Gemini that my team can use too?"
+ },
+ {
+  "skill": "prompt-improver",
+  "lang": "fr",
+  "prompt": "Mon prompt donne des réponses nulles : \"fais moi un résumé des ventes\". Tu peux l'améliorer ?"
+ },
+ {
+  "skill": "prompt-improver",
+  "lang": "en",
+  "prompt": "rewrite this so Gemini gives me something useful: 'write a post about our new hiking boots for instagram'"
+ },
+ {
+  "skill": "ai-use-case-finder",
+  "lang": "fr",
+  "prompt": "Je suis responsable RH régionale. Sur quelles tâches de mon équipe l'IA pourrait vraiment nous faire gagner du temps ? Et quels risques ?"
+ },
+ {
+  "skill": "ai-use-case-finder",
+  "lang": "en",
+  "prompt": "Where could AI help our B2B sales team day to day? Map our recurring tasks and tell me which ones are worth it."
+ },
+ {
+  "skill": "one-on-one-prep",
+  "lang": "fr",
+  "prompt": "J'ai mon point individuel avec Hugo demain, il est vendeur rayon fitness. Prépare-moi les sujets à aborder à partir de nos dernières notes."
+ },
+ {
+  "skill": "one-on-one-prep",
+  "lang": "en",
+  "prompt": "1:1 with Priya on Thursday - she's on my data team. What should we talk about? Look at what she's been working on in Jira."
+ },
+ {
+  "skill": "feedback-sbi-writer",
+  "lang": "fr",
+  "prompt": "Je dois faire un retour à Thomas : hier il a laissé un client attendre 15 min à l'atelier sans le prévenir, et c'est pas la première fois. Comment je formule ça ?"
+ },
+ {
+  "skill": "feedback-sbi-writer",
+  "lang": "en",
+  "prompt": "Help me give positive feedback to Elena - she handled the stockroom flood on Saturday super well and reorganized everything with the team."
+ },
+ {
+  "skill": "difficult-conversation-prep",
+  "lang": "fr",
+  "prompt": "Je dois annoncer à une vendeuse que son CDD ne sera pas renouvelé. Comment je prépare cet échange ?"
+ },
+ {
+  "skill": "difficult-conversation-prep",
+  "lang": "en",
+  "prompt": "I have to talk to a team lead who keeps undermining a colleague in meetings. How do I prepare this conversation without it blowing up?"
+ },
+ {
+  "skill": "team-retrospective",
+  "lang": "fr",
+  "prompt": "Voici les post-its de la rétro d'équipe après les soldes d'été :\n+ bonne entraide entre rayons\n+ réassort rapide\n- caisses saturées samedi\n- pas assez de briefs le matin\n- planning reçu trop tard\nTu peux en tirer des actions ?"
+ },
+ {
+  "skill": "team-retrospective",
+  "lang": "en",
+  "prompt": "I'm running a retro with my squad on Friday after a rough release. Suggest a format and the prompts to use, something other than start/stop/continue."
+ },
+ {
+  "skill": "okr-builder",
+  "lang": "fr",
+  "prompt": "Aide-moi à écrire les objectifs et résultats clés du magasin pour le S1 2027, en lien avec la stratégie régionale (doc dans le Drive)."
+ },
+ {
+  "skill": "okr-builder",
+  "lang": "en",
+  "prompt": "Draft Q1 OKRs for the Company Pro sales team. Strategy is to grow schools & clubs segment. Make the KRs measurable."
+ },
+ {
+  "skill": "okr-progress-review",
+  "lang": "fr",
+  "prompt": "On est à mi-trimestre, où on en est sur nos OKR ? Regarde Jira et les tableaux de bord et dis-moi ce qui est en danger."
+ },
+ {
+  "skill": "okr-progress-review",
+  "lang": "en",
+  "prompt": "score our Q3 key results so far and give me confidence levels + risks for the leadership update"
+ },
+ {
+  "skill": "decision-memo",
+  "lang": "fr",
+  "prompt": "On hésite entre 3 options pour le stockage du surplus hiver : entrepôt externe, conteneurs sur le parking, ou transfert vers Lomme. Rédige une note de décision avec les critères et une reco."
+ },
+ {
+  "skill": "decision-memo",
+  "lang": "en",
+  "prompt": "Write up a decision doc on whether we build our own store traffic counter integration or buy a vendor solution. Include who decides and whether it's reversible."
+ },
+ {
+  "skill": "new-manager-90-day-plan",
+  "lang": "fr",
+  "prompt": "Je prends la direction du magasin de Lens le mois prochain, je ne connais pas l'équipe. Tu peux m'aider à faire mon plan pour les 3 premiers mois ?"
+ },
+ {
+  "skill": "new-manager-90-day-plan",
+  "lang": "en",
+  "prompt": "Just got promoted to lead the analytics team (8 people). How should I approach my first 90 days?"
+ },
+ {
+  "skill": "team-health-check",
+  "lang": "fr",
+  "prompt": "J'aimerais prendre la température de mon équipe de 14 personnes tous les mois avec un petit questionnaire. Tu peux me le concevoir ?"
+ },
+ {
+  "skill": "team-health-check",
+  "lang": "en",
+  "prompt": "Here are the answers to our team pulse survey (12 responses). What are the themes and what should I do about them?"
+ },
+ {
+  "skill": "workshop-designer",
+  "lang": "fr",
+  "prompt": "Je veux organiser une demi-journée avec les responsables de rayon pour imaginer le magasin de demain. Tu me proposes un déroulé avec des activités ?"
+ },
+ {
+  "skill": "workshop-designer",
+  "lang": "en",
+  "prompt": "Design a 2-day offsite for the product design team in Annecy - goals are team bonding and defining next year's priorities."
+ },
+ {
+  "skill": "green-claim-checker",
+  "lang": "fr",
+  "prompt": "On veut écrire sur l'étiquette de la nouvelle gourde : \"100% écologique et neutre en carbone\". C'est ok ?"
+ },
+ {
+  "skill": "green-claim-checker",
+  "lang": "en",
+  "prompt": "Is this tagline fine for the campaign? 'Our new running collection: eco-friendly, responsible and better for the planet.'"
+ },
+ {
+  "skill": "csr-data-request",
+  "lang": "fr",
+  "prompt": "Je dois collecter auprès des 15 magasins de la région les données conso énergie, déchets et transport pour le reporting CSRD. Prépare-moi la demande avec un modèle à remplir."
+ },
+ {
+  "skill": "csr-data-request",
+  "lang": "en",
+  "prompt": "I need to ask our textile suppliers for sustainability data (water, energy, recycled content) for the CSRD report. Build the request with definitions, units and a deadline."
+ },
+ {
+  "skill": "circular-offer-ideas",
+  "lang": "fr",
+  "prompt": "Quelles offres d'économie circulaire on pourrait lancer au magasin de Lille sur le rayon vélo ? Réparation, occasion, location..."
+ },
+ {
+  "skill": "circular-offer-ideas",
+  "lang": "en",
+  "prompt": "brainstorm second-life / rental / take-back ideas for our ski & snowboard range in Alpine stores, and tell me if they're realistic to run"
+ },
+ {
+  "skill": "job-description-writer",
+  "lang": "fr",
+  "prompt": "Rédige une annonce pour un poste de technicien atelier cycle en CDI à Lille, inclusive."
+ },
+ {
+  "skill": "job-description-writer",
+  "lang": "en",
+  "prompt": "Write a job ad for a warehouse team leader at our Dourges logistics site, separate must-haves from nice-to-haves please"
+ },
+ {
+  "skill": "interview-debrief-synthesizer",
+  "lang": "fr",
+  "prompt": "J'ai les grilles de 3 recruteurs pour la candidate Julie Moreau (poste responsable de rayon). Tu peux consolider tout ça pour le débrief ?"
+ },
+ {
+  "skill": "interview-debrief-synthesizer",
+  "lang": "en",
+  "prompt": "Consolidate these interviewer scorecards for candidate Tom Becker before tomorrow's debrief:\n- Ana: leadership 4/5, 'clear examples of managing a team of 10'; data 2/5\n- Luis: leadership 3/5, 'a bit vague'; data 3/5\n- Mei: customer focus 5/5"
+ },
+ {
+  "skill": "candidate-communication-writer",
+  "lang": "fr",
+  "prompt": "Il faut que j'écrive à un candidat qu'on ne retient pas après le 2e entretien pour le poste de vendeur. Je veux un message respectueux avec un petit retour."
+ },
+ {
+  "skill": "candidate-communication-writer",
+  "lang": "en",
+  "prompt": "Send-ready email inviting a candidate to a final interview at the Lille store next Tuesday, with 3 slot options"
+ },
+ {
+  "skill": "offer-letter-drafter",
+  "lang": "fr",
+  "prompt": "Prépare la lettre de proposition d'embauche pour Nadia Belkacem, responsable de rayon, à partir du modèle RH dans le Drive. Démarrage le 2 décembre."
+ },
+ {
+  "skill": "offer-letter-drafter",
+  "lang": "en",
+  "prompt": "Draft the offer letter for our new data engineer using the standard template. I don't have the final salary yet."
+ },
+ {
+  "skill": "onboarding-plan-builder",
+  "lang": "fr",
+  "prompt": "Un nouveau vendeur arrive lundi au rayon montagne. Il me faut un programme d'intégration : avant l'arrivée, la première semaine, et les 3 premiers mois."
+ },
+ {
+  "skill": "onboarding-plan-builder",
+  "lang": "en",
+  "prompt": "We have a new product designer joining in 2 weeks. Build their onboarding: accesses, buddy, trainings, 30-60-90."
+ },
+ {
+  "skill": "hr-policy-qa",
+  "lang": "fr",
+  "prompt": "Combien de jours de congé j'ai si je me marie ? C'est dans quelle politique ?"
+ },
+ {
+  "skill": "hr-policy-qa",
+  "lang": "en",
+  "prompt": "What's our policy on remote work for HQ staff? Can I work from abroad for 2 weeks?"
+ },
+ {
+  "skill": "performance-review-writer",
+  "lang": "fr",
+  "prompt": "Je dois rédiger l'entretien annuel de Kevin, développeur dans mon équipe. Aide-moi à trouver des exemples concrets de son année et à formuler les axes de progrès."
+ },
+ {
+  "skill": "performance-review-writer",
+  "lang": "en",
+  "prompt": "Help me write the annual review for one of my store team leads, Sarah. She was great on customer service, weaker on stock management."
+ },
+ {
+  "skill": "self-assessment-coach",
+  "lang": "fr",
+  "prompt": "C'est la période des auto-évaluations et je sèche. Tu peux m'aider à mettre en valeur ce que j'ai fait cette année ?"
+ },
+ {
+  "skill": "self-assessment-coach",
+  "lang": "en",
+  "prompt": "I need to write my self-review by Friday. Can you dig through my Jira tickets and docs and help me write it with concrete examples?"
+ },
+ {
+  "skill": "calibration-prep",
+  "lang": "fr",
+  "prompt": "On a la session de calibrage des performances des 9 responsables de rayon la semaine prochaine. Prépare-moi les synthèses par personne et les points de vigilance sur les biais."
+ },
+ {
+  "skill": "calibration-prep",
+  "lang": "en",
+  "prompt": "Prep me for the talent calibration meeting - 11 engineers, I want an evidence summary each and a check for inconsistencies in how ratings were given."
+ },
+ {
+  "skill": "career-development-plan",
+  "lang": "fr",
+  "prompt": "Je suis vendeuse rayon running depuis 2 ans et je voudrais devenir responsable de rayon. Tu m'aides à faire un plan de développement ?"
+ },
+ {
+  "skill": "career-development-plan",
+  "lang": "en",
+  "prompt": "one of my analysts wants to move into data engineering in 18 months. help us build a development plan"
+ },
+ {
+  "skill": "team-skills-matrix",
+  "lang": "fr",
+  "prompt": "Je veux une cartographie des compétences de mon équipe atelier (8 techniciens) : qui sait faire quoi, où on est fragiles."
+ },
+ {
+  "skill": "team-skills-matrix",
+  "lang": "en",
+  "prompt": "Build a skills matrix for my platform team from our role framework and the levels people self-declared. Where's our bus factor risk?"
+ },
+ {
+  "skill": "engagement-survey-analyzer",
+  "lang": "fr",
+  "prompt": "Voilà les résultats du baromètre social du magasin et les verbatims. Qu'est-ce qui ressort et quoi faire ?"
+ },
+ {
+  "skill": "engagement-survey-analyzer",
+  "lang": "en",
+  "prompt": "Analyze the results of our annual engagement survey for the north region - scores per store and ~300 comments in the sheet. Themes and action plan."
+ },
+ {
+  "skill": "exit-interview-synthesizer",
+  "lang": "fr",
+  "prompt": "On a eu 11 départs au magasin cette année. Voici les comptes rendus des entretiens de sortie. Quelles tendances ?"
+ },
+ {
+  "skill": "exit-interview-synthesizer",
+  "lang": "en",
+  "prompt": "Look across this year's exit interviews from the logistics site and tell me why people are leaving and what we could do"
+ },
+ {
+  "skill": "learning-path-designer",
+  "lang": "fr",
+  "prompt": "Je veux créer un parcours de formation pour que les nouveaux vendeurs maîtrisent le conseil en chaussures de running. Objectifs, modules, évaluation."
+ },
+ {
+  "skill": "learning-path-designer",
+  "lang": "en",
+  "prompt": "Design a training program for store managers on reading their performance dashboards. Mix of e-learning and in-store practice, and how we measure if it worked."
+ },
+ {
+  "skill": "account-research",
+  "lang": "fr",
+  "prompt": "J'ai rendez-vous avec le club de handball de Tourcoing la semaine prochaine. Qu'est-ce qu'on sait d'eux ? Historique avec nous ?"
+ },
+ {
+  "skill": "account-research",
+  "lang": "en",
+  "prompt": "Research the Lille Metropole municipality as a prospect for us - sports facilities, who decides, anything we've done with them before."
+ },
+ {
+  "skill": "prospect-outreach-sequence",
+  "lang": "fr",
+  "prompt": "Je veux contacter les écoles primaires de la métropole lilloise pour leur proposer du matériel EPS. Fais-moi une séquence de mails + appel."
+ },
+ {
+  "skill": "prospect-outreach-sequence",
+  "lang": "en",
+  "prompt": "Write a 4-step outreach to HR managers at mid-size companies in Lyon to pitch corporate sport kits. Email + LinkedIn + call script, nothing spammy."
+ },
+ {
+  "skill": "discovery-call-prep",
+  "lang": "fr",
+  "prompt": "Premier appel demain avec une fédération régionale de rugby. Quelles questions poser pour qualifier le besoin ?"
+ },
+ {
+  "skill": "discovery-call-prep",
+  "lang": "en",
+  "prompt": "prep my first call with a gym chain interested in buying cardio equipment from Company Pro"
+ },
+ {
+  "skill": "sales-call-recap",
+  "lang": "fr",
+  "prompt": "Notes d'appel avec l'AS Wambrechies Foot :\n- veulent 80 maillots Kipsta floqués + 20 survêtements\n- budget ~4500€\n- livraison avant 15 janvier\n- décideur = trésorier, M. Leroy\n- envoyer devis vendredi\nFais le mail de récap au client et la mise à jour CRM."
+ },
+ {
+  "skill": "sales-call-recap",
+  "lang": "en",
+  "prompt": "Just got off the phone with the facilities manager at a big school group. Here are my notes: [interested in 30 bikes for their cycling program, want maintenance included, decision in Feb]. Write the recap email and the Airtable update."
+ },
+ {
+  "skill": "b2b-proposal-builder",
+  "lang": "fr",
+  "prompt": "Prépare une proposition commerciale pour le club de basket de Roubaix : 60 tenues personnalisées, livraison, SAV. Mes prix sont dans le tableau joint."
+ },
+ {
+  "skill": "b2b-proposal-builder",
+  "lang": "en",
+  "prompt": "Put together a proposal for a corporate client wanting branded running kits for 200 employees for a charity run. Use my price list only."
+ },
+ {
+  "skill": "tender-response-builder",
+  "lang": "fr",
+  "prompt": "On répond à l'appel d'offres de la ville d'Arras pour l'équipement des gymnases. Voici le CCTP. Fais-moi la matrice de conformité et la liste des pièces manquantes."
+ },
+ {
+  "skill": "tender-response-builder",
+  "lang": "en",
+  "prompt": "We got a public RFP from a regional council for outdoor fitness equipment. Help me build the response - requirements matrix, draft answers, deadlines."
+ },
+ {
+  "skill": "objection-handler",
+  "lang": "fr",
+  "prompt": "Le club me dit qu'Intersport leur fait les maillots 15% moins cher. Je réponds quoi ?"
+ },
+ {
+  "skill": "objection-handler",
+  "lang": "en",
+  "prompt": "customer says our lead time on custom kits (6 weeks) is too long. how do I answer that?"
+ },
+ {
+  "skill": "pipeline-review",
+  "lang": "fr",
+  "prompt": "Fais-moi un état du pipe B2B de la région : affaires qui traînent, celles qui ont glissé, prochaines actions."
+ },
+ {
+  "skill": "pipeline-review",
+  "lang": "en",
+  "prompt": "How healthy is my pipeline this quarter? Check Airtable - stuck deals, coverage vs target, what to do on each."
+ },
+ {
+  "skill": "account-plan",
+  "lang": "fr",
+  "prompt": "On veut développer le compte Université de Lille sur 2027. Tu m'aides à construire un plan de compte ?"
+ },
+ {
+  "skill": "account-plan",
+  "lang": "en",
+  "prompt": "Build a strategic plan for our biggest corporate customer (a logistics company with 40 sites). Goals, whitespace, stakeholders, actions."
+ },
+ {
+  "skill": "win-loss-analysis",
+  "lang": "fr",
+  "prompt": "On a perdu 7 appels d'offres collectivités sur 10 cette année. Voilà le tableau avec les motifs. Qu'est-ce qu'on en retient ?"
+ },
+ {
+  "skill": "win-loss-analysis",
+  "lang": "en",
+  "prompt": "Here's our list of won and lost B2B deals for H1 with notes. Any patterns? What should we change?"
+ },
+ {
+  "skill": "competitive-battlecard",
+  "lang": "fr",
+  "prompt": "Fais une fiche concurrent sur Intersport pour les commerciaux B2B, basée sur les sources que je te mets en lien."
+ },
+ {
+  "skill": "competitive-battlecard",
+  "lang": "en",
+  "prompt": "Need a one-pager on how we stack up against Sport 2000 for club kit deals - only use the sources I gave you"
+ },
+ {
+  "skill": "sales-forecast-commentary",
+  "lang": "fr",
+  "prompt": "Je dois commenter la prévision de ventes B2B du trimestre pour la direction : on est à 82% de l'objectif. Aide-moi à écrire l'analyse."
+ },
+ {
+  "skill": "sales-forecast-commentary",
+  "lang": "en",
+  "prompt": "write the narrative for this month's B2B sales forecast - we're behind target in schools, ahead in corporate"
+ },
+ {
+  "skill": "store-daily-brief",
+  "lang": "fr",
+  "prompt": "Les chiffres d'hier du magasin de Lille Centre vs l'an dernier et l'objectif, et mes priorités du jour."
+ },
+ {
+  "skill": "store-daily-brief",
+  "lang": "en",
+  "prompt": "Morning - how did the store do yesterday? sales, traffic, conversion, basket vs last year. and what's on today?"
+ },
+ {
+  "skill": "store-performance-analysis",
+  "lang": "fr",
+  "prompt": "Pourquoi le CA du magasin a baissé de 6% en septembre ? Décompose trafic, transformation, panier, et par sport."
+ },
+ {
+  "skill": "store-performance-analysis",
+  "lang": "en",
+  "prompt": "Give me a deep dive on my store's October: what drove sales, which departments, and what I should act on."
+ },
+ {
+  "skill": "sport-universe-review",
+  "lang": "fr",
+  "prompt": "Fais-moi une revue complète du rayon running : ventes, marge, stock, ruptures, top et flop produits, avis clients."
+ },
+ {
+  "skill": "sport-universe-review",
+  "lang": "en",
+  "prompt": "How's the camping department doing this season? Sales, margin, availability, best and worst sellers, what to fix."
+ },
+ {
+  "skill": "team-huddle-brief",
+  "lang": "fr",
+  "prompt": "Prépare-moi le petit point de 5 minutes de ce matin avec l'équipe de vente."
+ },
+ {
+  "skill": "team-huddle-brief",
+  "lang": "en",
+  "prompt": "need something quick to say to the floor team at 9:50 before opening - numbers, focus, safety reminder"
+ },
+ {
+  "skill": "staff-planning-assistant",
+  "lang": "fr",
+  "prompt": "Propose-moi un planning pour la semaine du Black Friday à partir des courbes de fréquentation. J'ai 22 vendeurs, dont 6 à temps partiel."
+ },
+ {
+  "skill": "staff-planning-assistant",
+  "lang": "en",
+  "prompt": "Draft next month's rota for the ski department based on traffic. 9 staff, 2 students only on weekends."
+ },
+ {
+  "skill": "store-visit-report",
+  "lang": "fr",
+  "prompt": "J'ai visité le magasin de Valenciennes ce matin en tant que DR. Mes notes :\n- rayon vélo bien rangé, bon accueil\n- ruptures sur les chaussures trail\n- affichage prix manquant en caisse 3\n- équipe démotivée côté atelier\nFais le compte rendu de visite avec un plan d'action."
+ },
+ {
+  "skill": "store-visit-report",
+  "lang": "en",
+  "prompt": "Write my store visit report for Douai from these notes, with strengths, gaps and owners for each action."
+ },
+ {
+  "skill": "store-incident-report",
+  "lang": "fr",
+  "prompt": "Un client est tombé d'un escabeau au rayon pêche cet après-midi, il a été pris en charge par les pompiers. Il faut que je fasse le rapport."
+ },
+ {
+  "skill": "store-incident-report",
+  "lang": "en",
+  "prompt": "We had a till system outage for 2 hours on Saturday afternoon. Help me write up what happened for HQ."
+ },
+ {
+  "skill": "stock-availability-analysis",
+  "lang": "fr",
+  "prompt": "On a beaucoup de ruptures sur les vestes Quechua en ce moment. Pourquoi ? Prévision, réassort, implantation ?"
+ },
+ {
+  "skill": "stock-availability-analysis",
+  "lang": "en",
+  "prompt": "Why are we overstocked on swimwear in October? Dig into the data and tell me the root causes."
+ },
+ {
+  "skill": "seasonal-operation-planner",
+  "lang": "fr",
+  "prompt": "On prépare la saison ski : ouverture du rayon glisse, location, recrutement saisonnier. Fais-moi un rétroplanning complet."
+ },
+ {
+  "skill": "seasonal-operation-planner",
+  "lang": "en",
+  "prompt": "help me plan back-to-school for the store - staffing, stock, merchandising, communication, timeline"
+ },
+ {
+  "skill": "local-sport-event-planner",
+  "lang": "fr",
+  "prompt": "J'aimerais organiser une course solidaire au départ du magasin avec les clubs d'athlé du coin au printemps. Par où je commence ?"
+ },
+ {
+  "skill": "local-sport-event-planner",
+  "lang": "en",
+  "prompt": "Plan a family bike day in our car park with a local cycling club - logistics, safety, comms and how we measure success."
+ },
+ {
+  "skill": "workshop-service-review",
+  "lang": "fr",
+  "prompt": "L'atelier vélo a des délais de réparation qui explosent. Analyse-moi le volume, les délais, le stock de vélos en attente et la satisfaction."
+ },
+ {
+  "skill": "workshop-service-review",
+  "lang": "en",
+  "prompt": "How's our repair workshop performing? Turnaround times, backlog, customer satisfaction, what to improve."
+ },
+ {
+  "skill": "store-action-plan",
+  "lang": "fr",
+  "prompt": "Suite à l'audit, voilà les constats : ruptures fréquentes, file d'attente caisse, propreté des cabines. Fais-moi un plan d'action avec responsables et échéances."
+ },
+ {
+  "skill": "store-action-plan",
+  "lang": "en",
+  "prompt": "Turn these findings from the mystery shopper visit into an action plan with owners, deadlines and KPIs we'll track weekly."
+ },
+ {
+  "skill": "customer-reply-drafter",
+  "lang": "fr",
+  "prompt": "Un client a laissé un avis 1 étoile : \"Vélo acheté il y a 3 semaines, dérailleur cassé, l'atelier me dit 10 jours d'attente, scandaleux.\" Rédige une réponse publique."
+ },
+ {
+  "skill": "customer-reply-drafter",
+  "lang": "en",
+  "prompt": "Help me reply to this customer email: she wants to return a tent she's used once because it's 'too heavy'. Be nice but correct."
+ },
+ {
+  "skill": "complaint-escalation-brief",
+  "lang": "fr",
+  "prompt": "Un client menace de porter plainte : sa fille s'est blessée avec une trottinette achetée chez nous, guidon desserré. Prépare un dossier d'escalade pour le directeur."
+ },
+ {
+  "skill": "complaint-escalation-brief",
+  "lang": "en",
+  "prompt": "Need an escalation note for a serious complaint - corporate customer received 150 wrong-size jerseys a week before their tournament."
+ },
+ {
+  "skill": "ticket-triage",
+  "lang": "fr",
+  "prompt": "Voici les 40 derniers tickets du service client. Classe-les par catégorie et priorité, repère les doublons et les problèmes qui émergent."
+ },
+ {
+  "skill": "ticket-triage",
+  "lang": "en",
+  "prompt": "triage this batch of support tickets: categories, urgency, who should handle each, any duplicates"
+ },
+ {
+  "skill": "kb-article-writer",
+  "lang": "fr",
+  "prompt": "On a résolu plein de cas sur l'appairage des montres GPS avec l'appli. Rédige un article d'aide à partir de ces tickets."
+ },
+ {
+  "skill": "kb-article-writer",
+  "lang": "en",
+  "prompt": "Write a help center article on how to fix a tubeless tire that keeps losing air, from these resolved cases."
+ },
+ {
+  "skill": "customer-policy-qa",
+  "lang": "fr",
+  "prompt": "Un client peut-il retourner des chaussures portées une fois s'il a gardé le ticket ? Que dit la politique ?"
+ },
+ {
+  "skill": "customer-policy-qa",
+  "lang": "en",
+  "prompt": "what's the warranty on our bikes if the frame cracks after 3 years?"
+ },
+ {
+  "skill": "voice-of-customer-report",
+  "lang": "fr",
+  "prompt": "Fais-moi une synthèse de ce que disent les clients ce trimestre : tickets, avis, enquêtes. Thèmes, volumes, verbatims."
+ },
+ {
+  "skill": "voice-of-customer-report",
+  "lang": "en",
+  "prompt": "Build the monthly customer feedback report for the north region from tickets, reviews and NPS comments."
+ },
+ {
+  "skill": "product-review-insights",
+  "lang": "fr",
+  "prompt": "Qu'est-ce que les clients disent de la tente 2 Seconds ? Points forts, défauts récurrents, contextes d'usage."
+ },
+ {
+  "skill": "product-review-insights",
+  "lang": "en",
+  "prompt": "Dig into the reviews of our Kiprun trail shoes - what do people love, what breaks, any recurring defects for the product team?"
+ },
+ {
+  "skill": "response-template-library",
+  "lang": "fr",
+  "prompt": "Crée-moi un jeu de réponses types pour les 10 motifs de contact les plus fréquents au service client, avec des champs à personnaliser."
+ },
+ {
+  "skill": "response-template-library",
+  "lang": "en",
+  "prompt": "We need canned responses for the chat team: delivery delay, refund status, size exchange, warranty claim... personalisable."
+ },
+ {
+  "skill": "contract-summary",
+  "lang": "fr",
+  "prompt": "Résume-moi ce contrat de prestation de nettoyage du magasin : durée, obligations, résiliation, clauses risquées."
+ },
+ {
+  "skill": "contract-summary",
+  "lang": "en",
+  "prompt": "Summarize this supply agreement with a bike components vendor - key terms, liability, how we get out of it."
+ },
+ {
+  "skill": "nda-triage",
+  "lang": "fr",
+  "prompt": "On m'envoie un accord de confidentialité d'une startup qui veut tester ses capteurs dans nos magasins. Il est ok ou pas ?"
+ },
+ {
+  "skill": "nda-triage",
+  "lang": "en",
+  "prompt": "Quick check on this NDA from an agency before I sign - anything red?"
+ },
+ {
+  "skill": "gdpr-processing-check",
+  "lang": "fr",
+  "prompt": "On veut mettre en place un outil de comptage des visiteurs avec caméra à l'entrée du magasin. Qu'est-ce que ça implique côté données perso ?"
+ },
+ {
+  "skill": "gdpr-processing-check",
+  "lang": "en",
+  "prompt": "We want to collect customers' phone numbers at checkout to send repair status SMS. Is this ok data-protection wise? what do I need?"
+ },
+ {
+  "skill": "ai-use-case-risk-screen",
+  "lang": "fr",
+  "prompt": "On voudrait utiliser une IA pour présélectionner les CV des candidats vendeurs. Quel niveau de risque avec la réglementation européenne sur l'IA ?"
+ },
+ {
+  "skill": "ai-use-case-risk-screen",
+  "lang": "en",
+  "prompt": "Assess this idea: a chatbot on the website that recommends bike sizes based on the customer's height and photo. What are the AI Act obligations?"
+ },
+ {
+  "skill": "policy-compliance-check",
+  "lang": "fr",
+  "prompt": "Est-ce que notre procédure de gestion des caisses respecte bien la politique interne de prévention de la fraude ? Elles sont toutes les deux dans le Drive."
+ },
+ {
+  "skill": "policy-compliance-check",
+  "lang": "en",
+  "prompt": "Check our new supplier onboarding process doc against the company's purchasing policy and tell me where we're not compliant."
+ },
+ {
+  "skill": "regulatory-watch-digest",
+  "lang": "fr",
+  "prompt": "Fais-moi un point sur les évolutions réglementaires récentes sur l'affichage environnemental des textiles, à partir de ces articles."
+ },
+ {
+  "skill": "regulatory-watch-digest",
+  "lang": "en",
+  "prompt": "What's changed lately in EU rules on product safety for kids' sports gear? Use these sources, give me impact and to-dos."
+ },
+ {
+  "skill": "campaign-brief",
+  "lang": "fr",
+  "prompt": "On lance une campagne pour le retour à la piscine en janvier. Fais-moi le brief pour l'agence."
+ },
+ {
+  "skill": "campaign-brief",
+  "lang": "en",
+  "prompt": "Write the brief for our spring hiking campaign: target, insight, message, channels, KPIs. Budget 120k€."
+ },
+ {
+  "skill": "product-page-copy",
+  "lang": "fr",
+  "prompt": "Rédige la fiche produit web du nouveau sac à dos Quechua 30L à partir de la fiche technique jointe. Optimisée SEO."
+ },
+ {
+  "skill": "product-page-copy",
+  "lang": "en",
+  "prompt": "Write the e-shop page for our new road bike helmet. Specs are in the attached data sheet, don't make up anything."
+ },
+ {
+  "skill": "social-media-post-pack",
+  "lang": "fr",
+  "prompt": "Des posts pour Insta, Facebook et LinkedIn pour annoncer l'ouverture du magasin de Roubaix, avec les textes alternatifs."
+ },
+ {
+  "skill": "social-media-post-pack",
+  "lang": "en",
+  "prompt": "make a set of posts for the Kipsta club kits launch across instagram, tiktok and linkedin - captions, hashtags, visual ideas"
+ },
+ {
+  "skill": "seo-content-brief",
+  "lang": "fr",
+  "prompt": "Je veux un article de blog qui se positionne sur \"comment choisir ses chaussures de trail\". Tu me fais le brief pour le rédacteur ?"
+ },
+ {
+  "skill": "seo-content-brief",
+  "lang": "en",
+  "prompt": "Content brief for a guide on 'best tent for family camping' - keywords, intent, outline, internal links"
+ },
+ {
+  "skill": "email-newsletter-writer",
+  "lang": "fr",
+  "prompt": "Écris la newsletter clients de novembre sur la préparation de la saison de ski, avec 2 objets à tester."
+ },
+ {
+  "skill": "email-newsletter-writer",
+  "lang": "en",
+  "prompt": "Write our customer email for the running club members: new collection + store events. Give me A/B subject lines."
+ },
+ {
+  "skill": "marketing-performance-report",
+  "lang": "fr",
+  "prompt": "Comment a performé la campagne rentrée sportive ? KPIs vs objectifs par canal et ce qu'on change."
+ },
+ {
+  "skill": "marketing-performance-report",
+  "lang": "en",
+  "prompt": "Give me the performance report for last month's paid social and email campaigns with insights and next steps."
+ },
+ {
+  "skill": "brand-voice-checker",
+  "lang": "fr",
+  "prompt": "Est-ce que ce texte colle à notre charte éditoriale ? \"Découvrez notre incroyable gamme révolutionnaire de raquettes, le must-have absolu de la saison !!!\""
+ },
+ {
+  "skill": "brand-voice-checker",
+  "lang": "en",
+  "prompt": "check this landing page copy against our brand guidelines and fix what doesn't fit"
+ },
+ {
+  "skill": "competitor-watch",
+  "lang": "fr",
+  "prompt": "Fais-moi la veille concurrentielle de la semaine sur le vélo électrique à partir des liens que je t'envoie."
+ },
+ {
+  "skill": "competitor-watch",
+  "lang": "en",
+  "prompt": "Digest these competitor newsletters and press articles - what are Intersport and Go Sport doing on prices and launches this month?"
+ },
+ {
+  "skill": "promo-calendar-planner",
+  "lang": "fr",
+  "prompt": "Construis le calendrier promo du 1er semestre 2027 en tenant compte des soldes, des JO d'hiver et du marathon de Paris."
+ },
+ {
+  "skill": "promo-calendar-planner",
+  "lang": "en",
+  "prompt": "Plan our promo calendar for Q1: January sales, ski season, Valentine's, spring running. Spot clashes."
+ },
+ {
+  "skill": "customer-persona-builder",
+  "lang": "fr",
+  "prompt": "Crée des personas pour notre clientèle randonnée à partir des études et des avis clients dans le Drive. Pas de clichés."
+ },
+ {
+  "skill": "customer-persona-builder",
+  "lang": "en",
+  "prompt": "build personas for people who buy fitness equipment for home, based on our survey data and reviews"
+ },
+ {
+  "skill": "ab-test-readout",
+  "lang": "fr",
+  "prompt": "Le test A/B sur le bouton \"Ajouter au panier\" est terminé : A = 3,1% conv sur 48 200 sessions, B = 3,4% sur 47 900. On garde B ?"
+ },
+ {
+  "skill": "ab-test-readout",
+  "lang": "en",
+  "prompt": "Read out the checkout A/B test results for me - is the uplift significant and did any guardrail metric get worse?"
+ },
+ {
+  "skill": "product-brief",
+  "lang": "fr",
+  "prompt": "Je démarre la conception d'une veste de pluie pour la randonnée enfant 7-12 ans. Tu m'aides à poser le brief produit ?"
+ },
+ {
+  "skill": "product-brief",
+  "lang": "en",
+  "prompt": "Write a product brief for an entry-level padel racket for beginners, target price under 30€."
+ },
+ {
+  "skill": "user-research-plan",
+  "lang": "fr",
+  "prompt": "On veut comprendre comment les familles choisissent leur matériel de camping. Comment on organise l'étude ? Méthode, recrutement, guide d'entretien."
+ },
+ {
+  "skill": "user-research-plan",
+  "lang": "en",
+  "prompt": "plan user research on why runners don't use our training app after week 2"
+ },
+ {
+  "skill": "research-synthesis",
+  "lang": "fr",
+  "prompt": "J'ai 12 comptes rendus d'interviews de grimpeurs dans le Drive. Fais-en ressortir les insights et les opportunités."
+ },
+ {
+  "skill": "research-synthesis",
+  "lang": "en",
+  "prompt": "Synthesize these interview notes from 8 cyclists commuting in winter into key insights, with how strong the evidence is for each."
+ },
+ {
+  "skill": "field-test-protocol",
+  "lang": "fr",
+  "prompt": "On doit tester un nouveau sac de couchage à -10°C avec des testeurs dans les Alpes en février. Rédige le protocole."
+ },
+ {
+  "skill": "field-test-protocol",
+  "lang": "en",
+  "prompt": "Write a field test protocol for our new trail running shoes - 20 testers, 6 weeks, different terrains."
+ },
+ {
+  "skill": "prd-writer",
+  "lang": "fr",
+  "prompt": "Rédige le PRD pour la fonctionnalité de réservation d'un créneau à l'atelier vélo sur l'appli."
+ },
+ {
+  "skill": "prd-writer",
+  "lang": "en",
+  "prompt": "Need a requirements doc for adding 'reserve in store' on the mobile app product page"
+ },
+ {
+  "skill": "user-story-writer",
+  "lang": "fr",
+  "prompt": "Découpe la fonctionnalité \"suivi de réparation en ligne\" en user stories pour Jira avec critères d'acceptation."
+ },
+ {
+  "skill": "user-story-writer",
+  "lang": "en",
+  "prompt": "write Jira stories for letting B2B customers reorder their last club kit order in one click, with Given/When/Then"
+ },
+ {
+  "skill": "roadmap-update",
+  "lang": "fr",
+  "prompt": "Fais la mise à jour de la roadmap de l'appli magasin pour les parties prenantes : ce qui est en cours, ensuite, plus tard, et ce qui a bougé."
+ },
+ {
+  "skill": "roadmap-update",
+  "lang": "en",
+  "prompt": "Write the quarterly roadmap update for the e-commerce squad, including what slipped and why"
+ },
+ {
+  "skill": "competitive-product-teardown",
+  "lang": "fr",
+  "prompt": "Compare notre tente 4 places avec les modèles équivalents de chez Coleman et Vango à partir de ces fiches produits."
+ },
+ {
+  "skill": "competitive-product-teardown",
+  "lang": "en",
+  "prompt": "Teardown of competitor smart bike trainers vs ours, feature by feature, using these spec sheets and reviews."
+ },
+ {
+  "skill": "eco-design-review",
+  "lang": "fr",
+  "prompt": "Voilà le concept de la future doudoune de ski. Quels leviers d'écoconception on pourrait activer ? Matières, réparabilité, fin de vie..."
+ },
+ {
+  "skill": "eco-design-review",
+  "lang": "en",
+  "prompt": "Review this kayak concept for eco-design - materials, durability, repairability, packaging. What trade-offs?"
+ },
+ {
+  "skill": "release-notes-writer",
+  "lang": "fr",
+  "prompt": "Écris les notes de version de l'appli vendeur 4.2 à partir des tickets Jira de la release, une version pour les utilisateurs et une pour l'interne."
+ },
+ {
+  "skill": "release-notes-writer",
+  "lang": "en",
+  "prompt": "release notes for this sprint's deploy of the B2B portal, from the merged PRs"
+ },
+ {
+  "skill": "sprint-planning-assistant",
+  "lang": "fr",
+  "prompt": "On planifie le sprint 23 demain. On est 5 devs dont 1 en congé 3 jours. Aide-moi à choisir dans le backlog et à fixer l'objectif."
+ },
+ {
+  "skill": "sprint-planning-assistant",
+  "lang": "en",
+  "prompt": "help me plan next sprint from the Jira backlog - capacity, a sprint goal, and what's risky"
+ },
+ {
+  "skill": "databricks-sql-builder",
+  "lang": "fr",
+  "prompt": "Écris-moi une requête Databricks pour avoir le CA par magasin et par sport sur les 12 dernières semaines, avec comparaison N-1."
+ },
+ {
+  "skill": "databricks-sql-builder",
+  "lang": "en",
+  "prompt": "This query takes forever, can you optimize it?\nSELECT * FROM sales s JOIN products p ON s.item_id = p.item_id WHERE YEAR(s.sale_date)=2026 AND p.sport LIKE '%ski%'"
+ },
+ {
+  "skill": "data-question-answerer",
+  "lang": "fr",
+  "prompt": "Combien de vélos électriques on a vendus dans les magasins des Hauts-de-France en septembre ?"
+ },
+ {
+  "skill": "data-question-answerer",
+  "lang": "en",
+  "prompt": "What share of online orders were click & collect last quarter? show me where the number comes from"
+ },
+ {
+  "skill": "kpi-definition-card",
+  "lang": "fr",
+  "prompt": "On n'a pas tous la même définition du taux de transformation magasin. Tu peux rédiger une définition propre ?"
+ },
+ {
+  "skill": "kpi-definition-card",
+  "lang": "en",
+  "prompt": "Define 'repair turnaround time' as a KPI: formula, source table, edge cases, pitfalls"
+ },
+ {
+  "skill": "tableau-dashboard-explainer",
+  "lang": "fr",
+  "prompt": "Je comprends rien au tableau de bord Tableau \"Performance Omnicanal\". Tu peux m'expliquer comment le lire ?"
+ },
+ {
+  "skill": "tableau-dashboard-explainer",
+  "lang": "en",
+  "prompt": "explain this Tableau view to my store managers - what does each chart mean and what should they take away?"
+ },
+ {
+  "skill": "dashboard-spec-writer",
+  "lang": "fr",
+  "prompt": "Je voudrais un tableau de bord pour suivre l'activité de l'atelier par magasin. Écris les spécifications pour l'équipe data."
+ },
+ {
+  "skill": "dashboard-spec-writer",
+  "lang": "en",
+  "prompt": "Spec out a new dashboard for regional managers on staffing vs traffic: audience, questions, KPIs, filters, sources, refresh."
+ },
+ {
+  "skill": "metric-anomaly-investigator",
+  "lang": "fr",
+  "prompt": "Le panier moyen web a chuté de 12% depuis lundi. Pourquoi ?"
+ },
+ {
+  "skill": "metric-anomaly-investigator",
+  "lang": "en",
+  "prompt": "store traffic counter shows -30% at Lille Centre last week but sales are flat. what's going on?"
+ },
+ {
+  "skill": "data-quality-check",
+  "lang": "fr",
+  "prompt": "Vérifie la qualité de la table stocks_magasin_daily : doublons, valeurs nulles, fraîcheur."
+ },
+ {
+  "skill": "data-quality-check",
+  "lang": "en",
+  "prompt": "Before I use the customer_reviews table for my analysis, can you check it's reliable? Give me the SQL checks."
+ },
+ {
+  "skill": "insight-storyteller",
+  "lang": "fr",
+  "prompt": "J'ai fini mon analyse sur la saisonnalité du rayon natation, voici les résultats. Aide-moi à en faire un message clair pour le directeur."
+ },
+ {
+  "skill": "insight-storyteller",
+  "lang": "en",
+  "prompt": "I have these numbers from my churn analysis on loyalty members. Turn them into a story for leadership: headline, so what, which charts."
+ },
+ {
+  "skill": "experiment-design",
+  "lang": "fr",
+  "prompt": "On veut tester un nouveau parcours de paiement sur le site. Combien de temps doit durer le test et sur combien de visiteurs ?"
+ },
+ {
+  "skill": "experiment-design",
+  "lang": "en",
+  "prompt": "design an A/B test for showing delivery dates on product pages - hypothesis, metric, sample size, guardrails"
+ },
+ {
+  "skill": "data-dictionary-builder",
+  "lang": "fr",
+  "prompt": "Documente les tables du schéma retail_b2b dans Databricks avec des définitions métier compréhensibles."
+ },
+ {
+  "skill": "data-dictionary-builder",
+  "lang": "en",
+  "prompt": "We need a data dictionary for the store_ops tables - columns, meanings, how they're used."
+ },
+ {
+  "skill": "cross-source-search",
+  "lang": "fr",
+  "prompt": "Où est-ce qu'on a parlé de la nouvelle politique de reprise des vélos d'occasion ? Cherche partout : Drive, Confluence, mails, Chat."
+ },
+ {
+  "skill": "cross-source-search",
+  "lang": "en",
+  "prompt": "what's the latest on the Lomme warehouse automation project? check everything - docs, Jira, Slack, email"
+ },
+ {
+  "skill": "expert-finder",
+  "lang": "fr",
+  "prompt": "Qui chez nous s'y connaît en tarification dynamique ? J'aurais besoin d'en parler à quelqu'un."
+ },
+ {
+  "skill": "expert-finder",
+  "lang": "en",
+  "prompt": "Who's the go-to person on the returns API? Draft a message to ask them for 30 min."
+ },
+ {
+  "skill": "topic-digest",
+  "lang": "fr",
+  "prompt": "Qu'est-ce qui s'est passé sur le projet caisses automatiques depuis septembre ? Chronologie, décisions, points ouverts."
+ },
+ {
+  "skill": "topic-digest",
+  "lang": "en",
+  "prompt": "Give me a recap of everything that happened on the Kipsta club portal in the last month"
+ },
+ {
+  "skill": "document-comparison",
+  "lang": "fr",
+  "prompt": "Compare la v2 et la v3 du contrat cadre avec le transporteur, qu'est-ce qui a changé ?"
+ },
+ {
+  "skill": "document-comparison",
+  "lang": "en",
+  "prompt": "what's different between last year's and this year's store opening hours policy? any contradictions?"
+ },
+ {
+  "skill": "long-document-digest",
+  "lang": "fr",
+  "prompt": "J'ai un rapport de 120 pages sur la stratégie omnicanale. Fais-moi un résumé structuré section par section avec les chiffres clés."
+ },
+ {
+  "skill": "long-document-digest",
+  "lang": "en",
+  "prompt": "Digest this 80-page market study on the European outdoor market for me - key points per chapter and open questions."
+ },
+ {
+  "skill": "knowledge-capture-page",
+  "lang": "fr",
+  "prompt": "On a décidé en réunion comment gérer les retours des clubs B2B. Transforme les notes et le fil de discussion en page Confluence."
+ },
+ {
+  "skill": "knowledge-capture-page",
+  "lang": "en",
+  "prompt": "turn this Slack thread where we figured out how to reset the self-checkout terminals into a how-to page"
+ },
+ {
+  "skill": "glossary-builder",
+  "lang": "fr",
+  "prompt": "Les nouveaux arrivants ne comprennent pas nos acronymes (CA, DR, RU, PDV, CTI...). Fais un glossaire à partir de nos docs."
+ },
+ {
+  "skill": "glossary-builder",
+  "lang": "en",
+  "prompt": "Build a glossary of internal terms and acronyms used by the supply chain team, with where each comes from."
+ },
+ {
+  "skill": "pr-review-assistant",
+  "lang": "fr",
+  "prompt": "Tu peux relire la PR #482 sur le service de calcul des stocks ? Sécurité, perfs, tests."
+ },
+ {
+  "skill": "pr-review-assistant",
+  "lang": "en",
+  "prompt": "review this pull request before I approve it: github.com/acme-internal/b2b-portal/pull/219"
+ },
+ {
+  "skill": "pr-description-writer",
+  "lang": "fr",
+  "prompt": "Écris la description de ma PR, voilà les commits : fix arrondi prix TTC, ajout tests TVA, refacto calcul remise."
+ },
+ {
+  "skill": "pr-description-writer",
+  "lang": "en",
+  "prompt": "write the PR description for my branch feat/repair-tracking, link it to JIRA STORE-1182"
+ },
+ {
+  "skill": "bug-report-writer",
+  "lang": "fr",
+  "prompt": "Bug sur l'appli vendeur : quand on scanne un article en promo, le prix affiché est l'ancien. Ça arrive sur les Zebra TC52 depuis la mise à jour. Fais un ticket Jira."
+ },
+ {
+  "skill": "bug-report-writer",
+  "lang": "en",
+  "prompt": "the B2B checkout crashes when a club adds more than 50 items to cart - write it up properly for Jira"
+ },
+ {
+  "skill": "backlog-grooming",
+  "lang": "fr",
+  "prompt": "Notre backlog Jira fait 300 tickets, c'est le bazar. Aide-moi à repérer les doublons, les vieux tickets et ceux pas clairs."
+ },
+ {
+  "skill": "backlog-grooming",
+  "lang": "en",
+  "prompt": "groom the PLATFORM backlog: stale items, dupes, stories missing acceptance criteria, things we need to size"
+ },
+ {
+  "skill": "tech-spec-writer",
+  "lang": "fr",
+  "prompt": "Rédige la conception technique pour synchroniser les stocks magasins en temps réel avec le site e-commerce."
+ },
+ {
+  "skill": "tech-spec-writer",
+  "lang": "en",
+  "prompt": "Write a design doc for moving our price update batch to an event-driven architecture. Include alternatives and rollout."
+ },
+ {
+  "skill": "architecture-decision-record",
+  "lang": "fr",
+  "prompt": "On a choisi PostgreSQL plutôt que Firestore pour le service de réservation atelier. Écris l'ADR."
+ },
+ {
+  "skill": "architecture-decision-record",
+  "lang": "en",
+  "prompt": "Document our decision to use Pub/Sub instead of Kafka for store events, ADR format"
+ },
+ {
+  "skill": "incident-postmortem",
+  "lang": "fr",
+  "prompt": "Hier le paiement en ligne était en panne 2h pendant les soldes. Voici la chronologie Slack. Fais le post-mortem, sans chercher de coupable."
+ },
+ {
+  "skill": "incident-postmortem",
+  "lang": "en",
+  "prompt": "Write the postmortem for last night's outage of the store inventory API - timeline is in the incident channel"
+ },
+ {
+  "skill": "incident-status-update",
+  "lang": "fr",
+  "prompt": "Les caisses de 30 magasins sont en panne depuis 10h. Il faut un message pour les magasins, un pour la direction, et un pour les clients sur le site."
+ },
+ {
+  "skill": "incident-status-update",
+  "lang": "en",
+  "prompt": "We're 1h into a payment outage. Draft the next status update for internal + customer-facing."
+ },
+ {
+  "skill": "runbook-writer",
+  "lang": "fr",
+  "prompt": "Écris la procédure d'exploitation pour quand le flux de prix vers les étiquettes électroniques est bloqué."
+ },
+ {
+  "skill": "runbook-writer",
+  "lang": "en",
+  "prompt": "runbook for when the click&collect order sync job fails: how to diagnose, fix, rollback, who to call"
+ },
+ {
+  "skill": "release-readiness-check",
+  "lang": "fr",
+  "prompt": "On met en prod la nouvelle version du portail B2B jeudi. Est-ce qu'on est prêts ? Regarde Jira et GitHub."
+ },
+ {
+  "skill": "release-readiness-check",
+  "lang": "en",
+  "prompt": "go/no-go check for tomorrow's release of the stock app v3 - tests, migrations, rollback plan, comms"
+ },
+ {
+  "skill": "code-explainer",
+  "lang": "fr",
+  "prompt": "Je suis chef de produit, tu peux m'expliquer simplement ce que fait le module pricing/discount_engine du repo ?"
+ },
+ {
+  "skill": "code-explainer",
+  "lang": "en",
+  "prompt": "New on the team - walk me through how the store-sync service works in our GitHub repo"
+ },
+ {
+  "skill": "engineering-standup-summary",
+  "lang": "fr",
+  "prompt": "Fais-moi le résumé du daily de l'équipe à partir de Jira et GitHub : hier, aujourd'hui, blocages."
+ },
+ {
+  "skill": "engineering-standup-summary",
+  "lang": "en",
+  "prompt": "summarize what the squad did yesterday and what's blocked, I missed standup"
+ },
+ {
+  "skill": "project-charter",
+  "lang": "fr",
+  "prompt": "On lance le projet de déploiement des casiers click & collect dans 20 magasins. Rédige la charte projet."
+ },
+ {
+  "skill": "project-charter",
+  "lang": "en",
+  "prompt": "Write the charter for our project to open 3 new urban store formats in 2027: scope, goals, stakeholders, budget, governance."
+ },
+ {
+  "skill": "project-status-report",
+  "lang": "fr",
+  "prompt": "Fais le point hebdo du projet refonte de l'atelier pour le sponsor, avec un statut vert/orange/rouge."
+ },
+ {
+  "skill": "project-status-report",
+  "lang": "en",
+  "prompt": "weekly status for the self-checkout rollout from Jira: progress, milestones, risks, what we need decided"
+ },
+ {
+  "skill": "raid-log-builder",
+  "lang": "fr",
+  "prompt": "Monte-moi un registre des risques, hypothèses, problèmes et dépendances pour le projet d'ouverture du magasin de Roubaix."
+ },
+ {
+  "skill": "raid-log-builder",
+  "lang": "en",
+  "prompt": "Build a RAID log for the warehouse migration project with scoring and owners"
+ },
+ {
+  "skill": "stakeholder-map",
+  "lang": "fr",
+  "prompt": "Qui sont les parties prenantes du projet de nouvelle carte fidélité et comment je les embarque ?"
+ },
+ {
+  "skill": "stakeholder-map",
+  "lang": "en",
+  "prompt": "map the stakeholders for introducing e-bike rentals in our stores - power/interest and how to engage each"
+ },
+ {
+  "skill": "project-plan-builder",
+  "lang": "fr",
+  "prompt": "Fais-moi un plan de projet avec jalons et dépendances pour réaménager le magasin pendant l'été sans fermer."
+ },
+ {
+  "skill": "project-plan-builder",
+  "lang": "en",
+  "prompt": "Create a project plan with WBS, milestones, critical path for migrating 50 stores to the new POS system by June."
+ },
+ {
+  "skill": "steering-committee-pack",
+  "lang": "fr",
+  "prompt": "Copil le 5 novembre sur le projet omnicanal. Prépare le contenu : avancement, décisions à prendre, options, budget."
+ },
+ {
+  "skill": "steering-committee-pack",
+  "lang": "en",
+  "prompt": "Prep the content for next week's steering committee on the logistics project - we need a decision on the budget overrun."
+ },
+ {
+  "skill": "lessons-learned",
+  "lang": "fr",
+  "prompt": "Le projet d'ouverture du magasin d'Amiens est terminé. Fais le retour d'expérience : ce qui a marché, ce qui n'a pas marché, recommandations."
+ },
+ {
+  "skill": "lessons-learned",
+  "lang": "en",
+  "prompt": "We finished the new loyalty app launch. Help me run and write up the lessons learned."
+ },
+ {
+  "skill": "sop-writer",
+  "lang": "fr",
+  "prompt": "Rédige une procédure standard pour la réception des marchandises en magasin, étape par étape."
+ },
+ {
+  "skill": "sop-writer",
+  "lang": "en",
+  "prompt": "Write an SOP for how store staff process a warranty return at the till"
+ },
+ {
+  "skill": "process-improvement-kaizen",
+  "lang": "fr",
+  "prompt": "Le process de réassort entre la réserve et le rayon est super lent. Aide-moi à l'analyser et à l'améliorer."
+ },
+ {
+  "skill": "process-improvement-kaizen",
+  "lang": "en",
+  "prompt": "Our click & collect preparation takes too long and has lots of errors. Map the current process, find the waste and propose quick wins."
+ },
+ {
+  "skill": "budget-variance-analysis",
+  "lang": "fr",
+  "prompt": "Analyse les écarts entre le réel et le budget du magasin à fin septembre, voici l'export. Seuil de matérialité 5%."
+ },
+ {
+  "skill": "budget-variance-analysis",
+  "lang": "en",
+  "prompt": "why are we 12% over budget on staff costs in Q3? here's the actuals vs budget table"
+ },
+ {
+  "skill": "business-case-builder",
+  "lang": "fr",
+  "prompt": "Je veux justifier l'ouverture d'un atelier ski dans le magasin de Lille. Coût 85k€, gains attendus en location et réparation. Fais le business case."
+ },
+ {
+  "skill": "business-case-builder",
+  "lang": "en",
+  "prompt": "Build a business case for installing solar panels on the Lomme store roof - options, costs, savings, payback. I'll give you the numbers."
+ },
+ {
+  "skill": "supplier-evaluation",
+  "lang": "fr",
+  "prompt": "On doit choisir entre 3 fournisseurs de cartons d'emballage. Aide-moi à les comparer : qualité, prix, délais, RSE."
+ },
+ {
+  "skill": "supplier-evaluation",
+  "lang": "en",
+  "prompt": "Score these 4 printing suppliers for our club kit customization: quality, cost, lead time, social compliance, risk"
+ },
+ {
+  "skill": "supplier-rfq-builder",
+  "lang": "fr",
+  "prompt": "Je dois lancer une consultation pour un prestataire de maintenance des tapis de course dans les magasins. Prépare le cahier des charges et la grille d'évaluation."
+ },
+ {
+  "skill": "supplier-rfq-builder",
+  "lang": "en",
+  "prompt": "draft an RFQ to buyers for store cleaning services across 12 stores: requirements, timeline, evaluation grid"
+ },
+ {
+  "skill": "purchase-request-justification",
+  "lang": "fr",
+  "prompt": "J'ai besoin d'acheter un nouveau compresseur pour l'atelier, 2 400€. Comment je justifie la demande d'achat ?"
+ },
+ {
+  "skill": "purchase-request-justification",
+  "lang": "en",
+  "prompt": "Help me justify buying 10 new handheld scanners for the store - my director needs a solid reason"
+ },
+ {
+  "skill": "price-positioning-analysis",
+  "lang": "fr",
+  "prompt": "Voilà les relevés de prix concurrents sur 40 références running. Où on se situe et qu'est-ce qu'on ajuste ?"
+ },
+ {
+  "skill": "price-positioning-analysis",
+  "lang": "en",
+  "prompt": "Here's competitor pricing for tents and sleeping bags. Calculate our price index and tell me where we're off."
+ },
+ {
+  "skill": "monthly-finance-commentary",
+  "lang": "fr",
+  "prompt": "Rédige le commentaire financier de septembre pour le comité de direction régional à partir du P&L joint."
+ },
+ {
+  "skill": "monthly-finance-commentary",
+  "lang": "en",
+  "prompt": "write the monthly finance commentary for management - P&L highlights, drivers, outlook for next month"
+ },
+ {
+  "skill": "daily-briefing",
+  "lang": "fr",
+  "prompt": "Qu'est-ce que j'ai sur le feu aujourd'hui ? Mails importants, réunions, trucs urgents."
+ },
+ {
+  "skill": "daily-briefing",
+  "lang": "en",
+  "prompt": "morning! give me a quick rundown of my day before I head into the store"
+ },
+ {
+  "skill": "interview-kit-builder",
+  "lang": "fr",
+  "prompt": "Je fais passer des entretiens la semaine prochaine pour un poste de vendeur sport rayon cycle à Lille. Tu peux me préparer les questions et une grille d'évaluation ?"
+ },
+ {
+  "skill": "interview-kit-builder",
+  "lang": "en",
+  "prompt": "I need a structured set of interview questions + scoring rubric for a junior data analyst role in the supply team. 3 interviewers, 45 min each."
+ },
+ {
+  "skill": "skills-navigator",
+  "lang": "fr",
+  "prompt": "Je suis responsable de rayon, je sais pas trop ce que tu sais faire pour moi. Tu as quoi comme outils ?"
+ },
+ {
+  "skill": "skills-navigator",
+  "lang": "en",
+  "prompt": "Is there something in here that can help me prep for a supplier negotiation? not sure which one to pick"
+ }
+]

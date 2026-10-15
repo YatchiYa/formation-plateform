@@ -1,0 +1,5 @@
+# ADK 2.10 impose google-cloud-aiplatform < 2 (module vertexai.rag).
+google-adk[gcp]==2.10.0
+google-api-python-client==2.201.0
+google-cloud-storage==3.17.0
+python-multipart==0.0.32

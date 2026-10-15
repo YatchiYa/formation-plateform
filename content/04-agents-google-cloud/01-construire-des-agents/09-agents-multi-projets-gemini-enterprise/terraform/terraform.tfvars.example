@@ -1,0 +1,22 @@
+# cp terraform.tfvars.example terraform.tfvars
+agents_project_id = "acme-agents-supply"   # projet de l'équipe qui publie l'agent
+ge_project_id     = "acme-ge-recette"      # projet de l'app Gemini Enterprise
+ge_app_id         = "acme-ge"
+ge_location       = "eu"
+region            = "europe-west1"
+
+# Sorties du projet 08 : terraform -chdir=../08-…/terraform output model_armor_templates
+prompt_template   = "projects/acme-ge-recette/locations/eu/templates/ge-prompt-shield"
+response_template = "projects/acme-ge-recette/locations/eu/templates/ge-response-shield"
+
+# discover_via_registry    = true   # l'orchestrateur trouve l'agent stock dans Agent Registry
+# publish_specialist_in_ge = true   # publier aussi l'agent stock seul dans l'app (ajout cross-project)
+
+# Agents d'autres équipes, déjà sur Agent Runtime (n'importe quel projet, région europe-* pour une app eu) :
+# external_adk_agents = {
+#   pricing = {
+#     engine       = "projects/acme-pricing/locations/europe-west1/reasoningEngines/1234567890"
+#     display_name = "Prix et promotions"
+#     description  = "Prix, promotions en cours et historique de prix d'un article."
+#   }
+# }

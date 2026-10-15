@@ -1,0 +1,9 @@
+node_modules/
+.next/
+data/
+test-results/
+playwright-report/
+.env
+*.tsbuildinfo
+next-env.d.ts
+scripts/import-config.local.py

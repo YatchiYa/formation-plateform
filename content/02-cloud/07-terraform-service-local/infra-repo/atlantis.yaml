@@ -1,0 +1,15 @@
+# Configuration CÔTÉ DÉPÔT : quels dossiers sont des projets Terraform, quand planifier.
+version: 3
+automerge: false
+parallel_plan: true
+projects:
+  - name: dev
+    dir: envs/dev
+    autoplan:
+      enabled: true
+      when_modified: ["*.tf", "../../modules/**/*.tf"]
+  - name: prod
+    dir: envs/prod
+    autoplan:
+      enabled: true
+      when_modified: ["*.tf", "../../modules/**/*.tf"]

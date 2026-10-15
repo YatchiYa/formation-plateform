@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agents et Gemini Enterprise</title>
+<meta name="description" content="Le parcours complet pour déployer des agents dans un projet Google Cloud, les brancher sur l'app Gemini Enterprise, avec ou sans OAuth, avec un ou plusieurs fournisseurs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Page de présentation : agents (projet des agents) -> app Gemini Enterprise (projet de l'app), avec ou sans OAuth.
+   Vos valeurs (en haut) remplissent toutes les commandes. Onglets ; flux OAuth pas à pas ; checklist ; dépannage filtrable. */
+:root {
+  --blue: #3643BA; --blue-deep: #1E2A7A; --hero: #3643BA; --sky: #E9ECFB; --track: #F5F6FB; --surface: #FFFFFF;
+  --ink: #161B33; --muted: #59607F; --line: #D9DEF0;
+  --go: #0F8A5F; --go-bg: #E4F5EE; --warn: #B4570A; --warn-bg: #FCF0E3; --stop: #B42318; --stop-bg: #FDECEA;
+  --code-bg: #10163A; --code-fg: #E3E7FA; --sun: #FFD34E;
+  --p-user: #59607F; --p-agents: #0F7B8A; --p-app: #8A3FB8; --p-google: #B4570A;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #8D97F5; --blue-deep: #0D1236; --hero: #232C8F; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA;
+    --muted: #A3AACC; --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80;
+    --stop-bg: #3B1716; --code-bg: #070A1E; --p-user: #A3AACC; --p-agents: #4FC7D6; --p-app: #C99BEA; --p-google: #F2A35C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --blue: #8D97F5; --blue-deep: #0D1236; --hero: #232C8F; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA;
+  --muted: #A3AACC; --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80;
+  --stop-bg: #3B1716; --code-bg: #070A1E; --p-user: #A3AACC; --p-agents: #4FC7D6; --p-app: #C99BEA; --p-google: #F2A35C;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 120px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+body { margin: 0; background: var(--track); color: var(--ink); font: 400 15.5px/1.6 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-style: italic; text-transform: uppercase; color: var(--blue); }
+h3 { font-size: 1.22rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--blue); }
+code { font-family: var(--font-mono); font-size: .84em; background: var(--sky); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+ul, ol { margin: 0; padding-left: 1.25em; display: grid; gap: 5px; }
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .04em; font-size: .86rem; color: var(--muted); }
+.tw { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+
+/* barre du haut + onglets */
+.topbar { position: sticky; top: 0; z-index: 30; background: var(--blue-deep); color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+.topbar-in { max-width: 1180px; margin: 0 auto; padding: 8px 16px 0; display: grid; gap: 6px; }
+.toprow { display: flex; align-items: center; gap: 10px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1.15rem; text-transform: uppercase; white-space: nowrap; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.brand span { color: var(--sun); }
+.tbtn { background: transparent; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: .82rem; font-weight: 600; white-space: nowrap; }
+.tbtn:hover { background: rgba(255,255,255,.12); }
+.tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { background: transparent; border: 0; color: #C9CFF3; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 9px 11px 10px; border-radius: 8px 8px 0 0; cursor: pointer; white-space: nowrap; display: flex; gap: 6px; align-items: center; }
+.tab:hover { color: #fff; background: rgba(255,255,255,.08); }
+.tab[aria-selected="true"] { background: var(--track); color: var(--blue); }
+.tab .n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.16); font-size: .72rem; }
+.tab[aria-selected="true"] .n { background: var(--blue); color: #fff; }
+
+/* hero */
+.hero { background: var(--hero); color: #fff; position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-58deg, transparent 0 46px, rgba(255,255,255,.06) 46px 50px); pointer-events: none; }
+.hero .wrap { position: relative; padding-block: 26px 24px; display: grid; gap: 12px; }
+.hero h1 { font-size: clamp(1.9rem, 4.8vw, 3rem); font-weight: 800; font-style: italic; text-transform: uppercase; }
+.hero h1 em { color: var(--sun); font-style: italic; }
+.hero p { color: #E4E8FF; max-width: 84ch; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 3px 11px; font-size: .84rem; font-weight: 600; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; }
+.panel { padding-block: 26px 40px; display: none; }
+.panel.on { display: grid; gap: 18px; }
+.panel > *, .steps > *, .meth > *, .grid2 > *, .grid3 > *, .grid4 > *, .step > div > * { min-width: 0; }
+.panel.on, .meth.on, .steps, .step > div, .card, .note, .fstep { grid-template-columns: minmax(0, 1fr); }
+.eyebrow { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: .86rem; color: var(--muted); }
+.lead { color: var(--muted); max-width: 84ch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; min-width: 0; display: grid; gap: 10px; align-content: start; }
+.card > * { min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .grid3, .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); } }
+.muted { color: var(--muted); }
+.small { font-size: .88rem; }
+
+/* encadrés */
+.note { border-left: 4px solid var(--blue); background: var(--sky); border-radius: 0 10px 10px 0; padding: 10px 14px; display: grid; gap: 6px; }
+.note.go { border-color: var(--go); background: var(--go-bg); }
+.note.warn { border-color: var(--warn); background: var(--warn-bg); }
+.note.stop { border-color: var(--stop); background: var(--stop-bg); }
+.note b.t { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .05em; }
+.badge { display: inline-block; font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: .75rem; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.b-agents { color: var(--p-agents); } .b-app { color: var(--p-app); } .b-user { color: var(--p-user); } .b-google { color: var(--p-google); }
+.b-go { color: var(--go); } .b-warn { color: var(--warn); } .b-stop { color: var(--stop); }
+
+/* code */
+.code { position: relative; }
+pre { margin: 0; background: var(--code-bg); color: var(--code-fg); font: 400 .82rem/1.55 var(--font-mono); padding: 12px 14px; border-radius: 10px; overflow-x: auto; white-space: pre; tab-size: 2; }
+pre .c { color: #8F9AD6; }
+.copy { position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 2px 9px; font-size: .74rem; cursor: pointer; }
+.copy:hover { background: rgba(255,255,255,.22); }
+.out { background: var(--surface); color: var(--ink); border: 1px dashed var(--line); }
+.label { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: .78rem; color: var(--muted); }
+
+/* étapes */
+.steps { counter-reset: s; display: grid; gap: 12px; }
+.step { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; }
+.step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--blue); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; }
+.step > div { display: grid; gap: 8px; min-width: 0; }
+.where { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* bascule de méthode */
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; border-radius: 999px; padding: 5px 14px; cursor: pointer; font-weight: 700; font-size: .88rem; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+.meth { display: none; gap: 14px; }
+.meth.on { display: grid; }
+
+/* schéma des projets */
+.arch { display: grid; grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1.2fr) 70px minmax(0, 1.2fr); align-items: stretch; gap: 0; }
+.zone { border: 2px solid; border-radius: 12px; padding: 12px; display: grid; gap: 8px; align-content: start; background: var(--surface); }
+.zone h3 { font-size: 1.05rem; }
+.z-user { border-color: var(--p-user); } .z-app { border-color: var(--p-app); } .z-agents { border-color: var(--p-agents); }
+.box { border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; font-size: .86rem; background: var(--track); }
+.arrow { display: grid; place-items: center; color: var(--muted); font-size: .72rem; text-align: center; padding: 4px; }
+.arrow::before { content: "⟶"; font-size: 1.8rem; color: var(--blue); line-height: 1; }
+@media (max-width: 900px) { .arch { grid-template-columns: minmax(0, 1fr); } .arrow::before { content: "↓"; } }
+
+/* flux OAuth */
+.flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.lane { border: 2px solid var(--line); border-radius: 12px; padding: 10px; background: var(--surface); text-align: center; font-family: var(--font-display); font-weight: 700; text-transform: uppercase; transition: .25s; }
+.lane small { display: block; font-family: var(--font-body); font-weight: 400; text-transform: none; color: var(--muted); font-size: .8rem; }
+.lane.hot { border-color: var(--blue); background: var(--sky); transform: translateY(-3px); box-shadow: 0 6px 0 rgba(54,67,186,.18); }
+@media (max-width: 640px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.fstep { min-height: 92px; border-radius: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); display: grid; gap: 6px; }
+.fnav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.btn { background: var(--blue); color: #fff; border: 0; border-radius: 8px; padding: 7px 14px; font-weight: 700; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
+.btn:disabled { opacity: .45; cursor: default; }
+.dots { display: flex; gap: 5px; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--blue); }
+
+/* valeurs */
+.vals { display: none; background: var(--surface); border-bottom: 1px solid var(--line); }
+.vals.on { display: block; }
+.vals .wrap { padding-block: 16px; display: grid; gap: 12px; }
+.fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 900px) { .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .fields { grid-template-columns: minmax(0, 1fr); } }
+.fields label { display: grid; gap: 3px; font-size: .78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.fields input, .fields select { border: 1px solid var(--line); border-radius: 7px; padding: 6px 9px; background: var(--track); font-family: var(--font-mono); font-size: .86rem; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink); width: 100%; }
+.fields .lab-app { color: var(--p-app); } .fields .lab-ag { color: var(--p-agents); }
+
+/* catalogue */
+.agent { display: grid; gap: 4px; }
+.agent .k { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); }
+
+/* checklist */
+.prog { height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.prog i { display: block; height: 100%; width: 0; background: var(--go); transition: width .3s; }
+.check { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--go); }
+.check.done { border-color: var(--go); background: var(--go-bg); }
+.check.done .ct { text-decoration: line-through; text-decoration-color: var(--go); }
+.phase { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase; color: var(--blue); font-size: 1.15rem; margin-top: 6px; }
+
+.search { border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; width: 100%; max-width: 420px; background: var(--surface); }
+.foot { color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); padding-block: 18px 30px; }
+@media print { .topbar, .copy, .vals, .fnav { display: none !important; } .panel { display: grid !important; break-before: page; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="toprow">
+      <div class="brand">Agents <span>×</span> Gemini Enterprise</div>
+      <button class="tbtn" id="btnVals" aria-expanded="false" aria-controls="vals">⚙ Vos valeurs</button>
+      <button class="tbtn" id="btnTheme" aria-label="Changer de thème">◐</button>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Parties">
+      <button class="tab" role="tab" data-tab="vue"><span class="n">0</span>Vue d'ensemble</button>
+      <button class="tab" role="tab" data-tab="deployer"><span class="n">1</span>Déployer</button>
+      <button class="tab" role="tab" data-tab="connecter"><span class="n">2</span>Connecter à l'app</button>
+      <button class="tab" role="tab" data-tab="oauth"><span class="n">3</span>Agent avec OAuth</button>
+      <button class="tab" role="tab" data-tab="multi"><span class="n">4</span>Plusieurs fournisseurs</button>
+      <button class="tab" role="tab" data-tab="ux"><span class="n">5</span>Expérience</button>
+      <button class="tab" role="tab" data-tab="secu"><span class="n">6</span>Sécurité</button>
+      <button class="tab" role="tab" data-tab="depannage"><span class="n">7</span>Dépannage</button>
+      <button class="tab" role="tab" data-tab="parcours"><span class="n">✓</span>Parcours</button>
+    </nav>
+  </div>
+</header>
+
+<div class="vals" id="vals">
+  <div class="wrap">
+    <p class="small muted">Ces valeurs remplissent <b>toutes les commandes</b> de la page. Elles restent dans votre navigateur. Rien n'est envoyé nulle part.</p>
+    <div class="fields">
+      <label class="lab-ag">Projet des agents <input data-v="PROJET_AGENTS"></label>
+      <label class="lab-ag">Numéro du projet des agents <input data-v="NUM_AGENTS" inputmode="numeric"></label>
+      <label class="lab-ag">Région des agents <input data-v="REGION"></label>
+      <label class="lab-ag">Agent (clé du catalogue) <select data-v="K"></select></label>
+      <label class="lab-app">Projet de l'app <input data-v="PROJET_APP"></label>
+      <label class="lab-app">Numéro du projet de l'app <input data-v="NUM_APP" inputmode="numeric"></label>
+      <label class="lab-app">ID de l'app <input data-v="APP_ID"></label>
+      <label class="lab-app">Localisation de l'app <input data-v="GE_LOCATION"></label>
+      <label>ID client OAuth (facultatif) <input data-v="CLIENT_ID" placeholder="…apps.googleusercontent.com"></label>
+      <label>ID de l'autorisation <input data-v="AUTH"></label>
+      <label>Ressource Agent Runtime (facultatif) <input data-v="RUNTIME" placeholder="projects/…/reasoningEngines/…"></label>
+      <label>&nbsp;<button class="btn ghost" id="btnReset" type="button">Valeurs par défaut</button></label>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:#C9CFF3">Parcours complet · projet des agents → app Gemini Enterprise</div>
+    <h1>Des agents à vous, <em>dans Gemini Enterprise</em></h1>
+    <p>Déployer un agent (Cloud Run en A2A, ou Agent Runtime) dans <b>son propre projet</b>, le brancher sur l'app
+      Gemini Enterprise d'un <b>autre projet</b>, puis lui faire utiliser <b>les données de l'utilisateur</b> (Gmail,
+      Agenda, Drive, Sheets…) avec son accord. Un ou plusieurs fournisseurs. Tout ce qui peut l'être est <b>scripté</b>.</p>
+    <div class="chips">
+      <span class="chip">Sans Docker : Cloud Build</span><span class="chip">Script, Terraform ou console</span>
+      <span class="chip">OAuth : bouton « Autoriser »</span><span class="chip">Model Armor</span><span class="chip">Aucune suppression possible</span>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+<!-- ============================== 0. VUE D'ENSEMBLE ============================== -->
+<section class="panel" id="vue" role="tabpanel">
+  <div><div class="eyebrow">0 · Vue d'ensemble</div><h2>Qui parle à qui</h2>
+    <p class="lead">Gemini Enterprise est l'assistant d'entreprise de Google : un chat, des connecteurs (Drive, Gmail…) et des <b>agents</b>. Nos agents vivent dans un <b>projet à part</b>. L'app les appelle, avec <b>son</b> compte de service, et, s'il le faut, avec le jeton de <b>l'utilisateur</b>.</p></div>
+
+  <div class="arch" aria-label="Schéma : utilisateur, app, agents">
+    <div class="zone z-user"><span class="badge b-user">Utilisateur</span><h3>Le chat</h3>
+      <div class="box">Ouvre un agent, pose une question</div><div class="box">1<sup>re</sup> fois si OAuth : « Autoriser »</div><div class="box">Rôle <b>Agent User</b> sur l'agent</div></div>
+    <div class="arrow">question</div>
+    <div class="zone z-app"><span class="badge b-app">Projet de l'app</span><h3><span class="v">{{PROJET_APP}}</span></h3>
+      <div class="box">App <code class="v">{{APP_ID}}</code> (<span class="v">{{GE_LOCATION}}</span>)</div>
+      <div class="box">Compte de l'app :<br><code class="v">{{GE_SA}}</code></div>
+      <div class="box">Autorisations OAuth (client + portées)</div></div>
+    <div class="arrow">appel A2A<br>ou Agent Runtime</div>
+    <div class="zone z-agents"><span class="badge b-agents">Projet des agents</span><h3><span class="v">{{PROJET_AGENTS}}</span></h3>
+      <div class="box">Cloud Run : <code class="v">{{K}}-a2a-shell</code> (A2A)</div>
+      <div class="box">Agent Runtime : <code class="v">{{K}}-shell</code></div>
+      <div class="box">Model Armor, Gemini, journaux</div>
+      <div class="box">Client OAuth + API Gmail, Drive… (recommandé)</div></div>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><span class="badge b-user">Identité 1</span><h3>L'utilisateur</h3><p class="small">Son compte Acme. Il voit un agent seulement s'il a le rôle <b>Agent User</b>. Avec OAuth, l'agent agit <b>avec ses droits à lui</b>.</p></div>
+    <div class="card"><span class="badge b-app">Identité 2</span><h3>Le compte de l'app</h3><p class="small"><code class="v">{{GE_SA}}</code> appelle l'agent. Il lui faut ① <code>run.invoker</code> sur chaque service Cloud Run, ② <code>discoveryengine.serviceAgent</code> sur le projet des agents (Agent Runtime).</p></div>
+    <div class="card"><span class="badge b-agents">Identité 3</span><h3>Le compte de l'agent</h3><p class="small"><code class="v">{{K}}-a2a-shell-sa</code> : appelle Gemini, écrit ses journaux, passe par Model Armor. Rien d'autre.</p></div>
+  </div>
+
+  <div><h3>Deux façons d'héberger un agent</h3></div>
+  <div class="tw"><table>
+    <tr><th></th><th>A2A sur Cloud Run</th><th>Agent Runtime (Vertex AI)</th></tr>
+    <tr><td><b>Ce qu'on donne à l'app</b></td><td>La <b>carte</b> de l'agent (JSON)</td><td>Le <b>chemin</b> <code>projects/…/reasoningEngines/…</code></td></tr>
+    <tr><td><b>Droit de l'app</b></td><td>① <code>roles/run.invoker</code> sur le service</td><td>② <code>roles/discoveryengine.serviceAgent</code> sur le projet</td></tr>
+    <tr><td><b>OAuth</b></td><td><b>Une</b> autorisation par agent</td><td><b>Plusieurs</b> (une par fournisseur)</td></tr>
+    <tr><td><b>Mise à jour</b></td><td>Nouvelle révision, <b>même adresse</b></td><td>Nouvelle ressource : nouveau chemin à rajouter dans l'app</td></tr>
+    <tr><td><b>Quand le choisir</b></td><td>Par défaut ; protocole ouvert, réutilisable</td><td>Plusieurs fournisseurs OAuth ; sessions gérées par Google</td></tr>
+  </table></div>
+
+  <div><h3>Le catalogue des agents</h3><p class="lead small">Un dossier par agent dans <code>agents/trio/</code>, décrit dans <code>catalogue.json</code> (nom, description, questions d'exemple, et le bloc <code>oauth</code>). Scripts et Terraform lisent ce fichier.</p></div>
+  <div class="grid4" id="catalogue"></div>
+
+  <div class="note warn"><b class="t">À savoir</b><p class="small">L'API de Gemini Enterprise (<code>streamAssist</code>) <b>ne sait pas</b> appeler un agent A2A ou ADK ajouté à l'app (documentation Google). Un agent personnalisé se teste dans le <b>chat</b>, ou en appelant l'agent directement comme le fait l'app (onglet Dépannage).</p></div>
+</section>
+
+<!-- ============================== 1. DÉPLOYER ============================== -->
+<section class="panel" id="deployer" role="tabpanel">
+  <div><div class="eyebrow">1 · Projet des agents</div><h2>Déployer un agent</h2>
+    <p class="lead">Tout se fait depuis un terminal Mac ou Linux. Il n'y a <b>pas de Docker</b> : l'image est construite par <b>Cloud Build</b>, dans Google Cloud. L'app n'a pas besoin d'exister à cette étape.</p></div>
+
+  <div class="grid3">
+    <div class="card"><h3>Le poste</h3><ul class="small"><li><code>gcloud</code> connecté : <code>gcloud auth login</code> et <code>gcloud auth application-default login</code></li><li>Python 3.12 à 3.14</li><li>Mac sans droits d'installation : <code>pip install --no-deps -r agents/trio/requirements-poste.txt</code></li></ul></div>
+    <div class="card"><h3>Vos droits</h3><p class="small">Vérification en lecture seule, groupes compris :</p><div class="code"><pre data-tpl>./scripts/verifier_droits.sh</pre></div></div>
+    <div class="card"><h3>La configuration</h3><p class="small">Un fichier <code>config/12-1-agents-dans-projet-exp.env</code>. Les champs de l'app peuvent rester vides tant qu'on ne publie pas.</p></div>
+  </div>
+
+  <div class="seg" role="group" aria-label="Méthode"><button data-m="dep" data-v="script" aria-pressed="true">Script</button><button data-m="dep" data-v="tf" aria-pressed="false">Terraform</button><button data-m="dep" data-v="console" aria-pressed="false">Console</button></div>
+
+  <div class="meth on" data-mg="dep" data-mv="script">
+    <div class="steps">
+      <div class="step"><div><h3>Charger la configuration</h3><div class="code"><pre data-tpl>source scripts/config.sh config/12-1-agents-dans-projet-exp.env</pre></div><p class="small muted">Affiche un résumé : projets, agents, et « (pas encore : agents seuls) » si l'app est vide.</p></div></div>
+      <div class="step"><div><h3>Préparer (une fois par projet)</h3><div class="code"><pre data-tpl>./scripts/deployer_shell.sh preparer   <span class="c"># filtres Model Armor, dépôt d'images, compte de construction</span></pre></div></div></div>
+      <div class="step"><div><h3>Déployer l'agent</h3><div class="code"><pre data-tpl>./scripts/deployer_shell.sh cloudrun {{K}}   <span class="c"># A2A : image (Cloud Build), compte, service privé</span>
+./scripts/deployer_shell.sh runtime {{K}}    <span class="c"># et/ou Agent Runtime</span></pre></div>
+        <div class="code"><pre class="out">== {{K}} (Cloud Run)   adresse {{URL}}
+-- 1/3 l'image, construite par Cloud Build (environ 1 min 20 s)   … SUCCESS
+-- 2/3 son compte de service et ses 3 rôles
+-- 3/3 le service Cloud Run (privé)
+Service URL: {{URL}}</pre></div></div></div>
+      <div class="step"><div><h3>Tester (3 à 5 minutes après)</h3><div class="code"><pre data-tpl>./scripts/deployer_shell.sh tester {{K}}</pre></div><p class="small muted">« OK : les agents répondent en A2A v0.3, avec mémoire de conversation ». Pour un agent OAuth, la réponse « cliquez sur Autoriser » est <b>normale</b> : le test n'envoie pas de jeton utilisateur.</p></div></div>
+      <div class="step"><div><h3>La fiche pour Gemini Enterprise</h3><div class="code"><pre data-tpl>./scripts/deployer_shell.sh carte {{K}}</pre></div><p class="small">Écrit <code class="v">carte-{{K}}.json</code> et affiche <b>tout</b> ce qu'il faut coller dans l'app : nom, description, carte sur une ligne, chemin Agent Runtime, étape Authentification, questions proposées, droits.</p>
+        <div class="note warn"><p class="small">La carte vient de <code>carte_a2a.py</code>, au format attendu par Google. <b>Pas</b> celle de <code>/.well-known/agent-card.json</code> : elle a des champs en plus, et Gemini Enterprise la refuse.</p></div></div></div>
+    </div>
+    <p class="small muted">Relancer est sans danger : ce qui existe est gardé. <code>cloudrun</code> reconstruit l'image : nouvelle révision, même adresse. Supprimer : <code>python scripts/nettoyer.py --agent {{K}} --supprimer</code> (affiche d'abord l'inventaire).</p>
+  </div>
+
+  <div class="meth" data-mg="dep" data-mv="tf">
+    <div class="steps">
+      <div class="step"><div><h3>Choisir les agents dans la configuration</h3><div class="code"><pre data-tpl>AGENTS="{{K}}"                  <span class="c"># ce qui doit EXISTER (vide = tout le catalogue)</span>
+AGENTS_OAUTH="{{K}}={{AUTH}}"   <span class="c"># seulement pour un agent OAuth</span></pre></div></div></div>
+      <div class="step"><div><h3>Appliquer</h3><div class="code"><pre data-tpl>source scripts/config.sh config/12-1-agents-dans-projet-exp.env
+cd 01-bis-cloud-run-a2a/terraform     <span class="c"># Agent Runtime : 02-bis-agent-runtime/terraform</span>
+terraform init &amp;&amp; terraform plan     <span class="c"># 1 agent sans app : 22 to add ; +7 par agent</span>
+terraform apply</pre></div><p class="small muted"><code>for_each</code> sur le catalogue : <b>une image par agent</b>, et ajouter un agent n'en touche aucun autre. Les agents OAuth ont aussi leurs API Google activées.</p></div></div>
+      <div class="step"><div><h3>Lire ce qu'il faut pour l'app</h3><div class="code"><pre data-tpl>terraform output cards    <span class="c"># la carte de chaque agent A2A</span>
+terraform output oauth    <span class="c"># autorisations attendues + portées</span>
+terraform output agents   <span class="c"># (02-bis) le chemin de chaque agent Agent Runtime</span></pre></div><p class="small muted">Avec <code>PUBLIER=oui</code> et les valeurs de l'app, Terraform ajoute aussi les agents à l'app, autorisation comprise.</p></div></div>
+    </div>
+  </div>
+
+  <div class="meth" data-mg="dep" data-mv="console">
+    <div class="steps">
+      <div class="step"><div><h3>L'image</h3><p class="small">Cloud Build se lance depuis le terminal (aucun bouton console ne prend notre dossier) : <code>gcloud builds submit … --config=01-bis-cloud-run-a2a/cloudbuild.yaml</code>. Le guide 12-1-3 donne la commande complète.</p></div></div>
+      <div class="step"><div><h3>Le service Cloud Run</h3><p class="small">🔎 <b>Cloud Run</b> → <b>Déployer un conteneur</b> → l'image → nom <code class="v">{{K}}-a2a-shell</code> → région <code class="v">{{REGION}}</code> → <b>Exiger l'authentification</b> → compte de service de l'agent → variables (fichier <code>env-{{K}}.yaml</code>).</p></div></div>
+      <div class="step"><div><h3>Vérifier</h3><p class="small">L'URL du service doit être <b>exactement</b> <code class="v">{{URL}}</code> : elle est écrite dans la carte.</p></div></div>
+    </div>
+    <p class="small muted">Détail clic par clic : <code>docs/12-1-3-deployer-agents-console.md</code>.</p>
+  </div>
+</section>
+
+<!-- ============================== 2. CONNECTER ============================== -->
+<section class="panel" id="connecter" role="tabpanel">
+  <div><div class="eyebrow">2 · Projet des agents + projet de l'app</div><h2>Brancher l'agent sur l'app</h2>
+    <p class="lead">Trois choses : <b>les droits</b> du compte de l'app (dans le projet des agents), <b>l'ajout</b> de l'agent (dans l'app), <b>l'accès</b> des utilisateurs. Attendez 2 à 3 minutes après les droits.</p></div>
+
+  <div class="grid2">
+    <div class="card"><span class="badge b-agents">Droit ① · agents A2A</span><h3>Cloud Run Invoker sur le service</h3>
+      <p class="small">🔎 Cloud Run → <code class="v">{{K}}-a2a-shell</code> → <b>Sécurité</b> → <b>Ajouter un compte principal</b> → <code class="v">{{GE_SA}}</code> → rôle <b>Cloud Run Invoker</b> (Demandeur Cloud Run) → Enregistrer.</p>
+      <div class="code"><pre data-tpl>gcloud run services add-iam-policy-binding {{K}}-a2a-shell \
+  --region={{REGION}} --project={{PROJET_AGENTS}} \
+  --role=roles/run.invoker --member=serviceAccount:{{GE_SA}}</pre></div></div>
+    <div class="card"><span class="badge b-agents">Droit ② · agents Agent Runtime</span><h3>Discovery Engine Service Agent sur le projet</h3>
+      <p class="small">🔎 IAM → <b>Accorder l'accès</b> → <code class="v">{{GE_SA}}</code> → rôle <b>Discovery Engine Service Agent</b>. Une fois pour tous les agents.</p>
+      <div class="code"><pre data-tpl>gcloud projects add-iam-policy-binding {{PROJET_AGENTS}} --condition=None \
+  --role=roles/discoveryengine.serviceAgent --member=serviceAccount:{{GE_SA}}</pre></div></div>
+  </div>
+  <div class="note"><p class="small"><b>Voir les droits (lecture seule) :</b> IAM → cocher <b>« Include Google-provided role grants »</b> → filtre <code>gcp-sa-discoveryengine</code>. Ou <code>./scripts/connecter_app.sh verifier</code>. Les deux droits en une commande, avec confirmation : <code>./scripts/connecter_app.sh droits {{K}}</code>.</p></div>
+
+  <div class="seg" role="group" aria-label="Type d'agent"><button data-m="add" data-v="a2a" aria-pressed="true">Ajouter un agent A2A</button><button data-m="add" data-v="rt" aria-pressed="false">Ajouter un agent Agent Runtime</button></div>
+  <div class="meth on" data-mg="add" data-mv="a2a">
+    <div class="steps">
+      <div class="step"><div><h3>La carte, sur une ligne</h3><div class="code"><pre data-tpl>./scripts/deployer_shell.sh carte {{K}}     <span class="c"># ou : cat carte-{{K}}.json</span></pre></div></div></div>
+      <div class="step"><div><h3>Dans l'app</h3><p class="small">🔎 <b>Gemini Enterprise</b> → l'app → <b>Agents</b> → <b>+ Add agent</b> → <b>Custom agent via A2A</b> → collez <b>toute</b> la ligne, du premier <code>{</code> au dernier <code>}</code> → <b>Preview agent details</b> → <b>Next</b>.</p></div></div>
+      <div class="step"><div><h3>Authentication</h3><p class="small">Agent sans OAuth : <b>Skip &amp; Finish</b>. Agent OAuth : <b>ne pas cliquer Skip</b>, voir l'onglet 3.</p></div></div>
+      <div class="step"><div><h3>Le nom</h3><p class="small">L'agent → <b>Edit</b> → <code class="v">{{NOM}} (A2A)</code>. Ou en une commande, avec les questions proposées : onglet 5.</p></div></div>
+    </div>
+  </div>
+  <div class="meth" data-mg="add" data-mv="rt">
+    <div class="steps">
+      <div class="step"><div><h3>Le chemin de l'agent</h3><div class="code"><pre data-tpl>./scripts/deployer_shell.sh carte {{K}}     <span class="c"># « [Agent Runtime] projects/{{NUM_AGENTS}}/locations/{{REGION}}/reasoningEngines/… »</span></pre></div></div></div>
+      <div class="step"><div><h3>Dans l'app</h3><p class="small"><b>+ Add agent</b> → <b>Custom agent via Agent Runtime</b> → <i>Authorizations</i> : rien (sans OAuth) → <b>Next</b> → Agent name <code class="v">{{NOM}}</code>, description du catalogue, <b>Agent Runtime resource path</b> → <b>Create</b>.</p></div></div>
+      <div class="step"><div><h3>Nouvelle version ?</h3><p class="small">Agent Runtime crée une <b>nouvelle ressource</b>. Retirez l'ancienne entrée de l'app et ajoutez le nouveau chemin.</p></div></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>L'accès des utilisateurs</h3><p class="small">L'agent → <b>User permissions</b> → <b>Add</b> → un groupe (recommandé) ou une adresse → rôle <b>Agent User</b> → Save. Sans ce rôle, l'agent n'apparaît pas dans le chat.</p></div>
+    <div class="card"><h3>Le test</h3><p class="small">Overview → lien de l'app web → <b>Agents</b> → <span class="v">{{NOM}}</span> → <i>« <span class="v">{{EX}}</span> »</i>. 20 à 40 s la 1<sup>re</sup> fois (démarrage).</p></div>
+  </div>
+
+  <div class="card"><h3>Ce qu'on envoie aux équipes qui ont leurs propres agents</h3>
+    <p class="small">Leur agent est dans <b>leur</b> projet. Elles donnent le droit, puis nous envoient la carte ou le chemin :</p>
+    <div class="code"><pre data-tpl>Pour brancher votre agent sur l'app Gemini Enterprise ({{PROJET_APP}}), merci de :
+1. donner au compte {{GE_SA}}
+   - roles/run.invoker sur votre service Cloud Run (agent A2A), ou
+   - roles/discoveryengine.serviceAgent sur votre projet (agent Agent Runtime) ;
+2. nous envoyer la carte A2A (JSON, une ligne) ou le chemin projects/…/reasoningEngines/… ;
+3. si l'agent agit avec le compte de l'utilisateur (OAuth) : l'ID client, et les portées voulues (le secret par un canal sûr).
+Région de l'agent : europe-* (app en {{GE_LOCATION}}).</pre></div></div>
+</section>
+
+<!-- ============================== 3. OAUTH ============================== -->
+<section class="panel" id="oauth" role="tabpanel">
+  <div><div class="eyebrow">3 · Le compte de l'utilisateur</div><h2>Un agent qui agit avec l'accord de l'utilisateur</h2>
+    <p class="lead">Exemples : <b>Rapport e-mails</b> (<code>courriels</code>, Gmail en lecture) et <b>Espace de travail</b> (<code>workspace</code> : Gmail, Agenda, Drive en lecture, Google Sheets en lecture et modification, sans suppression). L'utilisateur clique une fois sur « Autoriser ». Ensuite, l'agent reçoit <b>son</b> jeton à chaque question.</p></div>
+
+  <div class="card"><h3>Le flux, étape par étape</h3>
+    <div class="flow" aria-hidden="true">
+      <div class="lane" data-lane="user">Utilisateur<small>le chat</small></div>
+      <div class="lane" data-lane="app">App Gemini Enterprise<small>projet de l'app</small></div>
+      <div class="lane" data-lane="google">Google (OAuth)<small>fenêtre de consentement</small></div>
+      <div class="lane" data-lane="agent">Agent → Gmail…<small>projet des agents</small></div>
+    </div>
+    <div class="fstep" id="fstep" aria-live="polite"></div>
+    <div class="fnav"><button class="btn ghost" id="fprev">← Précédent</button><button class="btn" id="fnext">Suivant →</button><div class="dots" id="fdots"></div></div>
+  </div>
+
+  <div class="note go"><b class="t">Tout est scripté, sauf un geste</b><p class="small">Google ne publie pas d'API pour créer un <b>client OAuth</b> : 2 minutes dans la console, et le script affiche le lien. Tout le reste passe par les scripts et Terraform : API Google, déploiement, fiche, autorisation, ajout, personnalisation.</p></div>
+
+  <div class="steps">
+    <div class="step"><div><div class="where"><span class="badge b-agents">Projet des agents</span><span class="badge b-go">Script</span></div><h3>Activer les API de l'agent, voir ses portées</h3>
+      <div class="code"><pre data-tpl>source scripts/config.sh config/12-1-agents-dans-projet-exp.env
+./scripts/deployer_shell.sh oauth {{K}}</pre></div>
+      <div class="code"><pre class="out">== courriels
+▶ gcloud services enable gmail.googleapis.com --project={{PROJET_AGENTS}}
+  portées (A2A)           : https://www.googleapis.com/auth/gmail.readonly
+  portées (Agent Runtime) : … + https://www.googleapis.com/auth/cloud-platform
+Client OAuth (une fois, console, 2 min) : https://console.cloud.google.com/auth/clients?project={{PROJET_AGENTS}}</pre></div>
+      <p class="small muted">Les API et les portées viennent du bloc <code>"oauth"</code> de l'agent dans <code>catalogue.json</code>.</p></div></div>
+
+    <div class="step"><div><div class="where"><span class="badge b-agents">Projet des agents</span><span class="badge b-warn">Console · 2 min</span></div><h3>Le client OAuth</h3>
+      <ol class="small"><li>🔎 <b>Google Auth Platform</b> → si besoin <b>Commencer</b> : nom de l'application, e-mail, audience <b>Interne</b>.</li>
+        <li><b>Clients</b> → <b>+ Créer un client</b> → <b>Application Web</b> → nom <code class="v">ge-{{K}}</code>.</li>
+        <li><b>URI de redirection autorisés</b>, ces deux-là exactement :</li></ol>
+      <div class="code"><pre>https://vertexaisearch.cloud.google.com/oauth-redirect
+https://vertexaisearch.cloud.google.com/static/oauth/oauth.html</pre></div>
+      <p class="small">→ <b>Créer</b> → notez l'<b>ID client</b> (à mettre dans « Vos valeurs ») et le <b>secret</b>. Ne les mettez jamais dans le dépôt.</p></div></div>
+
+    <div class="step"><div><div class="where"><span class="badge b-agents">Projet des agents</span><span class="badge b-go">Script</span></div><h3>Déployer l'agent avec son autorisation</h3>
+      <div class="code"><pre data-tpl>AGENTS_OAUTH="{{K}}={{AUTH}}" ./scripts/deployer_shell.sh cloudrun {{K}}
+./scripts/deployer_shell.sh tester {{K}}   <span class="c"># 3 à 5 min après : « cliquez sur Autoriser » = normal</span></pre></div>
+      <p class="small muted">L'agent reçoit <code>AUTH_ID={{AUTH}}</code>. En A2A, le nom de l'autorisation dans l'app peut être différent ; sur Agent Runtime, il doit être <b>identique</b>.</p></div></div>
+
+    <div class="step"><div><div class="where"><span class="badge b-agents">Projet des agents</span><span class="badge b-go">Script</span></div><h3>La fiche, avec l'URL d'autorisation complète</h3>
+      <div class="code"><pre data-tpl>AGENTS_OAUTH="{{K}}={{AUTH}}" CLIENT_ID={{CLIENT_ID}} ./scripts/deployer_shell.sh carte {{K}}</pre></div>
+      <div class="code"><pre class="out">  3. Authentication (ne PAS cliquer Skip) :
+      Nom de l'autorisation  : {{AUTH}}
+      Authorization URL      : {{AUTH_URL}}
+      Token URL              : https://oauth2.googleapis.com/token
+      Scopes                 : {{SCOPES}}
+      PKCE / HTTP Basic      : décochés</pre></div></div></div>
+
+    <div class="step"><div><div class="where"><span class="badge b-agents">Projet des agents</span></div><h3>Le droit de l'app sur le service</h3><p class="small">Droit ① sur <code class="v">{{K}}-a2a-shell</code>, comme pour tout agent A2A (onglet 2).</p></div></div>
+
+    <div class="step"><div><div class="where"><span class="badge b-app">Projet de l'app</span><span class="badge b-warn">Console</span><span class="badge b-go">ou script</span></div><h3>Ajouter l'agent avec l'autorisation</h3>
+      <p class="small"><b>Console :</b> Custom agent via A2A → la carte → <b>Authentication</b> : remplissez les champs de la fiche. <b>Ne cliquez pas sur Skip.</b></p>
+      <div class="tw"><table>
+        <tr><th>Champ</th><th>Valeur</th></tr>
+        <tr><td>Nom de l'autorisation</td><td><code class="v">{{AUTH}}</code> (lisible : il s'affiche à l'utilisateur)</td></tr>
+        <tr><td>Client ID / secret</td><td>Ceux du client OAuth</td></tr>
+        <tr><td>Authorization URL</td><td>Celle de la fiche (avec <code>access_type=offline</code> et <code>prompt=consent</code>, obligatoires)</td></tr>
+        <tr><td>Token URL</td><td><code>https://oauth2.googleapis.com/token</code></td></tr>
+        <tr><td>Scopes</td><td><code class="v">{{SCOPES}}</code></td></tr>
+        <tr><td>PKCE / HTTP Basic</td><td>Décochés pour Google</td></tr>
+      </table></div>
+      <p class="small"><b>Ou par script</b>, avec les valeurs de l'app données devant les commandes (le fichier de config n'est pas touché) :</p>
+      <div class="code"><pre data-tpl>export PROJET_APP={{PROJET_APP}} NUM_APP={{NUM_APP}} GE_LOCATION={{GE_LOCATION}}
+export GE_PROJECT={{PROJET_APP}} GE_APP={{APP_ID}}
+./scripts/autorisation_oauth.sh create {{AUTH}} ~/Downloads/client_secret_XXX.json "{{SCOPES}}" "{{NOM}}"
+AUTH_ID={{AUTH}} ./scripts/add_agent_to_ge.sh a2a carte-{{K}}.json "{{NOM}} (A2A)"   <span class="c"># + droit run.invoker</span>
+./scripts/personnaliser_agent.sh "{{NOM}} (A2A)" {{K}}                              <span class="c"># questions proposées, langue</span></pre></div></div></div>
+
+    <div class="step"><div><div class="where"><span class="badge b-user">Chat</span></div><h3>Le test</h3>
+      <p class="small">Agent User pour vous → ouvrez l'agent → <i>« <span class="v">{{EX}}</span> »</i> → encadré <b>Authorize</b> → fenêtre Google → <b>Autoriser</b> → la réponse, avec <b>vos</b> données. Ensuite, plus d'encadré : l'accès est gardé.</p></div></div>
+  </div>
+
+  <div class="card"><h3>Ce que l'agent « Espace de travail » peut faire, et ne fera jamais</h3>
+    <div class="tw"><table>
+      <tr><th>Service</th><th>Portée</th><th>Peut</th><th>Ne peut pas</th></tr>
+      <tr><td>Gmail</td><td><code>gmail.readonly</code></td><td>Chercher, lire, résumer</td><td>Envoyer, supprimer (Google refuse)</td></tr>
+      <tr><td>Agenda</td><td><code>calendar.events.readonly</code></td><td>Voir les réunions</td><td>Créer, modifier, supprimer</td></tr>
+      <tr><td>Drive</td><td><code>drive.readonly</code></td><td>Chercher, lire Docs et Slides</td><td>Modifier, supprimer un fichier</td></tr>
+      <tr><td>Sheets</td><td><code>spreadsheets</code></td><td>Lire, écrire, formules, ajouter des lignes, onglets, mise en forme, tri, graphiques, créer un classeur</td><td><b>Rien supprimer ni vider</b> : bloqué par le code, avant tout appel à Google</td></tr>
+    </table></div>
+    <p class="small muted">Google n'a pas de portée « Sheets sans suppression ». Les outils n'acceptent donc qu'une liste de modifications <b>sans perte</b>, et <code>sheets_ecrire</code> refuse de vider une cellule remplie. Testé : à « Supprime l'onglet Archives », l'agent refuse et propose de le masquer.</p></div>
+</section>
+
+<!-- ============================== 4. MULTI ============================== -->
+<section class="panel" id="multi" role="tabpanel">
+  <div><div class="eyebrow">4 · Google + Atlassian + …</div><h2>Plusieurs fournisseurs d'identifiants</h2>
+    <p class="lead">Une <b>autorisation = un fournisseur</b>. Une seule autorisation Google couvre Gmail, Agenda, Drive, Sheets et BigQuery : les portées s'additionnent dans un seul consentement. Un autre fournisseur, comme Atlassian, Airtable ou Databricks, demande une autre autorisation.</p></div>
+
+  <div class="grid2">
+    <div class="card"><span class="badge b-stop">A2A (Cloud Run)</span><h3>Une seule autorisation par agent</h3><p class="small">L'app envoie <b>un</b> jeton (<code>agentAuthorization</code>). Plusieurs fournisseurs ? <b>Un agent par fournisseur</b> : « Espace Google (A2A) » et « Jira (A2A) ». Le chat passe de l'un à l'autre.</p></div>
+    <div class="card"><span class="badge b-go">Agent Runtime</span><h3>Une liste d'autorisations</h3><p class="small">L'app envoie un jeton <b>par autorisation</b> (<code>toolAuthorizations</code>). Chaque outil prend le sien. L'utilisateur clique « Autoriser » une fois par fournisseur.</p></div>
+  </div>
+
+  <div class="note"><b class="t">La règle de nommage (notre code)</b><p class="small"><code>AUTH_ID="acces-google,acces-atlassian"</code> : les outils Google prennent le jeton de la <b>1<sup>re</sup></b> autorisation, les outils Atlassian celle dont l'ID <b>contient « atlassian »</b>. Donc : <b>Google en premier</b>, et le mot du fournisseur dans l'ID.</p></div>
+
+  <div class="steps">
+    <div class="step"><div><h3>L'application OAuth Atlassian</h3>
+      <ol class="small"><li><a href="https://developer.atlassian.com/console/myapps/" target="_blank" rel="noopener">developer.atlassian.com/console/myapps</a> → <b>Create</b> → <b>OAuth 2.0 integration</b>.</li>
+        <li><b>Permissions</b> : Jira API (<code>read:jira-work</code>, <code>read:jira-user</code>), Confluence API (<code>search:confluence</code>, <code>read:confluence-content.summary</code>).</li>
+        <li><b>Authorization</b> → Callback URL : <code>https://vertexaisearch.cloud.google.com/static/oauth/oauth.html</code>.</li>
+        <li><b>Settings</b> : Client ID et Secret. <b>Distribution → Sharing</b> : sinon, vous seul pouvez autoriser.</li></ol></div></div>
+    <div class="step"><div><h3>Déployer sur Agent Runtime avec les deux autorisations</h3>
+      <div class="code"><pre data-tpl>AGENTS_OAUTH="workspace=acces-google,acces-atlassian" ./scripts/deployer_shell.sh runtime workspace
+AGENTS_OAUTH="workspace=acces-google,acces-atlassian" CLIENT_ID={{CLIENT_ID}} ./scripts/deployer_shell.sh carte workspace</pre></div></div></div>
+    <div class="step"><div><h3>Dans l'app : deux autorisations</h3>
+      <p class="small">Custom agent via Agent Runtime → <b>Authorizations</b> → <b>Add authorization</b> deux fois. Les noms doivent être <b>identiques</b> à <code>AGENTS_OAUTH</code>.</p>
+      <div class="tw"><table>
+        <tr><th></th><th>acces-google</th><th>acces-atlassian</th></tr>
+        <tr><td>Authorization URL</td><td>Celle de la fiche (Google, <b>+ cloud-platform</b>, exigé sur Agent Runtime)</td><td><code>https://auth.atlassian.com/authorize?audience=api.atlassian.com&amp;client_id=…&amp;scope=read%3Ajira-work%20read%3Ajira-user%20search%3Aconfluence%20read%3Aconfluence-content.summary%20offline_access&amp;redirect_uri=…&amp;response_type=code&amp;prompt=consent</code></td></tr>
+        <tr><td>Token URL</td><td><code>https://oauth2.googleapis.com/token</code></td><td><code>https://auth.atlassian.com/oauth/token</code></td></tr>
+      </table></div>
+      <p class="small">Par script : <code>AUTH_ID=acces-google,acces-atlassian ./scripts/add_agent_to_ge.sh adk &lt;chemin&gt; "Espace de travail"</code>. En A2A, le script refuse : « UNE seule autorisation par agent ».</p></div></div>
+    <div class="step"><div><h3>Dans le chat</h3><p class="small">« Mes tickets Jira en cours ? » → un 2<sup>e</sup> bouton <b>Authorize</b> (Atlassian) → <b>Accept</b> → la liste. « Prépare ma semaine avec réunions, e-mails et tickets » → les trois sources dans une seule réponse.</p></div></div>
+  </div>
+
+  <div class="card"><h3>Autres fournisseurs : les champs</h3>
+    <div class="tw"><table>
+      <tr><th>Fournisseur</th><th>Authorization URL</th><th>Token URL</th><th>PKCE</th><th>HTTP Basic</th></tr>
+      <tr><td>Google</td><td><code>accounts.google.com/o/oauth2/auth?…&amp;access_type=offline&amp;prompt=consent</code></td><td><code>oauth2.googleapis.com/token</code></td><td>non</td><td>non</td></tr>
+      <tr><td>Atlassian</td><td><code>auth.atlassian.com/authorize?audience=api.atlassian.com&amp;…</code></td><td><code>auth.atlassian.com/oauth/token</code></td><td>non</td><td>non</td></tr>
+      <tr><td>Airtable</td><td><code>airtable.com/oauth2/v1/authorize</code></td><td><code>airtable.com/oauth2/v1/token</code></td><td><b>oui</b></td><td><b>oui</b></td></tr>
+      <tr><td>Databricks</td><td><code>&lt;espace&gt;/oidc/v1/authorize</code></td><td><code>&lt;espace&gt;/oidc/v1/token</code></td><td><b>oui</b></td><td>si secret</td></tr>
+    </table></div>
+    <p class="small muted">Partout : déclarer chez le fournisseur les deux adresses de redirection de Gemini Enterprise. Atlassian, Airtable et Databricks n'ont <b>pas encore été testés</b> en vrai.</p></div>
+</section>
+
+<!-- ============================== 5. EXPÉRIENCE ============================== -->
+<section class="panel" id="ux" role="tabpanel">
+  <div><div class="eyebrow">5 · Ce que voit l'utilisateur</div><h2>Soigner l'expérience</h2>
+    <p class="lead">L'encadré « The agent requires additional authorization for: … » et son bouton <b>Authorize</b> sont l'interface de Google : leur forme ne se change pas. En revanche, ce qui est <b>écrit</b> autour se règle.</p></div>
+
+  <div class="tw"><table>
+    <tr><th>Élément</th><th></th><th>Comment</th></tr>
+    <tr><td>Couleur, forme, place du bouton</td><td><span class="badge b-stop">non</span></td><td>Interface Google, la même pour tous</td></tr>
+    <tr><td>Langue (« Authorize » ou « Autoriser »)</td><td><span class="badge b-warn">indirect</span></td><td>Gemini Enterprise en français ; pas de <code>hl=en_US</code> dans l'URL</td></tr>
+    <tr><td>Le nom après « authorization for: »</td><td><span class="badge b-go">oui</span></td><td>Nom affiché de l'autorisation (<code>displayName</code>), ou un ID lisible (pas l'ID généré par la console)</td></tr>
+    <tr><td>Nom et icône de l'agent</td><td><span class="badge b-go">oui</span></td><td><code>displayName</code>, <code>icon</code></td></tr>
+    <tr><td>Questions proposées, texte de la zone de saisie</td><td><span class="badge b-go">oui</span></td><td><code>starterPrompts</code>, <code>customPlaceholderText</code> (pris dans le catalogue)</td></tr>
+    <tr><td>Fenêtre Google : nom de l'app, logo, e-mail d'assistance</td><td><span class="badge b-go">oui</span></td><td>Google Auth Platform → <b>Branding</b>, dans le projet du client OAuth</td></tr>
+    <tr><td>Message de l'agent si le jeton manque ou est refusé</td><td><span class="badge b-go">oui</span></td><td>L'instruction de l'agent (déjà en français, avec la marche à suivre)</td></tr>
+  </table></div>
+
+  <div class="steps">
+    <div class="step"><div><h3>La fenêtre Google (sans risque)</h3><p class="small">Projet du client OAuth → 🔎 <b>Google Auth Platform</b> → <b>Branding</b> : nom (« Assistant Acme »), logo PNG 120×120, e-mail d'équipe. Puis <b>Accès aux données</b> → déclarer les portées : elles s'affichent en clair.</p></div></div>
+    <div class="step"><div><h3>Le nom de l'autorisation</h3><div class="code"><pre data-tpl>export PROJET_APP={{PROJET_APP}} NUM_APP={{NUM_APP}} GE_LOCATION={{GE_LOCATION}}
+./scripts/autorisation_oauth.sh list                              <span class="c"># ID | nom affiché</span>
+./scripts/autorisation_oauth.sh renommer {{AUTH}} "{{NOM}}"</pre></div><p class="small muted">Si l'encadré montre encore l'ID après renommage, recréez l'autorisation avec un ID lisible, puis rattachez l'agent.</p></div></div>
+    <div class="step"><div><h3>L'agent : nom, questions, texte de saisie, langue, icône</h3><div class="code"><pre data-tpl>GE_PROJECT={{PROJET_APP}} GE_APP={{APP_ID}} GE_LOCATION={{GE_LOCATION}} \
+  ./scripts/personnaliser_agent.sh "&lt;nom actuel dans l'app&gt;" {{K}} --icone icone.png</pre></div>
+      <div class="code"><pre class="out">AVANT : {"displayName": "test gmail remote agent with auth"}
+APRÈS : {"displayName": "{{NOM}} (A2A)", "starterPrompts": [{"text": "{{EX}}"}, …], "languageCode": "fr"}
+Modifier cet agent dans l'app {{APP_ID}} (projet {{PROJET_APP}}) ? Tapez « oui » : oui
+modifié : …  (retour arrière : ./scripts/personnaliser_agent.sh --annuler avant-&lt;ID&gt;.json)</pre></div>
+      <p class="small muted">Seuls ces champs changent (<code>updateMask</code>) : ni la carte, ni l'autorisation.</p></div></div>
+  </div>
+</section>
+
+<!-- ============================== 6. SÉCURITÉ ============================== -->
+<section class="panel" id="secu" role="tabpanel">
+  <div><div class="eyebrow">6 · Sécurité et gouvernance</div><h2>Ce qui protège, à chaque étage</h2></div>
+  <div class="grid3">
+    <div class="card"><h3>Services privés</h3><p class="small">Cloud Run <b>sans accès public</b> : seuls les comptes qui ont <code>run.invoker</code> appellent l'agent, c'est-à-dire l'app et vous.</p></div>
+    <div class="card"><h3>Droits minimaux</h3><p class="small">Chaque agent a son compte, avec 3 rôles : Gemini, journaux, Model Armor. Le compte de l'app n'a que ① et ②.</p></div>
+    <div class="card"><h3>Model Armor</h3><p class="small">Questions et réponses filtrées : injection de consignes, jailbreak, URL malveillantes, données sensibles, contenus dangereux.</p></div>
+    <div class="card"><h3>Les droits de l'utilisateur</h3><p class="small">Avec OAuth, l'agent ne voit que ce que l'utilisateur voit. Le jeton n'est <b>jamais enregistré</b> (état <code>temp:</code>) ni écrit dans les journaux.</p></div>
+    <div class="card"><h3>Portées minimales</h3><p class="small">Lecture seule partout, sauf Sheets. Aucun outil de suppression. Consentement <b>Interne</b> : comptes Acme uniquement.</p></div>
+    <div class="card"><h3>Injection par le contenu</h3><p class="small">Un e-mail peut contenir « ignore tes règles ». L'agent traite ce contenu comme une <b>donnée</b>. Même trompé, il ne peut rien supprimer ni envoyer : les portées et le code l'en empêchent.</p></div>
+  </div>
+
+  <div class="card"><h3>Le client OAuth : dans quel projet ?</h3>
+    <div class="tw"><table>
+      <tr><th></th><th>Projet des agents (recommandé)</th><th>Projet de l'app</th></tr>
+      <tr><td>API Gmail, Drive… à activer</td><td>projet des agents (script, Terraform)</td><td>projet de prod de l'app</td></tr>
+      <tr><td>Quotas, suivi</td><td>projet des agents</td><td>projet de l'app</td></tr>
+      <tr><td>Fenêtre Google</td><td>nom et logo de l'équipe</td><td>un seul nom pour tous</td></tr>
+      <tr><td>Secret et rotation</td><td>équipe agents</td><td>équipe Gemini Enterprise</td></tr>
+      <tr><td>Changement en prod pour un agent</td><td>aucun, à part l'ajout de l'agent</td><td>API + client dans la prod</td></tr>
+    </table></div>
+    <p class="small">Les deux marchent. <b>Projet des agents</b> : un client par équipe ou par famille d'agents. <b>Projet de l'app</b> : seulement pour un client commun, géré par l'équipe Gemini Enterprise. Dans les deux cas, l'admin Google Workspace peut devoir <b>approuver l'ID client</b> (Sécurité → Contrôles des API).</p></div>
+
+  <div class="note warn"><b class="t">En production</b><p class="small">Lecture d'abord (<code>connecter_app.sh verifier</code>, <code>autorisation_oauth.sh list</code>, <code>nettoyer.py</code> sans <code>--supprimer</code>). Toute modification de l'app demande une confirmation (taper l'ID du projet, ou « oui »). <code>personnaliser_agent.sh</code> garde l'avant pour revenir en arrière.</p></div>
+</section>
+
+<!-- ============================== 7. DÉPANNAGE ============================== -->
+<section class="panel" id="depannage" role="tabpanel">
+  <div><div class="eyebrow">7 · Si ça bloque</div><h2>Dépannage</h2></div>
+  <input class="search" id="q" type="search" placeholder="Filtrer : 403, carte, Autoriser, part_metadata…" aria-label="Filtrer les erreurs">
+  <div class="tw"><table id="errs">
+    <tr><th>Ce que vous voyez</th><th>Cause</th><th>Que faire</th></tr>
+    <tr><td>La carte est refusée à l'ajout</td><td>Carte de <code>/.well-known/agent-card.json</code>, ou ligne coupée</td><td><code>./scripts/deployer_shell.sh carte {{K}}</code>, puis copier <b>toute</b> la ligne</td></tr>
+    <tr><td><code>KeyError: '{{K}}'</code></td><td><code>catalogue.json</code> pas à jour sur le poste</td><td>Recopier tout le fichier</td></tr>
+    <tr><td>« The agent couldn't respond »</td><td>Droits pas encore actifs, ou manquants</td><td>Attendre 3 min ; vérifier ① et ② avec <code>{{GE_SA}}</code></td></tr>
+    <tr><td><code>part_metadata parameter is only supported in Gemini Developer API mode</code></td><td>Ancien <code>commun.py</code></td><td>Mettre à jour <code>commun.py</code>, puis <code>deployer_shell.sh cloudrun {{K}}</code></td></tr>
+    <tr><td>Agent absent du chat</td><td>Pas de rôle Agent User, ou pas de licence</td><td>L'agent → User permissions → Agent User</td></tr>
+    <tr><td><code>redirect_uri_mismatch</code></td><td>URI de redirection du client OAuth</td><td>Les 2 URI, au caractère près</td></tr>
+    <tr><td>« Accès bloqué : votre administrateur… »</td><td>L'admin Workspace bloque l'app</td><td>Faire approuver l'ID client (Contrôles des API)</td></tr>
+    <tr><td><code>refus (403) … has not been used in project</code></td><td>API Google non activée</td><td><code>./scripts/deployer_shell.sh oauth {{K}}</code> (projet du client OAuth)</td></tr>
+    <tr><td><code>refus (403) … insufficient authentication scopes</code></td><td>Portée absente de l'Authorization URL</td><td>Reprendre l'URL de la fiche ; retirer l'accès, puis réautoriser</td></tr>
+    <tr><td><code>refus (401)</code></td><td>Jeton expiré</td><td>Redemander ; sinon retirer l'accès sur myaccount.google.com/permissions</td></tr>
+    <tr><td>Pas de bouton Authorize</td><td>Agent ajouté sans autorisation (Skip)</td><td>Retirer l'agent de l'app, le rajouter avec l'étape Authentication</td></tr>
+    <tr><td>Agent Runtime : toujours « cliquez sur Autoriser »</td><td>Nom de l'autorisation ≠ <code>AGENTS_OAUTH</code></td><td>Même ID des deux côtés</td></tr>
+    <tr><td><code>A2A : UNE seule autorisation par agent</code></td><td>Deux fournisseurs en A2A</td><td>Agent Runtime, ou un agent par fournisseur</td></tr>
+    <tr><td>« Pas de jeton Atlassian »</td><td>ID sans le mot « atlassian », ou A2A</td><td>Onglet 4 : règle de nommage</td></tr>
+    <tr><td>Réponse bloquée par Model Armor</td><td>Droits du compte de l'agent pas encore actifs, ou données sensibles</td><td>Attendre 2 à 5 min ; restreindre la demande</td></tr>
+    <tr><td><code>does not have storage.objects.get access</code></td><td>Compte de construction absent</td><td><code>./scripts/deployer_shell.sh preparer</code></td></tr>
+    <tr><td><code>Service account … does not exist</code></td><td>Compte tout neuf, pas encore visible</td><td>Le script réessaie ; sinon relancer</td></tr>
+    <tr><td>Échec de <code>pip install</code> (watchdog) sur Mac</td><td>Pas de paquet compilé pour Python 3.14</td><td><code>pip install --no-deps -r agents/trio/requirements-poste.txt</code> ; <code>adk run</code> au lieu de <code>adk web</code></td></tr>
+  </table></div>
+
+  <div class="card"><h3>Appeler l'agent comme le fait l'app</h3>
+    <div class="code"><pre data-tpl>curl -s -X POST "{{URL}}/" \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  -H "Content-Type: application/json" -H "A2A-Version: 0.3" \
+  -d '{"jsonrpc":"2.0","id":"1","method":"message/send","params":{"message":{"kind":"message","role":"user","messageId":"t1","parts":[{"kind":"text","text":"{{EX}}","metadata":{"source":"curl"}}]}}}' \
+  | python3 -m json.tool</pre></div>
+    <p class="small muted">« completed » et une réponse : l'agent marche. Pour simuler l'app de bout en bout, avec son compte de service : <code>./scripts/simuler_gemini_enterprise.sh tout</code> (guide 12-1-5).</p></div>
+</section>
+
+<!-- ============================== PARCOURS ============================== -->
+<section class="panel" id="parcours" role="tabpanel">
+  <div><div class="eyebrow">Le parcours, à cocher</div><h2>De zéro à un agent OAuth dans le chat</h2>
+    <p class="lead">Chaque case reste cochée dans votre navigateur. L'ordre est celui qui a marché sur l'instance Acme.</p></div>
+  <div class="prog" aria-hidden="true"><i id="progbar"></i></div>
+  <p class="small muted" id="progtxt"></p>
+  <div id="checklist" style="display:grid;gap:8px"></div>
+  <button class="btn ghost" id="btnClear" type="button" style="justify-self:start">Tout décocher</button>
+
+  <div class="card"><h3>Pour aller plus loin : les guides</h3>
+    <ul class="small">
+      <li><code>docs/12-1-1-deployer-agents-shell.md</code> : déployer par script, pas à pas</li>
+      <li><code>docs/12-1-2-deployer-agents-terraform.md</code> · <code>12-1-3</code> (console)</li>
+      <li><code>docs/12-1-4-connecter-agents-app-gemini-enterprise.md</code> : les droits, les messages aux équipes</li>
+      <li><code>docs/12-1-5-simuler-appel-gemini-enterprise.md</code> : simuler l'app, sans l'app</li>
+      <li><code>docs/12-1-6-ajouter-agent-console-gemini-enterprise.md</code> : la console de l'app, clic par clic</li>
+      <li><code>docs/12-1-7-agents-oauth-identite-outils.md</code> : OAuth, identité</li>
+      <li><code>docs/12-1-8-agent-espace-de-travail-multi-oauth.md</code> : Gmail, Agenda, Drive, Sheets ; plusieurs fournisseurs ; expérience</li>
+      <li><code>scripts/README.md</code> : la carte de tous les scripts</li>
+    </ul></div>
+</section>
+
+<footer class="foot">Projet 09 · agents multi-projets et Gemini Enterprise. Les commandes affichées utilisent vos valeurs (⚙ en haut). Points non testés en vrai : signalés dans chaque partie, et dans les guides.</footer>
+</main>
+
+<script>
+(() => {
+  const CATALOGUE = {
+    meteo: { nom: "Météo & équipement", desc: "Météo réelle d'une ville (jusqu'à 7 jours) et équipement conseillé pour faire du sport dehors.", ex: "Quel temps à Chamonix demain ?" },
+    redaction: { nom: "Rédaction & reformulation", desc: "Reformule un texte selon le canal et la charte Acme.", ex: "Reformule ce message pour un e-mail client : ..." },
+    traduction: { nom: "Traduction Acme", desc: "Traduit en 7 langues européennes, glossaire et marques Acme respectés.", ex: "Traduis en espagnol : Votre tente Quechua est disponible en retrait en magasin." },
+    taille: { nom: "Conseil taille", desc: "La bonne taille de vêtement ou de chaussure à partir des mesures.", ex: "Je fais 98 cm de tour de poitrine, quelle taille de veste ?" },
+    retour: { nom: "Retours produits", desc: "Retour ou échange possible, délai et procédure.", ex: "J'ai acheté des chaussures il y a 40 jours, je peux les rendre ?" },
+    identite: { nom: "Identité utilisateur", desc: "Authentifié ou non, avec quel compte et quels droits.", ex: "Suis-je authentifié ? Avec quel compte ?", portees: ["openid", "email"] },
+    courriels: { nom: "Rapport e-mails", desc: "Lit les e-mails de l'utilisateur (Gmail, lecture seule) et en fait un rapport.", ex: "Fais-moi un rapport sur mes e-mails de la semaine.", portees: ["https://www.googleapis.com/auth/gmail.readonly"] },
+    workspace: { nom: "Espace de travail", desc: "E-mails, agenda, Drive en lecture ; Google Sheets en lecture et modification, sans suppression ; Jira et Confluence si autorisés.", ex: "Prépare ma semaine : réunions et e-mails importants.",
+      portees: ["https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/calendar.events.readonly", "https://www.googleapis.com/auth/drive.readonly", "https://www.googleapis.com/auth/spreadsheets"] }
+  };
+  const DEFAUTS = { PROJET_AGENTS: "aiml-gemini-ent-exp-0zga", NUM_AGENTS: "433175138344", REGION: "europe-west1", K: "courriels",
+    PROJET_APP: "acme-gemini-prod", NUM_APP: "523307489860", APP_ID: "gemini-enterprise-app", GE_LOCATION: "eu",
+    CLIENT_ID: "", AUTH: "acces-gmail", RUNTIME: "" };
+  const CLE = "ge-agents-acme";
+  const lire = k => { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch { return null; } };
+  const ecrire = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  let V = Object.assign({}, DEFAUTS, lire(CLE + ":vals") || {});
+
+  // Valeurs calculées à partir des champs.
+  const derive = () => {
+    const a = CATALOGUE[V.K] || CATALOGUE.meteo;
+    const portees = a.portees || [];
+    const client = V.CLIENT_ID || "<ID client>";
+    const url = "https://accounts.google.com/o/oauth2/auth?" + new URLSearchParams({ client_id: client,
+      redirect_uri: "https://vertexaisearch.cloud.google.com/static/oauth/oauth.html", scope: portees.join(" "),
+      include_granted_scopes: "true", response_type: "code", access_type: "offline", prompt: "consent" }).toString().replace(/\+/g, "%20");
+    return Object.assign({}, V, { CLIENT_ID: client, NOM: a.nom, EX: a.ex, SCOPES: portees.join(" ") || "(agent sans OAuth)",
+      AUTH_URL: portees.length ? url : "(agent sans OAuth : Skip & Finish)",
+      URL: `https://${V.K}-a2a-shell-${V.NUM_AGENTS}.${V.REGION}.run.app`,
+      GE_SA: `service-${V.NUM_APP}@gcp-sa-discoveryengine.iam.gserviceaccount.com` });
+  };
+
+  // Gabarits : <pre data-tpl>, <pre class="out">, <code class="v">, <span class="v"> ; {{NOM}} remplacé partout.
+  const tpls = [...document.querySelectorAll("pre[data-tpl], pre.out, .v, #errs td, main p code, main li code")].filter(el => /\{\{\w+\}\}/.test(el.innerHTML));
+  tpls.forEach(el => { el.dataset.src = el.innerHTML; });
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const rendre = () => {
+    const d = derive();
+    tpls.forEach(el => { el.innerHTML = el.dataset.src.replace(/\{\{(\w+)\}\}/g, (m, k) => k in d ? esc(d[k]) : m); });
+  };
+
+  // Champs « Vos valeurs ».
+  const sel = document.querySelector('select[data-v="K"]');
+  Object.entries(CATALOGUE).forEach(([k, a]) => sel.add(new Option(`${k} : ${a.nom}${a.portees ? " (OAuth)" : ""}`, k)));
+  const champs = [...document.querySelectorAll("[data-v]")].filter(el => el.matches("input, select"));
+  const remplir = () => champs.forEach(el => { el.value = V[el.dataset.v] ?? ""; });
+  champs.forEach(el => el.addEventListener("input", () => {
+    V[el.dataset.v] = el.value.trim();
+    if (el.dataset.v === "K") { V.AUTH = CATALOGUE[V.K].portees ? (V.K === "workspace" ? "acces-google" : V.K === "courriels" ? "acces-gmail" : "acces-" + V.K) : ""; remplir(); }
+    ecrire(CLE + ":vals", V); rendre();
+  }));
+  document.getElementById("btnReset").addEventListener("click", () => { V = Object.assign({}, DEFAUTS); ecrire(CLE + ":vals", V); remplir(); rendre(); });
+  const bv = document.getElementById("btnVals"), pv = document.getElementById("vals");
+  bv.addEventListener("click", () => { const on = pv.classList.toggle("on"); bv.setAttribute("aria-expanded", on); });
+
+  // Catalogue (onglet 0).
+  document.getElementById("catalogue").innerHTML = Object.entries(CATALOGUE).map(([k, a]) =>
+    `<div class="card agent"><div class="where"><b>${esc(a.nom)}</b>${a.portees ? '<span class="badge b-google">OAuth</span>' : ""}</div>
+     <span class="k">${k}</span><p class="small muted">${esc(a.desc)}</p></div>`).join("");
+
+  // Onglets (avec #ancre).
+  const tabs = [...document.querySelectorAll(".tab")], panels = [...document.querySelectorAll(".panel")];
+  const ouvrir = (id, scroll) => {
+    if (!panels.some(p => p.id === id)) id = "vue";
+    tabs.forEach(t => t.setAttribute("aria-selected", t.dataset.tab === id));
+    panels.forEach(p => p.classList.toggle("on", p.id === id));
+    history.replaceState(null, "", "#" + id);
+    if (scroll) window.scrollTo({ top: document.querySelector(".hero").offsetHeight, behavior: "auto" });
+  };
+  tabs.forEach(t => t.addEventListener("click", () => ouvrir(t.dataset.tab, true)));
+  tabs.forEach((t, i) => t.addEventListener("keydown", e => {
+    const j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : null;
+    if (j !== null) { const n = tabs[(j + tabs.length) % tabs.length]; n.focus(); ouvrir(n.dataset.tab, false); }
+  }));
+
+  // Bascules de méthode (script / Terraform / console ; A2A / Agent Runtime).
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll(`.seg button[data-m="${b.dataset.m}"]`).forEach(x => x.setAttribute("aria-pressed", x === b));
+    document.querySelectorAll(`.meth[data-mg="${b.dataset.m}"]`).forEach(m => m.classList.toggle("on", m.dataset.mv === b.dataset.v));
+  }));
+
+  // Boutons « Copier » (le texte affiché, donc avec vos valeurs).
+  document.querySelectorAll("pre:not(.out)").forEach(pre => {
+    const wrap = pre.parentElement.classList.contains("code") ? pre.parentElement : null;
+    if (!wrap) return;
+    const b = document.createElement("button"); b.className = "copy"; b.type = "button"; b.textContent = "Copier";
+    b.addEventListener("click", async () => {
+      const txt = pre.innerText.replace(/[ \t]+$/gm, "");   // les commentaires « # … » restent : bash les ignore
+      try { await navigator.clipboard.writeText(txt); b.textContent = "Copié ✓"; } catch { b.textContent = "Sélectionnez le texte"; }
+      setTimeout(() => { b.textContent = "Copier"; }, 1600);
+    });
+    wrap.appendChild(b);
+  });
+
+  // Flux OAuth, pas à pas.
+  const FLUX = [
+    ["user", "1. La question", "L'utilisateur ouvre l'agent dans le chat et pose sa question : « Fais-moi un rapport sur mes e-mails »."],
+    ["app", "2. L'app voit l'autorisation", "L'agent a été ajouté avec une autorisation. L'app n'a pas encore de jeton pour cet utilisateur : elle affiche l'encadré « … requires additional authorization for: <nom> » et le bouton Authorize."],
+    ["google", "3. Le consentement", "Clic sur Authorize : la fenêtre Google s'ouvre, avec le nom et le logo du client OAuth (Branding) et les portées en clair (« Afficher vos e-mails »). L'utilisateur accepte."],
+    ["app", "4. L'app garde le jeton", "Google renvoie un code à l'adresse de redirection de Gemini Enterprise. L'app l'échange contre un jeton d'accès et un jeton de rafraîchissement (access_type=offline), et les garde pour cet utilisateur."],
+    ["agent", "5. L'appel à l'agent", "A2A : l'app appelle le service Cloud Run avec son propre jeton (X-Serverless-Authorization, droit ①) et le jeton de l'utilisateur dans l'en-tête Authorization. Agent Runtime : un jeton par autorisation. Le code range le jeton dans l'état temp:AUTH_ID, jamais enregistré."],
+    ["agent", "6. L'outil appelle Gmail", "L'outil lit le jeton (commun.jeton_utilisateur) et appelle Gmail avec : Google applique les droits de l'utilisateur et les portées (lecture seule)."],
+    ["user", "7. La réponse", "Le rapport s'affiche. Aux questions suivantes, plus d'encadré : l'app rafraîchit le jeton toute seule, jusqu'à ce que l'utilisateur retire son accord (myaccount.google.com/permissions)."]
+  ];
+  let f = 0;
+  const lanes = [...document.querySelectorAll(".lane")], fstep = document.getElementById("fstep"), dots = document.getElementById("fdots");
+  dots.innerHTML = FLUX.map(() => "<i></i>").join("");
+  const flux = () => {
+    const [lane, t, d] = FLUX[f];
+    lanes.forEach(l => l.classList.toggle("hot", l.dataset.lane === lane));
+    fstep.innerHTML = `<h3>${esc(t)}</h3><p class="small">${esc(d)}</p>`;
+    [...dots.children].forEach((x, i) => x.classList.toggle("on", i <= f));
+    document.getElementById("fprev").disabled = f === 0; document.getElementById("fnext").disabled = f === FLUX.length - 1;
+  };
+  document.getElementById("fprev").addEventListener("click", () => { f = Math.max(0, f - 1); flux(); });
+  document.getElementById("fnext").addEventListener("click", () => { f = Math.min(FLUX.length - 1, f + 1); flux(); });
+  flux();
+
+  // Checklist du parcours.
+  const ETAPES = [
+    ["Projet des agents", [
+      ["config", "Configuration chargée, résumé correct", "source scripts/config.sh config/12-1-agents-dans-projet-exp.env"],
+      ["droits", "Mes droits vérifiés (tout OK, ou Registry/Dialogflow facultatifs)", "./scripts/verifier_droits.sh"],
+      ["preparer", "Préparé : filtres, dépôt, compte de construction", "./scripts/deployer_shell.sh preparer"],
+      ["meteo", "Un 1er agent sans OAuth déployé et testé (meteo)", "./scripts/deployer_shell.sh cloudrun meteo && ./scripts/deployer_shell.sh tester meteo"]]],
+    ["Brancher sur l'app", [
+      ["d1", "Droit ① : Cloud Run Invoker pour le compte de l'app, sur le service", ""],
+      ["d2", "Droit ② : Discovery Engine Service Agent sur le projet (Agent Runtime)", ""],
+      ["add", "Agent ajouté avec la fiche (carte ou chemin), sans OAuth : Skip & Finish", "./scripts/deployer_shell.sh carte meteo"],
+      ["user", "Rôle Agent User donné ; question posée dans le chat : réponse OK", ""]]],
+    ["Agent avec OAuth", [
+      ["oauth", "API Google activées, portées affichées", "./scripts/deployer_shell.sh oauth courriels"],
+      ["client", "Client OAuth créé (Application Web, 2 URI de redirection), ID et secret notés", ""],
+      ["dep", "Agent déployé avec AGENTS_OAUTH, droit ① posé", "AGENTS_OAUTH=\"courriels=acces-gmail\" ./scripts/deployer_shell.sh cloudrun courriels"],
+      ["fiche", "Fiche affichée avec l'URL d'autorisation complète", "AGENTS_OAUTH=\"courriels=acces-gmail\" CLIENT_ID=… ./scripts/deployer_shell.sh carte courriels"],
+      ["addo", "Agent ajouté avec l'étape Authentication remplie (pas Skip)", ""],
+      ["auth", "Dans le chat : Authorize → consentement → rapport sur MES e-mails", ""]]],
+    ["Finitions", [
+      ["brand", "Fenêtre Google : nom, logo, e-mail d'assistance (Branding)", ""],
+      ["perso", "Nom de l'autorisation et de l'agent, questions proposées, langue", "./scripts/personnaliser_agent.sh \"<nom actuel>\" courriels"],
+      ["multi", "(Option) Espace de travail sur Agent Runtime, Google + Atlassian", "AGENTS_OAUTH=\"workspace=acces-google,acces-atlassian\" ./scripts/deployer_shell.sh runtime workspace"]]]
+  ];
+  let fait = lire(CLE + ":check") || {};
+  const box = document.getElementById("checklist");
+  box.innerHTML = ETAPES.map(([titre, items]) => `<div class="phase">${esc(titre)}</div>` + items.map(([id, t, cmd]) =>
+    `<label class="check" data-id="${id}"><input type="checkbox" data-id="${id}"><span class="ct"><b>${esc(t)}</b>${cmd ? `<br><code>${esc(cmd)}</code>` : ""}</span></label>`).join("")).join("");
+  const cases = [...box.querySelectorAll("input")];
+  const maj = () => {
+    cases.forEach(c => { c.checked = !!fait[c.dataset.id]; c.closest(".check").classList.toggle("done", c.checked); });
+    const n = cases.filter(c => c.checked).length;
+    document.getElementById("progbar").style.width = (100 * n / cases.length) + "%";
+    document.getElementById("progtxt").textContent = `${n} / ${cases.length} étapes faites`;
+  };
+  cases.forEach(c => c.addEventListener("change", () => { fait[c.dataset.id] = c.checked; ecrire(CLE + ":check", fait); maj(); }));
+  document.getElementById("btnClear").addEventListener("click", () => { fait = {}; ecrire(CLE + ":check", fait); maj(); });
+  maj();
+
+  // Filtre du dépannage.
+  const rows = [...document.querySelectorAll("#errs tr")].slice(1);
+  document.getElementById("q").addEventListener("input", e => {
+    const q = e.target.value.toLowerCase().trim();
+    rows.forEach(r => { r.style.display = !q || r.textContent.toLowerCase().includes(q) ? "" : "none"; });
+  });
+
+  // Thème.
+  const th = lire(CLE + ":theme"); if (th) document.documentElement.dataset.theme = th;
+  document.getElementById("btnTheme").addEventListener("click", () => {
+    const sombre = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.dataset.theme = sombre ? "light" : "dark"; ecrire(CLE + ":theme", document.documentElement.dataset.theme);
+  });
+
+  remplir(); rendre(); ouvrir(location.hash.slice(1), false);
+})();
+</script>
+</body>
+</html>

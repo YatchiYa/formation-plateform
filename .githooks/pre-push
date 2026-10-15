@@ -1,0 +1,9 @@
+#!/bin/sh
+# Same rule for pushes; GitHub's ruleset is the real guard (scripts/protect-main.sh).
+[ "$(git config --bool formation.mainAllowed)" = "true" ] && exit 0
+while read local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    echo "✋ Push direct sur main refusé : poussez votre branche et ouvrez une pull request." >&2
+    exit 1
+  fi
+done

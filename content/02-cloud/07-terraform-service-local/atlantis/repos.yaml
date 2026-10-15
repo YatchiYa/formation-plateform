@@ -1,0 +1,26 @@
+# Configuration CÔTÉ SERVEUR d'Atlantis : c'est la « politique du service managé ».
+# Un dépôt ne peut PAS l'assouplir (allowed_overrides limité, pas de workflow personnalisé).
+repos:
+  - id: /.*/
+    # Apply seulement si la PR est APPROUVÉE (revue) et FUSIONNABLE (checks + règles de branche).
+    apply_requirements: [approved, mergeable]
+    import_requirements: [approved, mergeable]
+    allowed_overrides: [workflow]
+    allow_custom_workflows: false     # un dépôt ne peut pas injecter de commandes arbitraires
+    policy_check: true                # chaque plan passe par les politiques (Conftest / OPA)
+    delete_source_branch_on_merge: true
+
+workflows:
+  default:
+    plan:
+      steps: [init, plan]
+    apply:
+      steps: [apply]
+
+policies:
+  owners:
+    users: [bob]                      # seule la sécurité peut approuver une dérogation de politique
+  policy_sets:
+    - name: socle-entreprise
+      path: /policies
+      source: local

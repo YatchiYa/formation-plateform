@@ -1,0 +1,59 @@
+# REPRENDRE EN TERRAFORM CE QUI A ÉTÉ CRÉÉ EN CONSOLE (phase 1 -> phase 2)
+#
+#   cp imports.tf.example imports.tf      # garder seulement les blocs utiles
+#   terraform plan                        # doit afficher "N to import", et idéalement "0 to add/change"
+#   terraform apply                       # Terraform adopte les ressources, sans les recréer
+#   rm imports.tf                         # une fois importé, le bloc ne sert plus
+#
+# Remplacer PROJECT_ID par l'ID du projet. Les noms doivent être IDENTIQUES à ceux du code
+# (ex. template ge-prompt-shield) : sinon, renommer dans le code ou recréer.
+
+import {
+  to = google_model_armor_template.shield["ge-prompt-shield"]
+  id = "projects/PROJECT_ID/locations/eu/templates/ge-prompt-shield"
+}
+
+import {
+  to = google_model_armor_template.shield["ge-response-shield"]
+  id = "projects/PROJECT_ID/locations/eu/templates/ge-response-shield"
+}
+
+import {
+  to = google_model_armor_floorsetting.project
+  id = "projects/PROJECT_ID/locations/global/floorSetting"
+}
+
+import {
+  to = google_data_loss_prevention_inspect_template.fr[0]
+  id = "projects/PROJECT_ID/locations/europe/inspectTemplates/ge-donnees-sensibles-fr"
+}
+
+import {
+  for_each = toset(["discoveryengine.googleapis.com", "aiplatform.googleapis.com", "modelarmor.googleapis.com", "secretmanager.googleapis.com", "agentregistry.googleapis.com"])
+  to       = google_project_iam_audit_config.audit[each.value]
+  id       = "PROJECT_ID ${each.value}"
+}
+
+import {
+  to = google_logging_project_bucket_config.security
+  id = "projects/PROJECT_ID/locations/eu/buckets/ge-security"
+}
+
+import {
+  to = google_logging_project_bucket_config.usage
+  id = "projects/PROJECT_ID/locations/eu/buckets/ge-usage"
+}
+
+# Palier C (organisation)
+# import {
+#   to = google_org_policy_policy.guardrails["run.allowedIngress"]
+#   id = "projects/PROJECT_ID/policies/run.allowedIngress"
+# }
+# import {
+#   to = google_project_access_approval_settings.this[0]
+#   id = "projects/PROJECT_ID/accessApprovalSettings"
+# }
+# import {
+#   to = google_access_context_manager_service_perimeter.ge[0]
+#   id = "accessPolicies/POLICY_ID/servicePerimeters/NOM_DU_PERIMETRE"
+# }

@@ -1,0 +1,7 @@
+#!/bin/sh
+# main only changes through pull requests. The owner opts out once with: git config formation.mainAllowed true
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ "$branch" = "main" ] && [ "$(git config --bool formation.mainAllowed)" != "true" ]; then
+  echo "✋ main est protégée : créez une branche (git switch -c contenu/ma-formation) et ouvrez une pull request." >&2
+  exit 1
+fi

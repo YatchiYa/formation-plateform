@@ -1,0 +1,22 @@
+services:
+  web:
+    build: .
+    image: atelier-formation:latest
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env (copy .env.example)}
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
+      PREMIUM_GATE: ${PREMIUM_GATE:-off}
+      CONTENT_CACHE_MS: ${CONTENT_CACHE_MS:-2000}
+      TRACK_BOTS: ${TRACK_BOTS:-}
+    volumes:
+      # Edit ./content on the host: new folders show up within seconds, no rebuild.
+      - ./content:/app/content:ro
+      # Analytics + reading progress (SQLite).
+      - atelier-data:/data
+    restart: unless-stopped
+
+volumes:
+  atelier-data:

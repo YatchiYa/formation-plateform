@@ -1,0 +1,151 @@
+{
+  "tools": [
+    {
+      "name": "add_sheet",
+      "description": "Ajoute un onglet au classeur.",
+      "annotations": {
+        "title": "Ajouter un onglet",
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "append_rows",
+      "description": "Ajoute des lignes à la fin du tableau (sans écraser l'existant).",
+      "annotations": {
+        "title": "Ajouter des lignes",
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "batch_update",
+      "description": "Accès complet à l'API Sheets : exécute des requêtes batchUpdate natives (atomique : tout ou rien).",
+      "annotations": {
+        "title": "Opérations avancées (batchUpdate)",
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    },
+    {
+      "name": "clear_range",
+      "description": "Efface les VALEURS d'une plage (la mise en forme est conservée).",
+      "annotations": {
+        "title": "Effacer une plage",
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    },
+    {
+      "name": "create_spreadsheet",
+      "description": "Crée un nouveau Google Sheets dans le Drive de l'utilisateur.",
+      "annotations": {
+        "title": "Créer un classeur",
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "delete_dimension",
+      "description": "Supprime des lignes ou colonnes et leur contenu.",
+      "annotations": {
+        "title": "Supprimer des lignes ou colonnes",
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    },
+    {
+      "name": "delete_sheet",
+      "description": "Supprime un onglet ET tout son contenu.",
+      "annotations": {
+        "title": "Supprimer un onglet",
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    },
+    {
+      "name": "find_in_sheet",
+      "description": "Retourne les cellules (adresse A1 + valeur) qui contiennent le texte.",
+      "annotations": {
+        "title": "Chercher une valeur",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "format_range",
+      "description": "Applique gras, italique, couleurs, format de nombre ou alignement à une plage.",
+      "annotations": {
+        "title": "Mettre en forme une plage",
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "get_spreadsheet_info",
+      "description": "Titre, lien, et liste des onglets (nom, id, nombre de lignes et colonnes) d'un classeur.",
+      "annotations": {
+        "title": "Infos d'un classeur",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "insert_dimension",
+      "description": "Insère des lignes ou colonnes vides.",
+      "annotations": {
+        "title": "Insérer des lignes ou colonnes",
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "read_range",
+      "description": "Lit les valeurs d'une plage (liste de lignes).",
+      "annotations": {
+        "title": "Lire une plage",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "read_ranges",
+      "description": "Lit plusieurs plages en un seul appel.",
+      "annotations": {
+        "title": "Lire plusieurs plages",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "rename_sheet",
+      "description": "Renomme un onglet.",
+      "annotations": {
+        "title": "Renommer un onglet",
+        "readOnlyHint": false,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "search_spreadsheets",
+      "description": "Recherche des Google Sheets accessibles à l'utilisateur, par nom (Mon Drive et Drive partagés).",
+      "annotations": {
+        "title": "Rechercher des classeurs",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "whoami",
+      "description": "Retourne l'utilisateur Google connecté (pour vérifier la connexion OAuth).",
+      "annotations": {
+        "title": "Qui suis-je ?",
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "write_range",
+      "description": "Écrit des valeurs à partir de la plage indiquée, en REMPLAÇANT le contenu existant.",
+      "annotations": {
+        "title": "Écrire dans une plage (remplace)",
+        "readOnlyHint": false,
+        "destructiveHint": true
+      }
+    }
+  ]
+}

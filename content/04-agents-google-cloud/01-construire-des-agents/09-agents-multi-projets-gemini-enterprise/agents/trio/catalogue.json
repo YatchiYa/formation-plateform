@@ -1,0 +1,315 @@
+{
+  "meteo": {
+    "dossier": "meteo_agent",
+    "nom_affiche": "Météo & équipement",
+    "description": "Météo réelle d'une ville (jusqu'à 7 jours) et équipement conseillé pour faire du sport dehors.",
+    "competences": [
+      {
+        "id": "meteo",
+        "name": "Météo d'une ville",
+        "description": "Météo actuelle et prévisions jusqu'à 7 jours, données réelles.",
+        "tags": [
+          "météo",
+          "prévisions"
+        ],
+        "examples": [
+          "Quel temps à Chamonix demain ?"
+        ]
+      },
+      {
+        "id": "equipement",
+        "name": "Quoi porter",
+        "description": "Équipement conseillé selon la température, la pluie et le vent (règle des 3 couches).",
+        "tags": [
+          "équipement",
+          "sport"
+        ],
+        "examples": [
+          "Je cours à Lille demain matin, quoi porter ?"
+        ]
+      }
+    ]
+  },
+  "redaction": {
+    "dossier": "redaction_agent",
+    "nom_affiche": "Rédaction & reformulation",
+    "description": "Reformule un texte selon le canal (e-mail client, fiche produit, message interne, réseau social) et la charte Acme.",
+    "competences": [
+      {
+        "id": "reformuler",
+        "name": "Reformuler un texte",
+        "description": "Nouvelle version conforme à la charte du canal, avec contrôle de longueur.",
+        "tags": [
+          "rédaction",
+          "reformulation"
+        ],
+        "examples": [
+          "Reformule ce message pour un e-mail client : ..."
+        ]
+      }
+    ]
+  },
+  "traduction": {
+    "dossier": "traduction_agent",
+    "nom_affiche": "Traduction Acme",
+    "description": "Traduit un texte en 7 langues européennes en respectant le glossaire et les marques Acme.",
+    "competences": [
+      {
+        "id": "traduire",
+        "name": "Traduire",
+        "description": "Traduction avec termes imposés, marques conservées et contrôle automatique.",
+        "tags": [
+          "traduction",
+          "localisation"
+        ],
+        "examples": [
+          "Traduis en espagnol : Votre tente Quechua est disponible en retrait en magasin."
+        ]
+      }
+    ]
+  },
+  "taille": {
+    "dossier": "taille_agent",
+    "nom_affiche": "Conseil taille",
+    "description": "Conseille la bonne taille de vêtement ou de chaussure à partir des mesures du client.",
+    "competences": [
+      {
+        "id": "vetement",
+        "name": "Taille de vêtement",
+        "description": "Taille XS à 3XL à partir du tour de poitrine ou de taille.",
+        "tags": [
+          "taille",
+          "vêtement"
+        ],
+        "examples": [
+          "Je fais 98 cm de tour de poitrine, quelle taille de veste ?"
+        ]
+      },
+      {
+        "id": "pointure",
+        "name": "Pointure",
+        "description": "Pointure européenne à partir de la longueur du pied.",
+        "tags": [
+          "pointure",
+          "chaussures"
+        ],
+        "examples": [
+          "Mon pied mesure 27 cm, quelle pointure pour courir ?"
+        ]
+      }
+    ]
+  },
+  "retour": {
+    "dossier": "retour_agent",
+    "nom_affiche": "Retours produits",
+    "description": "Dit si un produit peut être retourné ou échangé, avec quel délai et comment, selon les règles de retour.",
+    "competences": [
+      {
+        "id": "retour",
+        "name": "Retour ou échange",
+        "description": "Retour possible ou non, délai restant et procédure.",
+        "tags": [
+          "retour",
+          "échange"
+        ],
+        "examples": [
+          "J'ai acheté des chaussures il y a 40 jours, je peux les rendre ?"
+        ]
+      }
+    ]
+  },
+  "identite": {
+    "dossier": "identite_agent",
+    "nom_affiche": "Identité utilisateur",
+    "description": "Dit si l'utilisateur est authentifié auprès de Gemini Enterprise, avec quel compte et quels droits.",
+    "competences": [
+      {
+        "id": "identite",
+        "name": "Qui suis-je ?",
+        "description": "Authentifié ou non, compte, domaine, droits accordés (OAuth Gemini Enterprise).",
+        "tags": [
+          "identité",
+          "oauth"
+        ],
+        "examples": [
+          "Suis-je authentifié ? Avec quel compte ?",
+          "Quels droits m'as-tu demandés ?"
+        ]
+      }
+    ],
+    "oauth": {
+      "apis": [],
+      "portees": [
+        "openid",
+        "email"
+      ]
+    }
+  },
+  "courriels": {
+    "dossier": "courriels_agent",
+    "nom_affiche": "Rapport e-mails",
+    "description": "Lit les e-mails de l'utilisateur connecté (Gmail, lecture seule) et en fait un rapport clair : priorités, thèmes, actions.",
+    "competences": [
+      {
+        "id": "rapport",
+        "name": "Rapport sur mes e-mails",
+        "description": "Résumé des e-mails récents de l'utilisateur, avec ses droits (OAuth Gemini Enterprise).",
+        "tags": [
+          "e-mail",
+          "gmail",
+          "oauth"
+        ],
+        "examples": [
+          "Fais-moi un rapport sur mes e-mails de la semaine.",
+          "Quels e-mails non lus dois-je traiter en priorité ?"
+        ]
+      }
+    ],
+    "oauth": {
+      "apis": [
+        "gmail.googleapis.com"
+      ],
+      "portees": [
+        "https://www.googleapis.com/auth/gmail.readonly"
+      ]
+    }
+  },
+  "workspace": {
+    "dossier": "workspace_agent",
+    "nom_affiche": "Espace de travail",
+    "description": "Lit les e-mails, l'agenda et le Drive de l'utilisateur connecté, lit et modifie ses Google Sheets sans jamais rien supprimer ; Jira et Confluence si autorisés.",
+    "competences": [
+      {
+        "id": "synthese",
+        "name": "Synthèse e-mails, agenda, Drive",
+        "description": "Résumé des e-mails, réunions et documents de l'utilisateur, avec ses droits.",
+        "tags": [
+          "gmail",
+          "agenda",
+          "drive",
+          "oauth"
+        ],
+        "examples": [
+          "Prépare ma semaine : réunions et e-mails importants.",
+          "Trouve le dernier compte rendu dans mon Drive et résume-le."
+        ]
+      },
+      {
+        "id": "sheets",
+        "name": "Google Sheets",
+        "description": "Lire, écrire, ajouter des lignes, mettre en forme, créer des onglets et des classeurs. Aucune suppression.",
+        "tags": [
+          "sheets",
+          "tableur"
+        ],
+        "examples": [
+          "Ajoute une ligne au classeur <lien> : 2026-10-12, Lille, 120.",
+          "Mets la 1re ligne en gras et fige-la dans <lien>."
+        ]
+      },
+      {
+        "id": "atlassian",
+        "name": "Jira et Confluence",
+        "description": "Tickets Jira et pages Confluence de l'utilisateur, si l'autorisation Atlassian est donnée.",
+        "tags": [
+          "jira",
+          "confluence"
+        ],
+        "examples": [
+          "Mes tickets Jira en cours ?"
+        ]
+      }
+    ],
+    "oauth": {
+      "apis": [
+        "gmail.googleapis.com",
+        "calendar-json.googleapis.com",
+        "drive.googleapis.com",
+        "sheets.googleapis.com"
+      ],
+      "portees": [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/calendar.events.readonly",
+        "https://www.googleapis.com/auth/drive.readonly",
+        "https://www.googleapis.com/auth/spreadsheets"
+      ]
+    }
+  },
+  "sheets": {
+    "dossier": "sheets_agent",
+    "nom_affiche": "Expert Google Sheets",
+    "description": "Expert Google Sheets de l'utilisateur connecté : analyse, formules avancées, tableaux croisés, graphiques, tableaux de bord, nettoyage et mise en forme, sans jamais rien supprimer ; lit aussi ses e-mails, son agenda et son Drive pour les transformer en classeurs.",
+    "competences": [
+      {
+        "id": "analyse",
+        "name": "Analyse et tableaux de bord",
+        "description": "Profil des données, KPI, tableaux croisés dynamiques, graphiques, onglet de synthèse vivant.",
+        "tags": [
+          "sheets",
+          "analyse",
+          "tableau de bord"
+        ],
+        "examples": [
+          "Analyse les ventes du classeur <lien> par magasin et par mois, avec un graphique.",
+          "Fais-moi un tableau de bord dans <lien>."
+        ]
+      },
+      {
+        "id": "formules",
+        "name": "Formules expertes",
+        "description": "Écrire, expliquer et corriger des formules : QUERY, XLOOKUP, FILTER, ARRAYFORMULA, LET, LAMBDA.",
+        "tags": [
+          "sheets",
+          "formules"
+        ],
+        "examples": [
+          "Pourquoi j'ai des #N/A en colonne F de <lien> ?",
+          "Ajoute une colonne marge = (prix - coût) / prix."
+        ]
+      },
+      {
+        "id": "structure",
+        "name": "Mise en forme et nettoyage",
+        "description": "Mettre sous forme de tableau, formats, couleurs conditionnelles, listes déroulantes, doublons, données propres. Aucune suppression.",
+        "tags": [
+          "sheets",
+          "mise en forme",
+          "nettoyage"
+        ],
+        "examples": [
+          "Mets <lien> au propre et surligne les doublons.",
+          "Ajoute une liste déroulante Statut en colonne E."
+        ]
+      },
+      {
+        "id": "workspace",
+        "name": "E-mails, agenda, Drive vers Sheets",
+        "description": "Lit e-mails, réunions et documents de l'utilisateur et en fait des synthèses ou des classeurs de suivi.",
+        "tags": [
+          "gmail",
+          "agenda",
+          "drive",
+          "oauth"
+        ],
+        "examples": [
+          "Crée un classeur de suivi de mes e-mails non lus de la semaine.",
+          "Combien d'heures de réunion ai-je eues ce mois-ci ? Mets-le dans un classeur."
+        ]
+      }
+    ],
+    "oauth": {
+      "apis": [
+        "gmail.googleapis.com",
+        "calendar-json.googleapis.com",
+        "drive.googleapis.com",
+        "sheets.googleapis.com"
+      ],
+      "portees": [
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/calendar.events.readonly",
+        "https://www.googleapis.com/auth/drive.readonly",
+        "https://www.googleapis.com/auth/spreadsheets"
+      ]
+    }
+  }
+}

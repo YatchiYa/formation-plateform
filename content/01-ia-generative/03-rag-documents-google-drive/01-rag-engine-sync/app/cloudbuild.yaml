@@ -1,0 +1,8 @@
+# Construire l'image dans Google Cloud (Cloud Build), sans Docker sur le poste.
+#   gcloud builds submit app/ --config=app/cloudbuild.yaml --substitutions=_IMAGE=<région>-docker.pkg.dev/…:<tag>
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_IMAGE}", "."]
+images: ["${_IMAGE}"]
+options:
+  logging: CLOUD_LOGGING_ONLY # obligatoire avec un compte de service de construction dédié

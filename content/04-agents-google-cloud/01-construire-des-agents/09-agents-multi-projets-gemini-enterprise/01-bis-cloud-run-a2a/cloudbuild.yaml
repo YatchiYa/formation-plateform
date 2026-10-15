@@ -1,0 +1,8 @@
+# Construire l'image d'UN agent dans Google Cloud (Cloud Build), sans Docker sur le poste.
+#   _AGENT_DIR : dossier de l'agent (meteo_agent) ; _IMAGE : où ranger l'image (Artifact Registry).
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-f", "01-bis-cloud-run-a2a/Dockerfile", "--build-arg", "AGENT_DIR=${_AGENT_DIR}", "-t", "${_IMAGE}", "."]
+images: ["${_IMAGE}"]
+options:
+  logging: CLOUD_LOGGING_ONLY   # journaux dans Cloud Logging (obligatoire avec un compte de service dédié)

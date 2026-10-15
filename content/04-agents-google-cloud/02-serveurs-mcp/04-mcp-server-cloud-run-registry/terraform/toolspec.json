@@ -1,0 +1,14 @@
+{
+  "tools": [
+    {
+      "name": "search_products",
+      "description": "Searches the product catalog by name or category (case-insensitive).",
+      "annotations": { "title": "Search products", "readOnlyHint": true }
+    },
+    {
+      "name": "get_stock",
+      "description": "Returns the current stock level and price of one product.",
+      "annotations": { "title": "Get stock level", "readOnlyHint": true }
+    }
+  ]
+}

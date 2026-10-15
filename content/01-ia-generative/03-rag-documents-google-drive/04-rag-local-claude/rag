@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Lancer le RAG local : ./rag            (http://localhost:8765)
+#                     ./rag test       (tests automatiques)
+# 1re fois : crée .venv et installe les dépendances (≈ 1 min), copie .env.exemple en .env si besoin.
+set -euo pipefail
+cd "$(dirname "$0")"
+[ -f .env ] || { cp .env.exemple .env; echo "== .env créé : ajoutez-y votre ANTHROPIC_API_KEY (et VOYAGE_API_KEY si vous voulez Voyage)."; }
+if [ ! -x .venv/bin/python ]; then
+  echo "== Installation (une fois)…"
+  if command -v uv >/dev/null; then uv venv -q -p 3.12 .venv && VIRTUAL_ENV=.venv uv pip install -q -r requirements.txt
+  else python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt; fi
+fi
+set -a; . ./.env; set +a
+for v in ANTHROPIC_API_KEY VOYAGE_API_KEY; do [ -n "${!v:-}" ] || unset "$v"; done  # clé vide = pas de clé
+export PYTHONWARNINGS=ignore
+if [ "${1:-}" = "test" ]; then exec .venv/bin/python -m pytest -q tests; fi
+echo "== RAG local : http://localhost:${PORT:-8765}   (Ctrl+C pour arrêter)"
+cd app && exec ../.venv/bin/python server.py

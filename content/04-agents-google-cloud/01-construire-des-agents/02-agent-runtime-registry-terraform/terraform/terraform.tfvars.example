@@ -1,0 +1,7 @@
+# cp terraform.tfvars.example terraform.tfvars
+project_id = "your-project-id"
+# region   = "europe-west1"
+# model    = "gemini-3.5-flash"
+
+# Register the Cloud Run agent from project 01 in Agent Registry:
+# cloud_run_agent_url = "https://weather-agent-xxxxx.europe-west1.run.app"

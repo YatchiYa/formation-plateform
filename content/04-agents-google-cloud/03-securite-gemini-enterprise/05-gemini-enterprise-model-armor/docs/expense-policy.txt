@@ -1,0 +1,8 @@
+Company expense policy (demo document for the tutorial)
+
+Meals: up to 30 EUR per person per meal. Alcohol is not reimbursed.
+Hotels: up to 180 EUR per night in Paris, 140 EUR elsewhere in France, 200 EUR abroad.
+Trains: second class for trips under 3 hours; first class allowed above 3 hours.
+Flights: economy class only, booked through the travel portal at least 14 days in advance.
+Taxis: allowed after 21:00 or when carrying equipment, up to 60 EUR per ride.
+Receipts must be uploaded within 30 days. Expenses above 500 EUR need manager approval.

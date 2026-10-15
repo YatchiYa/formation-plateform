@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documents Drive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #e9edf1; --surface: #ffffff; --ink: #1b2a41; --muted: #5b6b7f; --line: #cbd3dc;
+  --accent: #2347a8; --accent-ink: #ffffff; --mark: #f6e27a; --mark-ink: #3a3000;
+  --ok: #1d7a46; --warn: #a15c00; --bad: #b3261e;
+  --radius-s: 6px; --radius-l: 14px;
+  font-family: "Schibsted Grotesk", system-ui, sans-serif; color: var(--ink);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121a26; --surface: #1a2433; --ink: #e4e9f0; --muted: #98a6b8; --line: #2e3b4f;
+    --accent: #8aa8ff; --accent-ink: #0f1a33; --mark: #6b5d12; --mark-ink: #fff4c2;
+    --ok: #5fd08f; --warn: #f0b352; --bad: #ff8a80;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121a26; --surface: #1a2433; --ink: #e4e9f0; --muted: #98a6b8; --line: #2e3b4f;
+  --accent: #8aa8ff; --accent-ink: #0f1a33; --mark: #6b5d12; --mark-ink: #fff4c2;
+  --ok: #5fd08f; --warn: #f0b352; --bad: #ff8a80;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); font-size: 15px; line-height: 1.5; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a { color: var(--accent); }
+
+.app { display: grid; grid-template-columns: 340px 1fr; height: 100dvh; }
+.rail { border-right: 1px solid var(--line); overflow-y: auto; padding: 20px 18px 28px; display: flex; flex-direction: column; gap: 26px; }
+.brand h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+.brand p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.rail h2 { font-size: 14px; margin: 0 0 8px; font-weight: 600; }
+
+.row { display: flex; gap: 6px; }
+input[type=text] { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--surface); }
+.btn { border: 0; border-radius: var(--radius-s); padding: 8px 12px; background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+.btn:disabled { opacity: .55; cursor: wait; }
+.icon { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+.icon:hover { color: var(--bad); }
+
+ul.list { list-style: none; margin: 8px 0 0; padding: 0; }
+ul.list li { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+ul.list li:last-child { border-bottom: 0; }
+ul.list .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.origin { font-size: 12px; color: var(--muted); }
+.empty { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+
+.share { font-size: 12.5px; color: var(--muted); margin: 8px 0 0; }
+.share code { display: block; margin-top: 3px; color: var(--ink); word-break: break-all; font-size: 12px; cursor: copy; }
+
+.card { border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--surface); padding: 12px; margin-bottom: 10px; }
+.card-head, .card.soon { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.card.soon { color: var(--muted); background: transparent; border-style: dashed; padding: 9px 12px; }
+.card summary { cursor: pointer; display: flex; justify-content: space-between; gap: 8px; }
+.btn.google { display: block; text-align: center; text-decoration: none; margin-top: 8px; }
+.acct { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; font-size: 13.5px; }
+.acct .email { flex: 1 1 100%; font-weight: 600; overflow-wrap: anywhere; }
+.btn.small { padding: 5px 9px; font-size: 13px; }
+.switch { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; color: var(--muted); cursor: pointer; }
+.drop { display: block; border: 1.5px dashed var(--line); border-radius: var(--radius-l); padding: 18px 12px; text-align: center; color: var(--muted); font-size: 14px; cursor: pointer; background: var(--surface); }
+.drop.over { border-color: var(--accent); color: var(--accent); }
+.drop strong { color: var(--ink); }
+
+.sync { font-size: 13.5px; }
+.sync .state { font-weight: 600; }
+.sync .state.ok { color: var(--ok); } .sync .state.avertissement, .sync .state.occupe { color: var(--warn); } .sync .state.erreur { color: var(--bad); }
+.sync ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); }
+.sync .errs li { color: var(--warn); }
+
+.chat { display: grid; grid-template-rows: auto 1fr auto; min-height: 0; }
+.chat header { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--line); }
+.chat header span { color: var(--muted); font-size: 13.5px; }
+.thread { overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+.msg { max-width: 72ch; overflow-wrap: anywhere; }
+.msg.user { align-self: flex-end; background: var(--accent); color: var(--accent-ink); padding: 10px 14px; border-radius: var(--radius-l) var(--radius-l) 4px var(--radius-l); }
+.msg.bot { background: var(--surface); border: 1px solid var(--line); padding: 14px 18px; border-radius: 4px var(--radius-l) var(--radius-l) var(--radius-l); }
+.msg.bot p { margin: 0 0 .6em; } .msg.bot p:last-child { margin-bottom: 0; }
+.msg.bot ul { margin: 0 0 .6em; padding-left: 20px; }
+.msg .tool { color: var(--muted); font-size: 13px; font-style: italic; }
+/* La touche du kit : chaque source citée est surlignée comme au marqueur. */
+.msg.bot a.cite { background: var(--mark); color: var(--mark-ink); text-decoration: none; padding: 0 4px; border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.msg.bot a.cite:hover { text-decoration: underline; }
+.welcome { color: var(--muted); max-width: 60ch; margin: auto; text-align: center; }
+.welcome h2 { color: var(--ink); font-size: 22px; margin: 0 0 6px; letter-spacing: -0.01em; }
+.suggest { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+.suggest button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: 13.5px; }
+
+form.ask { display: flex; gap: 8px; padding: 14px 24px 20px; }
+form.ask input { padding: 12px 14px; border-radius: var(--radius-l); }
+.toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: var(--radius-s); font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
+.toast.show { opacity: 1; }
+
+@media (max-width: 820px) {
+  .app { grid-template-columns: 1fr; height: auto; }
+  .rail { border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; }
+  .chat { height: 100dvh; }
+  .chat header, .thread, form.ask { padding-left: 16px; padding-right: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <h1>Documents Drive</h1>
+      <p id="project">Chargement…</p>
+    </div>
+
+    <section aria-labelledby="h-src">
+      <h2 id="h-src">Sources</h2>
+
+      <div class="card">
+        <div class="card-head"><strong>Google Drive</strong><span class="origin" id="gState"></span></div>
+        <div id="gAccounts"></div>
+        <a class="btn google" id="gLogin" href="/auth/google/start" hidden>Se connecter avec Google</a>
+        <p class="share" id="gSetup" hidden>Connexion Google pas encore configurée : suivez
+          <em>docs/04-bis-connexion-google.md</em> (5 min dans la console). En attendant, utilisez le dossier partagé.</p>
+        <ul class="list" id="gSources"></ul>
+      </div>
+
+      <details class="card" id="sharedCard">
+        <summary><strong>Dossier partagé avec le kit</strong> <span class="origin">sans connexion</span></summary>
+        <form class="row" id="addFolder" style="margin-top:8px">
+          <input type="text" id="folder" placeholder="URL ou ID du dossier" aria-label="URL ou ID du dossier Drive" required>
+          <button class="btn" type="submit">Ajouter</button>
+        </form>
+        <p class="share">Partagez d'abord le dossier en lecture avec ces deux adresses (cliquer pour copier) :
+          <code id="sa1"></code><code id="sa2"></code></p>
+        <ul class="list" id="folders"></ul>
+      </details>
+
+      <div class="card soon"><strong>OneDrive</strong><span class="origin">bientôt</span></div>
+      <div class="card soon"><strong>SharePoint</strong><span class="origin">bientôt</span></div>
+    </section>
+
+    <section aria-labelledby="h-drop">
+      <h2 id="h-drop">Déposer des fichiers</h2>
+      <label class="drop" id="drop" tabindex="0">
+        <strong>Glissez vos fichiers ici</strong><br>ou cliquez pour parcourir · 30 Mo max
+        <input type="file" id="file" multiple hidden>
+      </label>
+    </section>
+
+    <section aria-labelledby="h-sync" class="sync">
+      <h2 id="h-sync">Synchronisation</h2>
+      <div id="syncState">…</div>
+      <button class="btn ghost" id="syncNow" style="margin-top:8px">Synchroniser maintenant</button>
+    </section>
+
+    <section aria-labelledby="h-docs">
+      <h2 id="h-docs">Documents indexés <span class="origin" id="docCount"></span></h2>
+      <ul class="list" id="docs"></ul>
+    </section>
+  </aside>
+
+  <main class="chat">
+    <header><strong>Assistant</strong><span><button class="btn ghost" id="newChat">Nouvelle conversation</button></span></header>
+    <div class="thread" id="thread" aria-live="polite">
+      <div class="welcome" id="welcome">
+        <h2>Posez une question à vos documents</h2>
+        Les réponses viennent uniquement de vos dossiers Drive et des fichiers déposés, avec un lien vers chaque source.
+        <div class="suggest">
+          <button type="button">Quels documents sont disponibles ?</button>
+          <button type="button">Résume le document le plus récent</button>
+        </div>
+      </div>
+    </div>
+    <form class="ask" id="ask">
+      <input type="text" id="q" placeholder="Votre question…" aria-label="Votre question" autocomplete="off" required>
+      <button class="btn" type="submit" id="send">Envoyer</button>
+    </form>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const APP = "assistant_documents";
+const $ = (id) => document.getElementById(id);
+let userId, sessionId;
+try { userId = localStorage.getItem("uid"); } catch {}
+if (!userId) { userId = "web-" + Math.random().toString(36).slice(2, 10); try { localStorage.setItem("uid", userId); } catch {} }
+
+function toast(text) { const t = $("toast"); t.textContent = text; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 4000); }
+function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, opts);
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body.detail || `Erreur ${r.status}`);
+  return body;
+}
+const SYNC_MSG = { lancee: "Synchronisation lancée.", terminee: "Synchronisation terminée." };
+
+// --- Panneau de gauche ---------------------------------------------------------
+async function refresh() {
+  try {
+    const s = lastStatus = await api("/api/status");
+    $("project").textContent = `${s.projet} · ${s.region}`;
+    $("sa1").textContent = s.partager_avec[0]; $("sa2").textContent = s.partager_avec[1];
+    $("folders").innerHTML = s.sources.length ? s.sources.map((f) =>
+      `<li><span class="name"><a href="https://drive.google.com/drive/folders/${esc(f.id)}" target="_blank" rel="noopener">${esc(f.name)}</a></span>
+       <button class="icon" data-folder="${esc(f.id)}" aria-label="Retirer ${esc(f.name)}" title="Retirer">✕</button></li>`).join("")
+      : `<li class="empty">Aucun dossier pour l'instant.</li>`;
+    renderSync(s.derniere_synchro, s.synchro_en_cours);
+    renderGoogleSources(s.google);
+    if (s.sources.length && !refresh.opened) { $("sharedCard").open = true; refresh.opened = true; }
+  } catch (e) { $("project").textContent = e.message; }
+  try {
+    const docs = await api("/api/documents");
+    $("docCount").textContent = `(${docs.length})`;
+    $("docs").innerHTML = docs.length ? docs.map((d) =>
+      `<li><span class="name"><a href="${esc(d.lien)}" target="_blank" rel="noopener" title="${esc(d.nom)}">${esc(d.nom)}</a></span>
+       <span class="origin">${d.origine === "depot" ? "déposé" : "Drive"}</span>
+       ${d.origine === "depot" ? `<button class="icon" data-doc="${esc(d.cle)}" aria-label="Supprimer ${esc(d.nom)}" title="Supprimer">✕</button>` : ""}</li>`).join("")
+      : `<li class="empty">Ajoutez un dossier ou déposez un fichier pour commencer.</li>`;
+  } catch {}
+}
+
+// --- Google Drive connecté ------------------------------------------------------------
+let G = null;
+async function loadGoogle() {
+  try { G = await api("/api/google"); } catch { G = { configure: false, comptes: [] }; }
+  $("gSetup").hidden = G.configure; $("gLogin").hidden = !G.configure;
+  $("gLogin").textContent = G.comptes.length ? "Connecter un autre compte Google" : "Se connecter avec Google";
+  $("gState").textContent = G.configure ? (G.push ? "synchro instantanée" : "synchro planifiée") : "";
+  $("gAccounts").innerHTML = G.comptes.map((c) => `<div class="acct"><span class="email">${esc(c)}</span>
+      <button class="btn small" data-all="${esc(c)}">Tout mon Drive</button>
+      <button class="btn small ghost" data-pick="${esc(c)}">Choisir des dossiers</button>
+      <button class="icon" data-logout="${esc(c)}" title="Déconnecter" aria-label="Déconnecter ${esc(c)}">✕</button></div>`).join("");
+}
+function renderGoogleSources(list) {
+  $("gSources").innerHTML = (list || []).map((g) => {
+    const what = g.mode === "tout" ? "Tout le Drive" : g.dossiers.map((d) => d.name).join(", ");
+    return `<li><span class="name" title="${esc(g.compte)}">${esc(what)} <span class="origin">· ${esc(g.compte)}</span></span>
+      <label class="switch"><input type="checkbox" data-auto="${esc(g.id)}" ${g.auto ? "checked" : ""}> auto</label>
+      <button class="icon" data-gsrc="${esc(g.id)}" aria-label="Retirer cette source" title="Retirer">✕</button></li>`;
+  }).join("");
+}
+async function addGoogle(compte, mode, dossiers) {
+  const since = now();
+  try { const r = await api("/api/sources/google", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ compte, mode, dossiers, auto: true }) });
+        afterChange(r, mode === "tout" ? "Tout le Drive ajouté." : `${dossiers.length} dossier(s) ajouté(s).`, since); }
+  catch (err) { toast(err.message); }
+}
+// Sélecteur Google (Picker) : chargé à la demande.
+function loadPickerLib() {
+  return new Promise((ok, ko) => {
+    if (window.google?.picker) return ok();
+    const sc = document.createElement("script"); sc.src = "https://apis.google.com/js/api.js";
+    sc.onload = () => gapi.load("picker", { callback: ok, onerror: ko }); sc.onerror = ko; document.head.append(sc);
+  });
+}
+async function pickFolders(compte) {
+  try {
+    const [{ jeton }] = await Promise.all([api(`/api/google/jeton?compte=${encodeURIComponent(compte)}`), loadPickerLib()]);
+    const view = new google.picker.DocsView(google.picker.ViewId.FOLDERS)
+      .setIncludeFolders(true).setSelectFolderEnabled(true).setMimeTypes("application/vnd.google-apps.folder");
+    new google.picker.PickerBuilder().addView(view).enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+      .setOAuthToken(jeton).setDeveloperKey(G.picker_key).setAppId(G.app_id).setOrigin(location.origin).setLocale("fr")
+      .setTitle("Choisissez les dossiers à indexer")
+      .setCallback((d) => { if (d.action === google.picker.Action.PICKED)
+        addGoogle(compte, "dossiers", d.docs.map((x) => ({ id: x.id, name: x.name }))); })
+      .build().setVisible(true);
+  } catch (err) { toast(err.message || "Le sélecteur Google n'a pas pu s'ouvrir."); }
+}
+
+function renderSync(r, running) {
+  if (running) { $("syncState").innerHTML = `<span class="state occupe">Synchronisation en cours…</span>`; return; }
+  if (!r) { $("syncState").innerHTML = `<span class="empty">Pas encore de synchronisation.</span>`; return; }
+  const label = { ok: "À jour", avertissement: "À vérifier", occupe: "Ignorée : une autre passe tournait", erreur: "En échec" }[r.statut] || r.statut;
+  const when = r.debut.replace(/^(\d{4})(\d\d)(\d\d)T(\d\d)(\d\d).*/, "$3/$2 à $4:$5 UTC");
+  const src = r.sources.map((s) => `<li>${esc(s.source)} : ${s.importes} ajouté(s) ou modifié(s), ${
+    s.suivis !== undefined ? `${s.suivis} suivi(s)` : `${s.inchanges} inchangé(s)`}${s.retires ? `, ${s.retires} retiré(s)` : ""}${
+    s.echecs ? `, <b>${s.echecs} en échec</b>` : ""}</li>`).join("");
+  const errs = r.erreurs.map((e) => `<li>${esc(e)}</li>`).join("");
+  $("syncState").innerHTML = `<span class="state ${esc(r.statut)}">${label}</span> · ${when} · ${r.documents} document(s), ${r.supprimes} retiré(s)
+    <ul>${src}</ul>${errs ? `<ul class="errs">${errs}</ul>` : ""}`;
+}
+
+// Après une action, on rafraîchit jusqu'à voir la fin d'une passe COMMENCÉE après elle (le job met quelques
+// secondes à apparaître « en cours » : sans ça, on s'arrêtait trop tôt et la liste restait ancienne).
+let polling, lastStatus;
+const utcStamp = (ms) => new Date(ms).toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+function pollUntilSynced(since) {
+  clearInterval(polling);
+  const t0 = Date.now();
+  polling = setInterval(async () => {
+    await refresh();
+    const done = lastStatus && !lastStatus.synchro_en_cours && (lastStatus.derniere_synchro?.debut || "") >= since;
+    if (done || Date.now() - t0 > 5 * 60 * 1000) clearInterval(polling);
+  }, 5000);
+}
+async function afterChange(res, what, since) { toast(`${what} ${SYNC_MSG[res.synchro] || ""}`); await refresh(); pollUntilSynced(since); }
+const now = () => utcStamp(Date.now() - 1000);
+
+$("addFolder").onsubmit = async (e) => {
+  e.preventDefault();
+  const btn = e.submitter; btn.disabled = true; const since = now();
+  try { const r = await api("/api/sources", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ dossier: $("folder").value }) });
+        $("folder").value = ""; await afterChange(r, `« ${r.ajoute} » ajouté.`, since); }
+  catch (err) { toast(err.message); } finally { btn.disabled = false; }
+};
+document.addEventListener("click", async (e) => {
+  const f = e.target.closest("[data-folder]"), d = e.target.closest("[data-doc]"), c = e.target.closest(".share code");
+  const since = now();
+  const all = e.target.closest("[data-all]"), pick = e.target.closest("[data-pick]"), out = e.target.closest("[data-logout]");
+  const gs = e.target.closest("[data-gsrc]");
+  if (all) return addGoogle(all.dataset.all, "tout", []);
+  if (pick) return pickFolders(pick.dataset.pick);
+  try {
+    if (out && confirm(`Déconnecter ${out.dataset.logout} ? Ses sources et leurs documents seront retirés de l'index.`)) {
+      await afterChange(await api(`/api/google/comptes/${encodeURIComponent(out.dataset.logout)}`, { method: "DELETE" }), "Compte déconnecté.", since);
+      return loadGoogle();
+    }
+    if (gs && confirm("Retirer cette source ? Ses documents seront retirés de l'index (pas de Drive).")) {
+      return afterChange(await api(`/api/sources/google/${encodeURIComponent(gs.dataset.gsrc)}`, { method: "DELETE" }), "Source retirée.", since);
+    }
+  } catch (err) { return toast(err.message); }
+  try {
+    if (f && confirm("Retirer ce dossier ? Ses documents seront retirés de l'index (pas de Drive).")) afterChange(await api(`/api/sources/${encodeURIComponent(f.dataset.folder)}`, { method: "DELETE" }), "Dossier retiré.", since);
+    if (d && confirm("Supprimer ce fichier déposé ?")) afterChange(await api(`/api/documents?cle=${encodeURIComponent(d.dataset.doc)}`, { method: "DELETE" }), "Fichier supprimé.", since);
+    if (c) { await navigator.clipboard.writeText(c.textContent); toast("Adresse copiée."); }
+  } catch (err) { toast(err.message); }
+});
+$("syncNow").onclick = async () => { const since = now(); try { afterChange(await api("/api/sync", { method: "POST" }), "", since); } catch (err) { toast(err.message); } };
+
+const drop = $("drop");
+async function sendFiles(files) {
+  if (!files.length) return;
+  const fd = new FormData(); for (const f of files) fd.append("files", f);
+  toast(`Envoi de ${files.length} fichier(s)…`); const since = now();
+  try { const r = await api("/api/upload", { method: "POST", body: fd }); afterChange(r, `${r.deposes.length} fichier(s) déposé(s).`, since); }
+  catch (err) { toast(err.message); }
+}
+drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); sendFiles(e.dataTransfer.files); });
+drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("file").click(); } });
+$("file").onchange = (e) => { sendFiles(e.target.files); e.target.value = ""; };
+
+// --- Chat -------------------------------------------------------------------------
+// Markdown minimal : échappement d'abord, puis liens, gras, listes, paragraphes.
+function md(text) {
+  let h = esc(text)
+    .replace(/\[([^\]]+)\]\s*\((https?:\/\/[^)\s]+)\)/g, '<a class="cite" href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  // Lignes consécutives « - x » ou « * x » -> <ul>, le reste -> paragraphes.
+  let html = "", para = [], items = [];
+  const flush = () => {
+    if (para.length) html += `<p>${para.join("<br>")}</p>`;
+    if (items.length) html += `<ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`;
+    para = []; items = [];
+  };
+  for (const line of h.split("\n")) {
+    const m = line.match(/^\s*[-*] (.*)/);
+    if (!line.trim()) flush();
+    else if (m) { if (para.length) { html += `<p>${para.join("<br>")}</p>`; para = []; } items.push(m[1]); }
+    else { if (items.length) flush(); para.push(line); }
+  }
+  flush();
+  return html;
+}
+function bubble(cls, html) { $("welcome")?.remove(); const d = document.createElement("div"); d.className = "msg " + cls; d.innerHTML = html; $("thread").append(d); d.scrollIntoView({ block: "end" }); return d; }
+
+async function newSession() {
+  const s = await api(`/apps/${APP}/users/${userId}/sessions`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+  sessionId = s.id;
+}
+$("newChat").onclick = async () => { await newSession(); $("thread").innerHTML = ""; toast("Nouvelle conversation."); };
+
+async function ask(question) {
+  if (!sessionId) await newSession();
+  bubble("user", esc(question));
+  const out = bubble("bot", `<span class="tool">Réflexion…</span>`);
+  $("send").disabled = true;
+  let text = "";
+  try {
+    const r = await fetch("/run_sse", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ appName: APP, userId, sessionId, newMessage: { role: "user", parts: [{ text: question }] }, streaming: true }) });
+    if (!r.ok) throw new Error(`Erreur ${r.status}`);
+    const reader = r.body.getReader(), dec = new TextDecoder(); let buf = "";
+    for (;;) {
+      const { value, done } = await reader.read(); if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf("\n\n")) >= 0) {
+        const chunk = buf.slice(0, i); buf = buf.slice(i + 2);
+        const data = chunk.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5)).join("");
+        if (!data) continue;
+        const ev = JSON.parse(data);
+        if (ev.error) throw new Error(ev.error);
+        for (const p of ev.content?.parts || []) {
+          if (p.functionCall) out.innerHTML = `<span class="tool">Recherche dans les documents : « ${esc(p.functionCall.args?.question || "")} »…</span>`;
+          if (p.text && !p.thought) { text = ev.partial ? text + p.text : p.text; out.innerHTML = md(text); }
+        }
+      }
+      out.scrollIntoView({ block: "end" });
+    }
+    if (!text) out.innerHTML = `<span class="tool">Pas de réponse.</span>`;
+  } catch (err) { out.innerHTML = `<span class="tool">${esc(err.message)}</span>`; }
+  finally { $("send").disabled = false; }
+}
+$("ask").onsubmit = (e) => { e.preventDefault(); const q = $("q").value.trim(); if (q) { $("q").value = ""; ask(q); } };
+document.querySelectorAll(".suggest button").forEach((b) => b.onclick = () => ask(b.textContent));
+
+document.addEventListener("change", async (e) => {
+  const a = e.target.closest("[data-auto]"); if (!a) return;
+  try { await api(`/api/sources/google/${encodeURIComponent(a.dataset.auto)}`, { method: "PATCH",
+          headers: { "Content-Type": "application/json" }, body: JSON.stringify({ auto: a.checked }) });
+        toast(a.checked ? "Synchro automatique activée." : "Synchro automatique coupée : seulement à la demande."); }
+  catch (err) { a.checked = !a.checked; toast(err.message); }
+});
+{ // retour de la connexion Google
+  const q = new URLSearchParams(location.search);
+  if (q.get("connecte")) toast(`Compte ${q.get("connecte")} connecté : choisissez « Tout mon Drive » ou des dossiers.`);
+  if (q.get("erreur")) toast(`Connexion Google : ${q.get("erreur")}`);
+  if (q.get("connecte") || q.get("erreur")) history.replaceState(null, "", "/");
+}
+loadGoogle();
+refresh();
+const demo = new URLSearchParams(location.search).get("q"); if (demo) ask(demo);
+</script>
+</body>
+</html>

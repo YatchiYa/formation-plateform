@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gemini Enterprise Agents Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout : manuel d'exploitation interne. Bandeau fixe, alerte « Terraform en local » permanente sous le hero,
+   puis des sections en couloirs numérotés ; panneau de réglages qui réécrit toutes les commandes. EN par défaut, FR au clic. */
+:root {
+  --blue: #3643BA; --blue-deep: #1E2A7A; --hero: #3643BA; --sky: #E9ECFB; --track: #F5F6FB; --surface: #FFFFFF;
+  --ink: #161B33; --muted: #59607F; --line: #D9DEF0;
+  --go: #0F8A5F; --go-bg: #E4F5EE; --warn: #B4570A; --warn-bg: #FCF0E3; --stop: #B42318; --stop-bg: #FDECEA;
+  --code-bg: #10163A; --code-fg: #E3E7FA; --code-var: #FFD34E; --sun: #FFD34E;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #8D97F5; --blue-deep: #0D1236; --hero: #232C8F; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA;
+    --muted: #A3AACC; --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80;
+    --stop-bg: #3B1716; --code-bg: #070A1E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --blue: #8D97F5; --blue-deep: #0D1236; --hero: #232C8F; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA;
+  --muted: #A3AACC; --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80;
+  --stop-bg: #3B1716; --code-bg: #070A1E; color-scheme: dark;
+}
+html[data-lang="en"] [lang="fr"]:not(html), html[data-lang="fr"] [lang="en"]:not(html) { display: none !important; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body { margin: 0; background: var(--track); color: var(--ink); font: 400 15.5px/1.6 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.08; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(1.7rem, 3.6vw, 2.3rem); font-weight: 800; font-style: italic; text-transform: uppercase; color: var(--blue); }
+h3 { font-size: 1.25rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--blue); }
+code { font-family: var(--font-mono); font-size: .84em; background: var(--sky); padding: .08em .35em; border-radius: 4px; word-break: break-word; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+ol, ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--blue-deep); color: #fff; }
+.topbar-in { max-width: 1160px; margin: 0 auto; padding: 8px 20px; display: flex; align-items: center; gap: 14px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1.2rem; text-transform: uppercase; white-space: nowrap; }
+.brand span { color: var(--sun); }
+.nav { display: flex; gap: 2px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.nav a { color: #DDE2FF; text-decoration: none; font-weight: 600; font-size: .86rem; padding: 6px 9px; border-radius: 6px; white-space: nowrap; }
+.nav a:hover { background: rgba(255,255,255,.12); color: #fff; }
+.tools { display: flex; gap: 6px; align-items: center; }
+.tbtn { background: transparent; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 6px; padding: 4px 9px; cursor: pointer; font-size: .82rem; font-weight: 600; }
+.tbtn b { color: var(--sun); }
+.prog { font-size: .8rem; color: #DDE2FF; white-space: nowrap; }
+
+.wrap { max-width: 1160px; margin: 0 auto; padding-inline: 20px; }
+section { padding-block: 44px 4px; }
+.eyebrow { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: .88rem; color: var(--muted); margin-bottom: 4px; }
+.lead { color: var(--muted); max-width: 74ch; margin-top: 8px; font-size: 1.04rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; display: grid; gap: 10px; align-content: start; }
+.card > *, .step-body > *, .tabpanel > * { min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+
+.hero { background: var(--hero); color: #fff; position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-58deg, transparent 0 46px, rgba(255,255,255,.06) 46px 50px); pointer-events: none; }
+.hero .wrap { position: relative; padding-block: 32px 28px; display: grid; gap: 14px; }
+.hero h1 { font-size: clamp(2.1rem, 5.4vw, 3.5rem); font-weight: 800; font-style: italic; text-transform: uppercase; }
+.hero h1 em { color: var(--sun); font-style: italic; }
+.hero p { color: #E4E8FF; max-width: 72ch; font-size: 1.04rem; }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.fact { background: #fff; color: #1E2A7A; border-radius: 9px; padding: 9px 12px; box-shadow: 0 3px 0 rgba(0,0,0,.18); min-width: 0; }
+.fact small { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 600; color: #4E5682; }
+.fact b { font-family: var(--font-mono); font-size: .84rem; word-break: break-all; }
+.fact.alert { background: var(--sun); }
+
+.tf-alert { background: var(--warn-bg); border-bottom: 3px solid var(--warn); }
+.tf-alert .wrap { padding-block: 14px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; align-items: center; }
+.tf-alert .tag { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase; color: var(--warn); font-size: 1.3rem; line-height: 1; }
+.tf-alert a { font-weight: 600; white-space: nowrap; }
+
+.roles .card { border-top: 4px solid var(--blue); }
+.roles .card.hr { border-top-color: var(--go); }
+.roles .card.sec { border-top-color: var(--stop); }
+.roles .card.adm { border-top-color: var(--sun); }
+.roles ul { font-size: .92rem; }
+
+.setup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 18px; }
+.field { display: grid; gap: 4px; }
+.field label, .lbl { font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.field input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--track); font-family: var(--font-mono); font-size: .86rem; }
+.field input:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px var(--sky); }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.seg { display: flex; flex-wrap: wrap; background: var(--sky); border-radius: 9px; padding: 3px; gap: 3px; }
+.seg button { flex: 1 1 120px; border: 0; background: transparent; padding: 7px 10px; border-radius: 7px; font-weight: 600; cursor: pointer; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+
+.steps { display: grid; gap: 12px; margin-top: 18px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; display: grid; grid-template-columns: 64px minmax(0, 1fr); overflow: hidden; }
+.step.done .lane { background: var(--go); }
+.lane { background: var(--blue); color: #fff; display: flex; flex-direction: column; align-items: center; padding-top: 14px; gap: 8px; }
+.lane b { font-family: var(--font-display); font-size: 2rem; font-weight: 800; font-style: italic; line-height: 1; }
+.lane input { width: 20px; height: 20px; accent-color: var(--sun); cursor: pointer; }
+.lane label { font-size: .64rem; text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
+.step-body { padding: 14px 18px 16px; display: grid; gap: 10px; min-width: 0; }
+.step-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.chip { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 99px; background: var(--sky); color: var(--blue); white-space: nowrap; }
+.chip.where { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+.chip.adm { background: var(--warn-bg); color: var(--warn); }
+.why { color: var(--muted); font-size: .95rem; }
+
+pre.cmd { position: relative; margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 9px; padding: 11px 14px; padding-right: 76px; overflow-x: auto; font: 400 .8rem/1.6 var(--font-mono); }
+pre.cmd code { background: none; padding: 0; color: inherit; font-size: inherit; word-break: normal; border-radius: 0; }
+pre.cmd .c { color: #8C95C6; } pre.cmd .v { color: var(--code-var); font-weight: 600; }
+.copy { position: absolute; top: 7px; right: 7px; border: 1px solid #39407A; background: #1D2557; color: #DDE2FF; border-radius: 6px; padding: 3px 9px; font-size: .74rem; cursor: pointer; font-family: var(--font-body); font-weight: 600; }
+.copy:hover { background: #3643BA; color: #fff; }
+.note { border-radius: 9px; padding: 10px 13px; font-size: .93rem; border-left: 4px solid var(--blue); background: var(--sky); }
+.note.go { border-color: var(--go); background: var(--go-bg); } .note.go b:first-child { color: var(--go); }
+.note.warn { border-color: var(--warn); background: var(--warn-bg); } .note.warn b:first-child { color: var(--warn); }
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 18px; }
+.tabs button { border: 1px solid var(--line); background: var(--surface); border-radius: 9px; padding: 9px 14px; font-weight: 600; cursor: pointer; text-align: left; line-height: 1.25; color: var(--ink); }
+.tabs button small { display: block; font-weight: 400; color: var(--muted); font-size: .8rem; }
+.tabs button[aria-selected="true"] { border-color: var(--blue); background: var(--sky); box-shadow: inset 0 -3px 0 var(--blue); }
+.tabpanel { margin-top: 12px; display: grid; gap: 12px; }
+
+.tbl { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-top: 16px; }
+table.t { width: 100%; border-collapse: collapse; font-size: .92rem; min-width: 640px; }
+table.t th, table.t td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+table.t thead th { background: var(--blue-deep); color: #fff; font-family: var(--font-display); font-size: 1rem; text-transform: uppercase; letter-spacing: .04em; }
+table.t td:first-child { font-weight: 600; }
+
+.chklist { display: grid; gap: 8px; margin-top: 14px; }
+.ck { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; cursor: pointer; }
+.ck input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--go); cursor: pointer; }
+.ck.ok { border-color: var(--go); background: var(--go-bg); }
+.ck span { min-width: 0; }
+
+.search { padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px; background: var(--surface); width: 100%; max-width: 520px; margin-top: 16px; }
+.search:focus { border-color: var(--blue); outline: none; }
+.trouble { display: grid; gap: 8px; margin-top: 12px; }
+.tr { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 14px; padding: 11px 15px; font-size: .93rem; }
+.tr > div { min-width: 0; } .tr .lbl { display: block; }
+.faq { display: grid; gap: 8px; margin-top: 12px; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.faq summary { cursor: pointer; padding: 11px 16px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before { content: "+"; font-family: var(--font-display); font-weight: 800; color: var(--blue); width: 12px; }
+.faq details[open] summary::before { content: "–"; }
+.faq summary .cat { margin-left: auto; font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); white-space: nowrap; }
+.faq .a { padding: 0 16px 13px 38px; font-size: .95rem; }
+.cats { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.cats button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 5px 12px; font-weight: 600; font-size: .86rem; cursor: pointer; color: var(--muted); }
+.cats button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+.empty { color: var(--muted); padding: 8px 2px; }
+.tested { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin-top: 16px; }
+.tested .card { gap: 4px; padding: 13px 15px; }
+.st { font-family: var(--font-display); font-weight: 800; font-style: italic; text-transform: uppercase; }
+.st.ok { color: var(--go); } .st.todo { color: var(--warn); }
+.todo { background: var(--warn-bg); color: var(--warn); border: 1px dashed var(--warn); border-radius: 5px; padding: 0 5px; font-family: var(--font-mono); font-size: .82em; }
+.sr { position: absolute; left: -9999px; }
+
+footer { margin-top: 50px; padding-block: 22px; background: var(--blue-deep); color: #C9CFF2; font-size: .86rem; }
+footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--surface); padding: 8px 16px; border-radius: 8px; font-weight: 600; z-index: 50; }
+
+@media (max-width: 980px) {
+  .facts, .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .setup, .grid2 { grid-template-columns: 1fr; }
+  .tr { grid-template-columns: 1fr; }
+  .tf-alert .wrap { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .wrap, .topbar-in { padding-inline: 16px; }
+  .topbar { position: static; } html { scroll-padding-top: 0; }
+  .topbar-in { flex-wrap: wrap; } .nav { order: 3; flex-basis: 100%; }
+  .fields, .grid4, .facts { grid-template-columns: 1fr; }
+  .step { grid-template-columns: 48px minmax(0, 1fr); }
+  .lane b { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">Agents <span>×</span> Gemini Enterprise</div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#roles"><span lang="en">Roles</span><span lang="fr">Rôles</span></a>
+      <a href="#admin-setup"><span lang="en">App setup</span><span lang="fr">Mise en place</span></a>
+      <a href="#path"><span lang="en">Deploy</span><span lang="fr">Déployer</span></a>
+      <a href="#terraform">Terraform</a>
+      <a href="#add-agent"><span lang="en">Add an agent</span><span lang="fr">Ajouter un agent</span></a>
+      <a href="#requests"><span lang="en">Partner requests</span><span lang="fr">Demandes partenaires</span></a>
+      <a href="#modes">Modes</a>
+      <a href="#hr"><span lang="en">HR &amp; managers</span><span lang="fr">RH et managers</span></a>
+      <a href="#trouble"><span lang="en">Troubleshooting</span><span lang="fr">Dépannage</span></a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="tools">
+      <span class="prog" id="prog"></span>
+      <button class="tbtn" id="lang-btn" type="button" aria-label="Language / Langue"><b>EN</b> · FR</button>
+      <button class="tbtn" id="theme-btn" type="button" aria-label="Theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:#C9D0FF"><span lang="en">Internal playbook · Gemini Enterprise team, developers, HR</span><span lang="fr">Manuel interne · équipe Gemini Enterprise, développeurs, RH</span></div>
+    <h1><span lang="en">Run agents in our <em>Gemini Enterprise</em></span><span lang="fr">Faire tourner des agents dans notre <em>Gemini Enterprise</em></span></h1>
+    <p lang="en">Everything our team needs: set up the app project once, deploy our own agents, add new ones, connect partner agents from their own projects, and answer every question. Each step says where it happens, what to type and what you should see.</p>
+    <p lang="fr">Tout ce dont notre équipe a besoin : préparer une fois le projet de l'app, déployer nos agents, en ajouter de nouveaux, connecter les agents des partenaires depuis leurs projets, et répondre à toutes les questions. Chaque étape dit où elle se passe, quoi taper et ce que vous devez voir.</p>
+    <div class="facts">
+      <div class="fact"><small><span lang="en">App project</span><span lang="fr">Projet de l'app</span></small><b data-cfg="geProject"></b></div>
+      <div class="fact"><small><span lang="en">App location · agent region</span><span lang="fr">Localisation · région des agents</span></small><b>eu · europe-west1</b></div>
+      <div class="fact"><small><span lang="en">Project number</span><span lang="fr">Numéro du projet</span></small><b data-cfg="geProjectNumber"></b></div>
+      <div class="fact alert"><small><span lang="en">Terraform runs</span><span lang="fr">Terraform s'exécute</span></small><b><span lang="en">locally (for now)</span><span lang="fr">en local (pour l'instant)</span></b></div>
+    </div>
+  </div>
+</div>
+
+<div class="tf-alert" role="note">
+  <div class="wrap">
+    <div class="tag">Terraform<br>= local</div>
+    <p lang="en"><strong>For now, Terraform runs from a person's machine or Cloud Shell, not from a CI pipeline.</strong> The state file (<code>terraform.tfstate.d/scenario-…/terraform.tfstate</code>, one workspace per scenario) lives in the folder where you run it, and Terraform acts with <strong>your</strong> identity. One person at a time per folder, and never lose or commit the state.</p>
+    <p lang="fr"><strong>Pour l'instant, Terraform s'exécute depuis le poste d'une personne ou Cloud Shell, pas depuis une chaîne CI.</strong> Le fichier d'état (<code>terraform.tfstate.d/scenario-…/terraform.tfstate</code>, un espace de travail par scénario) vit dans le dossier où vous le lancez, et Terraform agit avec <strong>votre</strong> identité. Une personne à la fois par dossier, et ne jamais perdre ni committer l'état.</p>
+    <a href="#terraform"><span lang="en">The rules →</span><span lang="fr">Les règles →</span></a>
+  </div>
+</div>
+
+<main>
+<section id="roles" class="roles"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Who does what</span><span lang="fr">Qui fait quoi</span></div>
+  <h2><span lang="en">Roles</span><span lang="fr">Les rôles</span></h2>
+  <div class="grid4" id="roles-grid"></div>
+</div></section>
+
+<section id="admin-setup"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Once · Gemini Enterprise admin</span><span lang="fr">Une fois · admin Gemini Enterprise</span></div>
+  <h2><span lang="en">Set up the app project</span><span lang="fr">Préparer le projet de l'app</span></h2>
+  <p class="lead" lang="en">Do this once in <code>aiml-gemini-entreprise-ldbr</code>, before deploying any agent or accepting partner requests. About 30 minutes.</p>
+  <p class="lead" lang="fr">À faire une fois dans <code>aiml-gemini-entreprise-ldbr</code>, avant de déployer un agent ou d'accepter des demandes de partenaires. Environ 30 minutes.</p>
+  <div class="steps" id="admin-steps"></div>
+</div></section>
+
+<section id="path"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Our own agents · weather, writing, translation, size, returns, identity, and the next ones</span><span lang="fr">Nos agents · météo, rédaction, traduction, taille, retours, identité, et les suivants</span></div>
+  <h2><span lang="en">Deploy and connect, step by step</span><span lang="fr">Déployer et connecter, pas à pas</span></h2>
+  <p class="lead" lang="en">The projects already exist (billing set, region eu). Choose where you run the commands, the hosting and where the agents live, check the values: every command updates. Written version of this path: <code>docs/11-acme-agents-vers-app-gemini-enterprise.md</code>; one, several or all agents with no app yet: <code>docs/12-1-1</code> (shell), <code>12-1-2</code> (Terraform), <code>12-1-3</code> (console). Tick a step only when its <strong>Expected</strong> box matches what you see.</p>
+  <p class="lead" lang="fr">Les projets existent déjà (facturation configurée, région eu). Choisissez où vous lancez les commandes, l'hébergement et l'endroit où vivent les agents, vérifiez les valeurs : toutes les commandes se mettent à jour. Version écrite de ce parcours : <code>docs/11-acme-agents-vers-app-gemini-enterprise.md</code> ; un, plusieurs ou tous les agents sans app encore : <code>docs/12-1-1</code> (shell), <code>12-1-2</code> (Terraform), <code>12-1-3</code> (console). Ne cochez une étape que si l'encadré <strong>Attendu</strong> correspond à ce que vous voyez.</p>
+  <div class="setup">
+    <div class="card">
+      <div class="field"><span class="lbl"><span lang="en">Where you run the commands</span><span lang="fr">Où vous lancez les commandes</span></span>
+        <div class="seg" data-key="run"><button type="button" data-val="laptop"><span lang="en">My laptop (~/Desktop)</span><span lang="fr">Mon poste (~/Desktop)</span></button><button type="button" data-val="shell">Cloud Shell</button></div></div>
+      <div class="field"><span class="lbl"><span lang="en">Hosting</span><span lang="fr">Hébergement</span></span>
+        <div class="seg" data-key="host"><button type="button" data-val="runtime">Agent Runtime</button><button type="button" data-val="a2a">Cloud Run · A2A</button></div></div>
+      <div class="field"><span class="lbl"><span lang="en">Where the agents live</span><span lang="fr">Où vivent les agents</span></span>
+        <div class="seg" data-key="where"><button type="button" data-val="same"><span lang="en">In the app project</span><span lang="fr">Dans le projet de l'app</span></button><button type="button" data-val="other"><span lang="en">In another project</span><span lang="fr">Dans un autre projet</span></button></div></div>
+    </div>
+    <div class="card">
+      <div class="fields">
+        <div class="field"><label for="v-GE_PROJECT"><span lang="en">App project</span><span lang="fr">Projet de l'app</span></label><input id="v-GE_PROJECT" data-var="GE_PROJECT" autocomplete="off"></div>
+        <div class="field"><label for="v-GE_NUM"><span lang="en">App project number</span><span lang="fr">Numéro du projet de l'app</span></label><input id="v-GE_NUM" data-var="GE_NUM" autocomplete="off" inputmode="numeric" placeholder="123456789012"></div>
+        <div class="field"><label for="v-APP_ID"><span lang="en">App ID</span><span lang="fr">ID de l'app</span></label><input id="v-APP_ID" data-var="APP_ID" autocomplete="off" placeholder="app-id"></div>
+        <div class="field"><label for="v-AGENTS_PROJECT"><span lang="en">Agents project</span><span lang="fr">Projet des agents</span></label><input id="v-AGENTS_PROJECT" data-var="AGENTS_PROJECT" value="acme-agents-prod" autocomplete="off"></div>
+      </div>
+    </div>
+  </div>
+  <div class="steps" id="path-steps"></div>
+</div></section>
+
+<section id="terraform"><div class="wrap">
+  <div class="eyebrow"><span lang="en">How Terraform is used today</span><span lang="fr">Comment Terraform est utilisé aujourd'hui</span></div>
+  <h2><span lang="en">Terraform: local execution</span><span lang="fr">Terraform : exécution en local</span></h2>
+  <div class="grid2">
+    <div class="card"><h3><span lang="en">What « local » means</span><span lang="fr">Ce que veut dire « en local »</span></h3><ul id="tf-means"></ul></div>
+    <div class="card"><h3><span lang="en">The rules, until we move to CI</span><span lang="fr">Les règles, en attendant la CI</span></h3><ol id="tf-rules"></ol></div>
+  </div>
+  <div class="tbl"><table class="t" id="tf-stacks"></table></div>
+  <div class="grid2">
+    <div class="card"><h3><span lang="en">Everyday commands</span><span lang="fr">Commandes courantes</span></h3><div id="tf-cmds"></div></div>
+    <div class="card"><h3><span lang="en">Later: shared state and CI</span><span lang="fr">Plus tard : état partagé et CI</span></h3><div id="tf-later" style="display:grid;gap:10px"></div></div>
+  </div>
+</div></section>
+
+<section id="add-agent"><div class="wrap">
+  <div class="eyebrow"><span lang="en">New agent → available in the chat</span><span lang="fr">Nouvel agent → disponible dans le chat</span></div>
+  <h2><span lang="en">Add a new agent</span><span lang="fr">Ajouter un nouvel agent</span></h2>
+  <p class="lead" lang="en">Four cases. Pick the one that matches the agent, follow its steps, then make it visible (last block, same for all).</p>
+  <p class="lead" lang="fr">Quatre cas. Choisissez celui qui correspond à l'agent, suivez ses étapes, puis rendez-le visible (dernier bloc, identique pour tous).</p>
+  <div class="tabs" role="tablist" id="add-tabs"></div>
+  <div class="tabpanel" id="add-panel" role="tabpanel"></div>
+  <div class="card" style="margin-top:14px" id="visible-card"></div>
+</div></section>
+
+<section id="requests"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Runbook · Gemini Enterprise admin</span><span lang="fr">Procédure · admin Gemini Enterprise</span></div>
+  <h2><span lang="en">Handle a partner request</span><span lang="fr">Traiter une demande de partenaire</span></h2>
+  <p class="lead" lang="en">Partners follow the partner portal (<code>portail-agents-partenaires.html</code>) and send a request generated there. Work through this list for each request; the button resets it.</p>
+  <p class="lead" lang="fr">Les partenaires suivent le portail partenaires (<code>portail-agents-partenaires.html</code>) et envoient une demande générée par celui-ci. Suivez cette liste pour chaque demande ; le bouton la remet à zéro.</p>
+  <div class="chklist" id="req-list"></div>
+  <p style="margin-top:10px"><button class="tbtn" style="color:var(--blue);border-color:var(--line)" type="button" id="req-reset"><span lang="en">Reset for a new request</span><span lang="fr">Remettre à zéro pour une nouvelle demande</span></button></p>
+</div></section>
+
+<section id="modes"><div class="wrap">
+  <div class="eyebrow">Console › Gemini Enterprise › app › Agents › + Add agent</div>
+  <h2><span lang="en">The 5 add modes</span><span lang="fr">Les 5 modes d'ajout</span></h2>
+  <div class="tbl"><table class="t" id="modes-table"></table></div>
+  <div class="tabs" role="tablist" id="mode-tabs"></div>
+  <div class="tabpanel" id="mode-panel" role="tabpanel"></div>
+</div></section>
+
+<section id="hr"><div class="wrap">
+  <div class="eyebrow"><span lang="en">No technical background needed</span><span lang="fr">Sans connaissances techniques</span></div>
+  <h2><span lang="en">For HR and managers</span><span lang="fr">Pour les RH et les managers</span></h2>
+  <div class="grid2" id="hr-grid"></div>
+</div></section>
+
+<section id="trouble"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Symptom › cause › fix</span><span lang="fr">Symptôme › cause › correction</span></div>
+  <h2><span lang="en">Troubleshooting</span><span lang="fr">Dépannage</span></h2>
+  <label for="t-search" class="sr">Search</label>
+  <input id="t-search" class="search" type="search">
+  <div class="trouble" id="t-list"></div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Team, developers, HR</span><span lang="fr">Équipe, développeurs, RH</span></div>
+  <h2>FAQ</h2>
+  <label for="f-search" class="sr">Search</label>
+  <input id="f-search" class="search" type="search">
+  <div class="cats" id="f-cats"></div>
+  <div class="faq" id="f-list"></div>
+</div></section>
+
+<section id="tested"><div class="wrap">
+  <div class="eyebrow"><span lang="en">October 2026 · two real Google Cloud projects</span><span lang="fr">Octobre 2026 · deux vrais projets Google Cloud</span></div>
+  <h2><span lang="en">What has been tested</span><span lang="fr">Ce qui a été testé</span></h2>
+  <div class="tested" id="tested-grid"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <span><span lang="en">Code and docs:</span><span lang="fr">Code et documentation :</span> <code style="background:transparent;color:#fff">09-agents-multi-projets-gemini-enterprise</code> · docs/08, docs/09, 01-bis, 02-bis</span>
+  <span><span lang="en">Internal use · v2.0</span><span lang="fr">Usage interne · v2.0</span></span>
+</div></footer>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ======================================================================
+   CONFIGURATION : à compléter une fois (étape « Préparer le projet de l'app »).
+   ====================================================================== */
+var CONFIG = {
+  geProject: "aiml-gemini-entreprise-ldbr",
+  geProjectNumber: "98547854221",   // à vérifier : gcloud projects describe aiml-gemini-entreprise-ldbr --format='value(projectNumber)'
+  appId: ""              // TODO : Gemini Enterprise > l'app > Présentation
+};
+
+(function () {
+  "use strict";
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem("geplay:" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem("geplay:" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  var root = document.documentElement;
+  var lang = store.get("lang", "en"), state = store.get("state", { host: "runtime", where: "other", run: "laptop" }), done = store.get("done", {}), vars = store.get("vars", {});
+  var addTab = store.get("addTab", "own-runtime"), reqDone = store.get("req", {}), fcat = "all";
+
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function T(o) { return typeof o === "string" ? o : (o[lang] || o.en); }
+  function L(en, fr) { return '<span lang="en">' + en + '</span><span lang="fr">' + fr + "</span>"; }
+  function todo() { return '<span class="todo">' + (lang === "fr" ? "à compléter" : "to complete") + "</span>"; }
+  function v(n) { var el = document.querySelector('[data-var="' + n + '"]'); return (el && el.value.trim()) || n; }
+  function same() { return state.where === "same"; }
+  function rt() { return state.host === "runtime"; }
+  function VARS() {
+    return { GE_PROJECT: v("GE_PROJECT"), GE_NUM: v("GE_NUM"), APP_ID: v("APP_ID"), AGENTS_PROJECT: same() ? v("GE_PROJECT") : v("AGENTS_PROJECT"),
+             FOLDER: rt() ? "02-bis-agent-runtime" : "01-bis-cloud-run-a2a",
+             DOSSIER: state.run === "shell" ? "~/09-agents-multi-projets-gemini-enterprise" : "~/Desktop/09-agents-multi-projets-gemini-enterprise",
+             GE_SA: "service-" + v("GE_NUM") + "@gcp-sa-discoveryengine.iam.gserviceaccount.com" };
+  }
+  function fill(t) { var m = VARS(); return t.replace(/\{([A-Z_]+)\}/g, function (_, n) { return n in m ? m[n] : n; }); }
+  function codeHtml(t) {
+    var m = VARS();
+    return t.split("\n").map(function (line) {
+      var i = line.indexOf("# "), code = i >= 0 && (i === 0 || line[i - 1] === " ") ? line.slice(0, i) : line, com = line.slice(code.length);
+      return esc(code).replace(/\{([A-Z_]+)\}/g, function (_, n) { return '<span class="v">' + esc(n in m ? m[n] : n) + "</span>"; }) + (com ? '<span class="c">' + esc(fill(com)) + "</span>" : "");
+    }).join("\n");
+  }
+  function cmd(t) { return '<pre class="cmd" data-tpl="' + esc(t).replace(/"/g, "&quot;") + '"><button class="copy" type="button">' + (lang === "fr" ? "Copier" : "Copy") + "</button><code>" + codeHtml(t) + "</code></pre>"; }
+  function exp(en, fr) { return '<div class="note go"><b>' + (lang === "fr" ? "Attendu :" : "Expected:") + "</b> " + (lang === "fr" ? fr : en) + "</div>"; }
+  function warn(en, fr) { return '<div class="note warn"><b>' + (lang === "fr" ? "Attention :" : "Watch out:") + "</b> " + (lang === "fr" ? fr : en) + "</div>"; }
+  function P(en, fr) { return "<p>" + (lang === "fr" ? fr : en) + "</p>"; }
+  function OL(items, start) { return "<ol" + (start ? ' start="' + start + '"' : "") + ">" + items.map(function (x) { return "<li>" + T(x) + "</li>"; }).join("") + "</ol>"; }
+  var toastEl = document.getElementById("toast"), tt;
+  function toast(m) { toastEl.textContent = m; toastEl.hidden = false; clearTimeout(tt); tt = setTimeout(function () { toastEl.hidden = true; }, 1600); }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".copy"); if (!b) return;
+    var pre = b.closest("pre"), node = pre.querySelector("code"), text = fill(pre.getAttribute("data-tpl"));
+    var fb = function () { var r = document.createRange(); r.selectNodeContents(node); var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast(lang === "fr" ? "Sélectionné : Ctrl+C" : "Selected: press Ctrl+C"); };
+    try { navigator.clipboard.writeText(text).then(function () { toast(lang === "fr" ? "Copié" : "Copied"); }, fb); } catch (e2) { fb(); }
+  });
+
+  /* ---------------- étapes ---------------- */
+  function renderSteps(elId, list) {
+    var n = 0, html = "";
+    list.forEach(function (s) {
+      if (s.when && !s.when()) return;
+      n += 1;
+      html += '<article class="step' + (done[s.id] ? " done" : "") + '"><div class="lane"><b>' + n + '</b><input type="checkbox" id="d-' + s.id + '" data-done="' + s.id + '"' + (done[s.id] ? " checked" : "")
+        + '><label for="d-' + s.id + '">' + (lang === "fr" ? "Fait" : "Done") + '</label></div><div class="step-body"><div class="step-head"><h3>' + esc(T(s.t)) + "</h3>"
+        + '<span class="chip ' + (s.who === "adm" ? "adm" : "") + '">' + (s.who === "adm" ? (lang === "fr" ? "Admin GE" : "GE admin") : (lang === "fr" ? "Développeur" : "Developer")) + "</span>"
+        + '<span class="chip where">' + esc(T(s.where)) + "</span></div>" + (s.why ? '<p class="why">' + esc(T(s.why)) + "</p>" : "") + s.body() + "</div></article>";
+    });
+    document.getElementById(elId).innerHTML = html;
+  }
+  document.addEventListener("change", function (e) {
+    var id = e.target.getAttribute && e.target.getAttribute("data-done"); if (!id) return;
+    done[id] = e.target.checked; store.set("done", done); e.target.closest(".step").classList.toggle("done", e.target.checked); updateProg();
+  });
+  function updateProg() {
+    var all = document.querySelectorAll("[data-done]"), c = 0; all.forEach(function (x) { if (x.checked) c++; });
+    document.getElementById("prog").textContent = c + " / " + all.length;
+  }
+  var CS = { en: "Terminal", fr: "Terminal" }, CON = { en: "Console", fr: "Console" }, CSCON = { en: "Console + Cloud Shell", fr: "Console + Cloud Shell" }, PC = { en: "Your computer", fr: "Votre poste" };
+
+  /* ---------------- rôles ---------------- */
+  var ROLES = [
+    ["adm", { en: "Gemini Enterprise admin", fr: "Admin Gemini Enterprise" }, [
+      { en: "Owns <code>aiml-gemini-entreprise-ldbr</code> and the app", fr: "Possède <code>aiml-gemini-entreprise-ldbr</code> et l'app" },
+      { en: "Adds agents to the app, grants Agent User to groups", fr: "Ajoute les agents à l'app, donne Agent User aux groupes" },
+      { en: "Reviews partner requests", fr: "Relit les demandes partenaires" },
+      { en: "Needs: Gemini Enterprise Admin, Project IAM Admin, Service Account Admin", fr: "Il lui faut : Gemini Enterprise Admin, Project IAM Admin, Service Account Admin" }]],
+    ["", { en: "Developers", fr: "Développeurs" }, [
+      { en: "Write and test agents (<code>agents/trio</code>)", fr: "Écrivent et testent les agents (<code>agents/trio</code>)" },
+      { en: "Deploy with Terraform (01-bis or 02-bis), locally for now", fr: "Déploient avec Terraform (01-bis ou 02-bis), en local pour l'instant" },
+      { en: "Own one Terraform folder each, and keep its state safe", fr: "Ont chacun un dossier Terraform, et gardent son état en sécurité" }]],
+    ["hr", { en: "HR and managers", fr: "RH et managers" }, [
+      { en: "Express needs: which agent, for whom, which data", fr: "Expriment les besoins : quel agent, pour qui, quelles données" },
+      { en: "Create no-code agents in the web app", fr: "Créent des agents sans code dans l'app web" },
+      { en: "Name the Google groups that get access", fr: "Indiquent les groupes Google qui ont accès" }]],
+    ["sec", { en: "Security and DPO", fr: "Sécurité et DPO" }, [
+      { en: "Own the Model Armor templates (project 08)", fr: "Possèdent les templates Model Armor (projet 08)" },
+      { en: "Review agents reading personal data or writing anything", fr: "Relisent les agents qui lisent des données personnelles ou écrivent" },
+      { en: "Approve partner agents before publication", fr: "Approuvent les agents partenaires avant publication" }]]
+  ];
+  function renderRoles() {
+    document.getElementById("roles-grid").innerHTML = ROLES.map(function (r) {
+      return '<div class="card ' + r[0] + '"><h3>' + esc(T(r[1])) + "</h3><ul>" + r[2].map(function (x) { return "<li>" + T(x) + "</li>"; }).join("") + "</ul></div>";
+    }).join("");
+  }
+
+  /* ---------------- mise en place du projet de l'app ---------------- */
+  var ADMIN = [
+    { id: "a-shell", who: "adm", where: CON, t: { en: "Open Cloud Shell in the app project", fr: "Ouvrir Cloud Shell dans le projet de l'app" },
+      why: { en: "Cloud Shell is a terminal inside the Google Cloud console: gcloud, Terraform and Python are already installed. No Docker needed: Cloud Run images are built in Google Cloud by Cloud Build.", fr: "Cloud Shell est un terminal dans la console Google Cloud : gcloud, Terraform et Python sont déjà installés. Pas besoin de Docker : les images Cloud Run sont construites dans Google Cloud par Cloud Build." },
+      body: function () {
+        return OL([{ en: "Go to <code>console.cloud.google.com</code> with your Acme account.", fr: "Aller sur <code>console.cloud.google.com</code> avec votre compte Acme." },
+          { en: "Top bar: click the <b>project picker</b> and choose <code>aiml-gemini-entreprise-ldbr</code>.", fr: "Barre du haut : cliquer sur le <b>sélecteur de projet</b> et choisir <code>aiml-gemini-entreprise-ldbr</code>." },
+          { en: "Top right: click the <b>&gt;_</b> icon (Activate Cloud Shell). A terminal opens at the bottom.", fr: "En haut à droite : cliquer sur l'icône <b>&gt;_</b> (Activer Cloud Shell). Un terminal s'ouvre en bas." },
+          { en: "Paste each block below (Ctrl+Shift+V, or right click › Paste) and press Enter.", fr: "Coller chaque bloc ci-dessous (Ctrl+Maj+V, ou clic droit › Coller) et appuyer sur Entrée." }])
+          + cmd("gcloud config set project {GE_PROJECT}\ngcloud auth application-default login     # follow the link, sign in, paste the code back")
+          + exp("<code>Updated property [core/project]</code>, then <code>Credentials saved to file</code>.", "<code>Updated property [core/project]</code>, puis <code>Credentials saved to file</code>.");
+      } },
+    { id: "a-rights", who: "adm", where: CS, t: { en: "Check your rights", fr: "Vérifier vos droits" },
+      why: { en: "Without the right roles, later steps fail with PERMISSION_DENIED.", fr: "Sans les bons rôles, les étapes suivantes échouent avec PERMISSION_DENIED." },
+      body: function () {
+        return cmd("gcloud projects get-iam-policy {GE_PROJECT} --flatten=bindings \\\n  --filter=\"bindings.members:user:$(gcloud config get-value account)\" --format=\"value(bindings.role)\"")
+          + exp("among the roles: <code>roles/discoveryengine.admin</code> (Gemini Enterprise Admin), <code>roles/resourcemanager.projectIamAdmin</code>, <code>roles/iam.serviceAccountAdmin</code>, or <code>roles/owner</code>. A role given through a group may not appear here: in that case check in Console › IAM.",
+                "parmi les rôles : <code>roles/discoveryengine.admin</code> (Gemini Enterprise Admin), <code>roles/resourcemanager.projectIamAdmin</code>, <code>roles/iam.serviceAccountAdmin</code>, ou <code>roles/owner</code>. Un rôle donné via un groupe peut ne pas apparaître ici : vérifiez alors dans Console › IAM.")
+          + warn("a role is missing? Ask the project owner; do not continue without it.", "un rôle manque ? Demandez-le au propriétaire du projet ; ne continuez pas sans.");
+      } },
+    { id: "a-ids", who: "adm", where: CSCON, t: { en: "Write down the values everyone needs", fr: "Noter les valeurs dont tout le monde a besoin" },
+      why: { en: "Partners need the project number; Terraform needs the app ID. Type them in the « Deploy » panel below, and in the CONFIG block of both HTML files.", fr: "Les partenaires ont besoin du numéro du projet ; Terraform a besoin de l'ID de l'app. Tapez-les dans le panneau « Déployer » ci-dessous, et dans le bloc CONFIG des deux fichiers HTML." },
+      body: function () {
+        return cmd("gcloud projects describe {GE_PROJECT} --format='value(projectNumber)'     # the project NUMBER (12 digits)")
+          + OL([{ en: "<b>App ID</b>: console › search bar › « Gemini Enterprise » › click the app name › <b>Overview</b>: copy the ID.", fr: "<b>ID de l'app</b> : console › barre de recherche › « Gemini Enterprise » › cliquer sur le nom de l'app › <b>Présentation</b> : copier l'ID." },
+                { en: "<b>Location</b>: same page; it must be <code>eu</code>. It forces every agent into a <code>europe-*</code> region.", fr: "<b>Localisation</b> : même page ; elle doit être <code>eu</code>. Elle impose une région <code>europe-*</code> à chaque agent." }])
+          + exp("a 12-digit number, an app ID, and the location <code>eu</code>.", "un numéro à 12 chiffres, un ID d'app, et la localisation <code>eu</code>.");
+      } },
+    { id: "a-sa", who: "adm", where: CS, t: { en: "Check Gemini Enterprise's service account", fr: "Vérifier le compte de service de Gemini Enterprise" },
+      why: { en: "This account calls every agent. Partners grant it one permission in their project.", fr: "Ce compte appelle chaque agent. Les partenaires lui donnent un droit dans leur projet." },
+      body: function () {
+        return cmd("gcloud beta services identity create --service=discoveryengine.googleapis.com --project={GE_PROJECT}")
+          + exp("<code>Service identity created: service-NUMBER@gcp-sa-discoveryengine.iam.gserviceaccount.com</code>. Safe to run again: it only shows the account if it already exists.",
+                "<code>Service identity created: service-NUMERO@gcp-sa-discoveryengine.iam.gserviceaccount.com</code>. Sans risque à relancer : il affiche seulement le compte s'il existe déjà.");
+      } },
+    { id: "a-code", who: "adm", where: CS, t: { en: "Get the folder and the Python environment", fr: "Le dossier et l'environnement Python" },
+      why: { en: "Terraform runs locally: the folder must be on the machine that runs it.", fr: "Terraform s'exécute en local : le dossier doit être sur la machine qui le lance." },
+      body: function () {
+        return (state.run === "shell"
+          ? OL([{ en: "Cloud Shell › three-dot menu › <b>Upload</b> › the zip of the folder, then unzip it in your home folder.", fr: "Cloud Shell › menu à trois points › <b>Importer</b> › le zip du dossier, puis le décompresser dans votre dossier personnel." }])
+          : OL([{ en: "Copy <code>09-agents-multi-projets-gemini-enterprise</code> to your Desktop. Tools (Linux or Mac): gcloud (+ <code>gcloud components install beta</code>), Terraform 1.9+, uv. No Docker: Cloud Run images are built by Cloud Build.", fr: "Copier <code>09-agents-multi-projets-gemini-enterprise</code> sur votre Bureau. Outils (Linux ou Mac) : gcloud (+ <code>gcloud components install beta</code>), Terraform 1.9+, uv. Pas de Docker : les images Cloud Run sont construites par Cloud Build." }]))
+          + cmd("cd {DOSSIER} && ls\nuv venv -p '>=3.12' .venv && source .venv/bin/activate     # (.venv) appears in the prompt\nuv pip install -r agents/trio/requirements.txt")
+          + exp("<code>01-bis-cloud-run-a2a  02-bis-agent-runtime  agents  docs  scripts  terraform …</code>, then <code>Installed … packages</code>.", "<code>01-bis-cloud-run-a2a  02-bis-agent-runtime  agents  docs  scripts  terraform …</code>, puis <code>Installed … packages</code>.")
+          + warn("a copied folder must not contain someone else's <code>terraform.tfstate.d/</code> or <code>terraform.tfvars</code>: they describe their deployments.", "un dossier copié ne doit pas contenir le <code>terraform.tfstate.d/</code> ou le <code>terraform.tfvars</code> d'une autre personne : ils décrivent ses déploiements.");
+      } },
+    { id: "a-portal", who: "adm", where: PC, t: { en: "Fill in and share the partner portal", fr: "Compléter et diffuser le portail partenaires" },
+      why: { en: "The portal gives partners our project number, service account and contact. Empty values show « to complete ».", fr: "Le portail donne aux partenaires notre numéro de projet, notre compte de service et le contact. Une valeur vide s'affiche « à compléter »." },
+      body: function () {
+        return OL([{ en: "Open <code>portail-agents-partenaires.html</code> in a text editor.", fr: "Ouvrir <code>portail-agents-partenaires.html</code> dans un éditeur de texte." },
+                   { en: "Near the end, find <code>var CONFIG = {</code> and fill <code>geProjectNumber</code>, <code>contactEmail</code>, <code>contactChannel</code>. Save.", fr: "Vers la fin, trouver <code>var CONFIG = {</code> et remplir <code>geProjectNumber</code>, <code>contactEmail</code>, <code>contactChannel</code>. Enregistrer." },
+                   { en: "Same in this file: <code>geProjectNumber</code>, <code>appId</code>.", fr: "Pareil dans ce fichier : <code>geProjectNumber</code>, <code>appId</code>." },
+                   { en: "Publish both files on the intranet, or share them as files.", fr: "Publier les deux fichiers sur l'intranet, ou les partager en fichiers." }])
+          + exp("the portal shows the number and the service account, with no « to complete » left.", "le portail affiche le numéro et le compte de service, sans plus aucun « à compléter ».");
+      } },
+    { id: "a-armor", who: "adm", where: CS, t: { en: "Choose the Model Armor templates", fr: "Choisir les templates Model Armor" },
+      why: { en: "Every agent filters its own inputs and outputs: Gemini Enterprise's Model Armor does not cover added agents.", fr: "Chaque agent filtre ses propres questions et réponses : le Model Armor de Gemini Enterprise ne couvre pas les agents ajoutés." },
+      body: function () {
+        return OL([{ en: "<b>Central templates (target)</b>: get them from the security project (project 08, <code>terraform output model_armor_templates</code>) and put them in <code>prompt_template</code> / <code>response_template</code> of each <code>terraform.tfvars</code>.", fr: "<b>Templates centraux (cible)</b> : les récupérer du projet sécurité (projet 08, <code>terraform output model_armor_templates</code>) et les mettre dans <code>prompt_template</code> / <code>response_template</code> de chaque <code>terraform.tfvars</code>." },
+                   { en: "<b>Not ready yet</b>: leave both empty; Terraform creates a pair of templates in the agents project (location <code>eu</code>).", fr: "<b>Pas encore prêts</b> : laisser les deux vides ; Terraform crée une paire de templates dans le projet des agents (localisation <code>eu</code>)." }]);
+      } }
+  ];
+
+  /* ---------------- parcours de déploiement ---------------- */
+  var PATH = [
+    { id: "p-api", who: "dev", where: CS, t: { en: "Check the APIs, enable only the missing ones", fr: "Vérifier les API, activer seulement celles qui manquent" },
+      why: { en: "The APIs are normally already enabled. This checks each one and enables only what is missing. cloudresourcemanager and serviceusage are needed before Terraform.", fr: "Les API sont normalement déjà actives. Ceci vérifie chacune et n'active que ce qui manque. cloudresourcemanager et serviceusage sont indispensables avant Terraform." },
+      body: function () {
+        var extra = rt() ? "" : " run.googleapis.com artifactregistry.googleapis.com";
+        return cmd("verifier_api() { local P=$1; shift; local m=(); for API in \"$@\"; do\n  if gcloud services list --enabled --project=$P --filter=\"config.name=$API\" --format=\"value(config.name)\" | grep -q .; then echo \"OK        $API\"; else echo \"MANQUANTE $API\"; m+=($API); fi; done\n  [ ${#m[@]} -gt 0 ] && gcloud services enable \"${m[@]}\" --project=$P && echo \"activées : ${m[*]}\"; return 0; }\nverifier_api {AGENTS_PROJECT} cloudresourcemanager.googleapis.com serviceusage.googleapis.com iam.googleapis.com aiplatform.googleapis.com agentregistry.googleapis.com modelarmor.googleapis.com logging.googleapis.com" + extra + "\nverifier_api {GE_PROJECT} cloudresourcemanager.googleapis.com serviceusage.googleapis.com iam.googleapis.com discoveryengine.googleapis.com")
+          + exp("one <code>OK</code> line per API; if some were missing, <code>activées : …</code>.", "une ligne <code>OK</code> par API ; s'il en manquait, <code>activées : …</code>.");
+      } },
+    { id: "p-rights", who: "dev", where: CS, t: { en: "Check your rights on both projects", fr: "Vérifier vos droits sur les deux projets" },
+      why: { en: "Terraform acts with your identity. A missing role ends in PERMISSION_DENIED halfway through.", fr: "Terraform agit avec votre identité. Un rôle manquant finit en PERMISSION_DENIED en cours de route." },
+      body: function () {
+        var extra = rt() ? "" : ", <code>run.admin</code>, <code>artifactregistry.admin</code>, <code>cloudbuild.builds.editor</code>";
+        return cmd("for P in {AGENTS_PROJECT} {GE_PROJECT}; do echo \"== $P\"; gcloud projects get-iam-policy $P --flatten=bindings \\\n  --filter=\"bindings.members:user:$(gcloud config get-value account 2>/dev/null)\" --format=\"value(bindings.role)\"; done")
+          + P("<b>Agents project</b>: <code>aiplatform.admin</code>, <code>iam.serviceAccountAdmin</code>, <code>iam.serviceAccountUser</code>, <code>resourcemanager.projectIamAdmin</code>, <code>serviceusage.serviceUsageAdmin</code>, <code>modelarmor.admin</code>, <code>agentregistry.admin</code>" + extra + " (or <code>owner</code>). <b>App project</b>: <code>discoveryengine.admin</code>.",
+                  "<b>Projet des agents</b> : <code>aiplatform.admin</code>, <code>iam.serviceAccountAdmin</code>, <code>iam.serviceAccountUser</code>, <code>resourcemanager.projectIamAdmin</code>, <code>serviceusage.serviceUsageAdmin</code>, <code>modelarmor.admin</code>, <code>agentregistry.admin</code>" + extra + " (ou <code>owner</code>). <b>Projet de l'app</b> : <code>discoveryengine.admin</code>, <code>iam.serviceAccountAdmin</code>.")
+          + warn("a role given through a group does not show here: check in Console › IAM, or ask the project admin.", "un rôle donné via un groupe n'apparaît pas ici : vérifiez dans Console › IAM, ou demandez à l'admin du projet.");
+      } },
+    { id: "p-sa", who: "dev", where: CS, t: { en: "Service accounts: which ones, who creates them", fr: "Comptes de service : lesquels, qui les crée" },
+      why: { en: "Each program has its own identity with only the rights it needs. No service account ever has a key.", fr: "Chaque programme a sa propre identité, avec seulement les droits utiles. Aucun compte de service n'a jamais de clé." },
+      body: function () {
+        var rows = [
+          [rt() ? "<key>-agent-sa (meteo-agent-sa, …, identite-agent-sa)" : "<key>-a2a-sa (meteo-a2a-sa, …, identite-a2a-sa)", { en: "Run each agent, one account per agent (Gemini, logs, Model Armor)", fr: "Faire tourner chaque agent, un compte par agent (Gemini, journaux, Model Armor)" }, "Terraform"],
+          rt() ? null : ["agents-a2a-build-sa", { en: "Builds the agent images with Cloud Build (storage.objectViewer, artifactregistry.writer, logging.logWriter); the default Cloud Build account usually has no rights", fr: "Construit les images des agents avec Cloud Build (storage.objectViewer, artifactregistry.writer, logging.logWriter) ; le compte Cloud Build par défaut n'a en général aucun droit" }, "Terraform"],
+          ["service-{GE_NUM}@gcp-sa-discoveryengine…", { en: "Gemini Enterprise: calls the agents; gets one permission in the agents project", fr: "Gemini Enterprise : appelle les agents ; reçoit un droit dans le projet des agents" }, { en: "Google (exists with the app); the permission: Terraform", fr: "Google (existe avec l'app) ; le droit : Terraform" }],
+          ["deployeur-agents@{AGENTS_PROJECT}…", { en: "Optional: runs Terraform instead of your account", fr: "Optionnel : lance Terraform à la place de votre compte" }, { en: "You (below)", fr: "Vous (ci-dessous)" }]
+        ].filter(Boolean);
+        return '<div class="tbl" style="margin-top:0"><table class="t"><thead><tr><th>' + (lang === "fr" ? "Compte" : "Account") + "</th><th>" + (lang === "fr" ? "Rôle" : "Role") + "</th><th>" + (lang === "fr" ? "Créé par" : "Created by") + "</th></tr></thead><tbody>"
+          + rows.map(function (r) { return "<tr><td><code>" + esc(fill(r[0])) + "</code></td><td>" + T(r[1]) + "</td><td>" + T(r[2]) + "</td></tr>"; }).join("") + "</tbody></table></div>"
+          + P("<b>Optional deployer account</b> (if security wants Terraform to run with a dedicated identity):", "<b>Compte déployeur, optionnel</b> (si la sécurité veut que Terraform tourne avec une identité dédiée) :")
+          + cmd("gcloud iam service-accounts create deployeur-agents --project={AGENTS_PROJECT} --display-name=\"Terraform : déploiement des agents\"\nexport DEPLOYEUR=deployeur-agents@{AGENTS_PROJECT}.iam.gserviceaccount.com\nfor R in aiplatform.admin iam.serviceAccountAdmin iam.serviceAccountUser resourcemanager.projectIamAdmin \\\n         serviceusage.serviceUsageAdmin modelarmor.admin agentregistry.admin logging.viewer; do\n  gcloud projects add-iam-policy-binding {AGENTS_PROJECT} --condition=None --role=roles/$R --member=serviceAccount:$DEPLOYEUR >/dev/null && echo roles/$R\ndone\ngcloud iam service-accounts add-iam-policy-binding $DEPLOYEUR --project={AGENTS_PROJECT} \\\n  --role=roles/iam.serviceAccountTokenCreator --member=user:$(gcloud config get-value account 2>/dev/null)\nexport GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=$DEPLOYEUR     # Terraform now acts as the deployer")
+          + exp("<code>Created service account [deployeur-agents]</code>, 8 roles, <code>Updated IAM policy</code>. To publish with Terraform, the deployer also needs <code>discoveryengine.admin</code> on the app project.", "<code>Created service account [deployeur-agents]</code>, 8 rôles, <code>Updated IAM policy</code>. Pour publier avec Terraform, le déployeur a aussi besoin de <code>discoveryengine.admin</code> sur le projet de l'app.");
+      } },
+    { id: "p-local", who: "dev", where: CS, t: { en: "Test the agents before deploying", fr: "Tester les agents avant de déployer" },
+      why: { en: "If an agent fails here, it fails in Gemini Enterprise too. This separates agent problems from permission problems.", fr: "Si un agent échoue ici, il échoue aussi dans Gemini Enterprise. On sépare les problèmes d'agent des problèmes de droits." },
+      body: function () {
+        return cmd("cd {DOSSIER}\nuv venv -p '>=3.12' .venv && source .venv/bin/activate\nuv pip install -r agents/trio/requirements.txt\npython scripts/test_trio.py                     # offline tests\nexport LOCAL_DEV=1 GOOGLE_CLOUD_PROJECT={AGENTS_PROJECT}\nadk web --port 8080 agents/trio                 # then Web Preview > port 8080")
+          + exp("<code>tests trio OK (9 scénarios, 6 agents)</code>; Web Preview (icon at the top of Cloud Shell) shows the 6 agents. « Traduis en espagnol : Votre tente Quechua est disponible en retrait en magasin. » answers « … Quechua … recogida en tienda » and « Contrôle : conforme ». Stop with Ctrl+C.",
+                "<code>tests trio OK (9 scénarios, 6 agents)</code> ; l'Aperçu sur le Web (icône en haut de Cloud Shell) montre les 6 agents. « Traduis en espagnol : Votre tente Quechua est disponible en retrait en magasin. » répond « … Quechua … recogida en tienda » et « Contrôle : conforme ». Arrêter avec Ctrl+C.")
+          + warn("<code>uv: command not found</code>: run <code>pip install --user uv</code> and open a new terminal. <code>No API key was provided</code>: ADK too old, check <code>pip show google-adk</code> (2.10). By default no API key is used; to use one, see the FAQ « Can an agent use an API key? ». Once the configuration file is loaded (next step), start it with <code>PROMPT_TEMPLATE= RESPONSE_TEMPLATE= LOCAL_DEV=1 adk web</code>: otherwise the not-yet-created Model Armor templates block every answer.",
+                 "<code>uv: command not found</code> : lancer <code>pip install --user uv</code> et ouvrir un nouveau terminal. <code>No API key was provided</code> : ADK trop ancien, vérifier <code>pip show google-adk</code> (2.10). Par défaut aucune clé d'API ; pour en utiliser une, voir la FAQ « Un agent peut-il utiliser une clé d'API ? ». Une fois le fichier de configuration chargé (étape suivante), lancer <code>PROMPT_TEMPLATE= RESPONSE_TEMPLATE= LOCAL_DEV=1 adk web</code> : sinon les templates Model Armor pas encore créés bloquent toutes les réponses.");
+      } },
+    { id: "p-config", who: "dev", where: CS, t: { en: "Fill in and load the configuration file", fr: "Remplir et charger le fichier de configuration" },
+      why: { en: "One file says where to deploy, which agents, and which Gemini Enterprise may call them. Loaded with one line, it feeds gcloud, the scripts and Terraform (no terraform.tfvars to write).", fr: "Un fichier dit où déployer, quels agents, et quel Gemini Enterprise peut les appeler. Chargé en une ligne, il alimente gcloud, les scripts et Terraform (plus de terraform.tfvars à écrire)." },
+      body: function () {
+        var f = same() ? "config/12-2-agents-dans-projet-app.env" : "config/12-1-agents-dans-projet-exp.env";
+        return P("Open <code>" + f + "</code> in an editor and set these lines (the other lines keep their default):", "Ouvrir <code>" + f + "</code> dans un éditeur et y mettre ces lignes (les autres gardent leur valeur) :")
+          + cmd("PROJET_APP={GE_PROJECT}\nNUM_APP={GE_NUM}\nAPP_ID={APP_ID}\nGE_LOCATION=eu\nPROJET_AGENTS={AGENTS_PROJECT}\nNUM_AGENTS=123456789012          # gcloud projects describe {AGENTS_PROJECT} --format='value(projectNumber)'\nREGION=europe-west1\nAGENTS=\"\"                         # empty = all 6 agents; \"meteo\" = one; \"meteo taille\" = two\nPUBLIER=" + (same() ? "oui" : "non") + "\nAGENTS_OAUTH=\"\"\nGROUPE_UTILISATEURS=equipe-agents@acme.example\nDOSSIER={DOSSIER}")
+          + cmd("cd {DOSSIER} && source .venv/bin/activate\nsource scripts/config.sh " + f)
+          + exp("a summary with <code>Agents à déployer : meteo redaction traduction taille retour identite</code>, <code>Terraform : espace « scenario-" + (same() ? "12-2" : "12-1") + " »</code>, then <code>OK</code>. " + (same() ? "Terraform will deploy, grant the permission <b>and</b> publish the agents in the app." : "Terraform never touches the app project; the admin publishes (step « Add the agents to the app »)."),
+                "un résumé avec <code>Agents à déployer : meteo redaction traduction taille retour identite</code>, <code>Terraform : espace « scenario-" + (same() ? "12-2" : "12-1") + " »</code>, puis <code>OK</code>. " + (same() ? "Terraform va déployer, donner le droit <b>et</b> publier les agents dans l'app." : "Terraform ne touche jamais au projet de l'app ; l'admin publie (étape « Ajouter les agents dans l'app »)."))
+          + warn("repeat the <code>source</code> line in every new terminal. For Terraform, <code>AGENTS</code> lists what must EXIST: removing a key destroys that agent. No app yet? Leave <code>PROJET_APP</code>, <code>NUM_APP</code>, <code>APP_ID</code> empty and keep <code>PUBLIER=non</code>.", "refaire la ligne <code>source</code> dans chaque nouveau terminal. Pour Terraform, <code>AGENTS</code> liste ce qui doit EXISTER : retirer une clé détruit cet agent. Pas encore d'app ? Laisser <code>PROJET_APP</code>, <code>NUM_APP</code>, <code>APP_ID</code> vides et garder <code>PUBLIER=non</code>.");
+      } },
+    { id: "p-deploy", who: "dev", where: CS, t: { en: "Deploy (Terraform, locally)", fr: "Déployer (Terraform, en local)" },
+      why: { en: "Runs with your identity from this folder; the state file is created here.", fr: "S'exécute avec votre identité depuis ce dossier ; le fichier d'état est créé ici." },
+      body: function () {
+        var n = rt() ? (same() ? "55" : "49") : (same() ? "70" : "63");
+        return cmd("cd {DOSSIER}/{FOLDER}/terraform\nterraform init\nterraform plan        # read it: « 0 to destroy »\nterraform apply       # type yes; " + (rt() ? "10 to 15 min" : "about 10 min; Cloud Build builds one image per agent (~1 min 20 s each), no Docker") + "\ncp -r terraform.tfstate.d ~/backup-$(date +%F)-{FOLDER}-tfstate.d     # back up the state")
+          + exp("<code>Apply complete! Resources: " + n + " added</code> (about), then " + (rt() ? "one resource name <code>projects/…/reasoningEngines/…</code> per agent (6)." : "one URL <code>https://…run.app</code> per agent (6). Opening one in a browser gives 403: private, as intended.") + " With <code>AGENTS=\"meteo\"</code>: " + (rt() ? "13" : "22 (23 with the app number)") + ", then +" + (rt() ? "7" : "7 (8)") + " per agent" + (same() ? "; publishing adds 7." : "."),
+                "<code>Apply complete! Resources: " + n + " added</code> (environ), puis " + (rt() ? "un nom de ressource <code>projects/…/reasoningEngines/…</code> par agent (6)." : "une URL <code>https://…run.app</code> par agent (6). En ouvrir une dans le navigateur donne 403 : privé, c'est voulu.") + " Avec <code>AGENTS=\"meteo\"</code> : " + (rt() ? "13" : "22 (23 avec le numéro de l'app)") + ", puis +" + (rt() ? "7" : "7 (8)") + " par agent" + (same() ? " ; la publication ajoute 7." : "."))
+          + warn("Cloud Shell disconnects after a period of inactivity. If it happens during <code>apply</code>: reconnect, <code>cd</code> back to the folder, run <code>terraform apply</code> again; it resumes.",
+                 "Cloud Shell se déconnecte après une période d'inactivité. Si cela arrive pendant <code>apply</code> : se reconnecter, revenir dans le dossier avec <code>cd</code>, relancer <code>terraform apply</code> ; il reprend.");
+      } },
+    { id: "p-test", who: "dev", where: CS, t: { en: "Test the deployed agents", fr: "Tester les agents déployés" },
+      why: { en: "If this passes and the chat fails, the problem is the publication or a permission, not the agent.", fr: "Si ce test passe et que le chat échoue, le problème est la publication ou un droit, pas l'agent." },
+      body: function () {
+        return cmd("cd .. && " + (rt() ? "source ../.venv/bin/activate && ./test.sh" : "./test.sh      # A2A v0.3, the protocol Gemini Enterprise uses"))
+          + (rt() ? exp("for each agent, the tools called (<code>-> outil : meteo(…)</code>) then the answer.", "pour chaque agent, les outils appelés (<code>-> outil : meteo(…)</code>) puis la réponse.")
+                  : exp("for each agent <code>carte : … (A2A 0.3)</code>, two answers, then <code>OK : les agents répondent en A2A v0.3</code>.", "pour chaque agent <code>carte : … (A2A 0.3)</code>, deux réponses, puis <code>OK : les agents répondent en A2A v0.3</code>."));
+      } },
+    { id: "p-registry", who: "dev", where: CS, t: { en: "Check Agent Registry", fr: "Vérifier Agent Registry" },
+      why: { en: "The registry is the catalogue other teams and agents use to find ours.", fr: "Le registre est le catalogue où les autres équipes et agents trouvent les nôtres." },
+      body: function () {
+        return cmd(rt() ? "gcloud agent-registry agents list --location=europe-west1 --project={AGENTS_PROJECT}" : "gcloud agent-registry services list --location=europe-west1 --project={AGENTS_PROJECT}")
+          + exp(rt() ? "one entry per agent, <code>meteo-agent</code> … <code>identite-agent</code> (registered automatically)." : "one entry per agent, <code>meteo-a2a</code> … <code>identite-a2a</code>, with their A2A cards.",
+                rt() ? "une entrée par agent, <code>meteo-agent</code> … <code>identite-agent</code> (inscrits automatiquement)." : "une entrée par agent, <code>meteo-a2a</code> … <code>identite-a2a</code>, avec leurs cartes A2A.");
+      } },
+    { id: "p-check", who: "dev", where: CS, t: { en: "Check the permission given to Gemini Enterprise", fr: "Vérifier le droit donné à Gemini Enterprise" },
+      when: function () { return !same(); },
+      why: { en: "Without this permission the agent is added to the app but never answers. Terraform granted it; check it is there before going to the app.", fr: "Sans ce droit, l'agent s'ajoute à l'app mais ne répond jamais. Terraform l'a donné ; vérifiez qu'il est là avant d'aller dans l'app." },
+      body: function () {
+        return cmd(rt() ? "gcloud projects get-iam-policy {AGENTS_PROJECT} --flatten=bindings \\\n  --filter=\"bindings.members:{GE_SA}\" --format=\"value(bindings.role)\""
+                        : "gcloud run services get-iam-policy traduction-a2a --region=europe-west1 --project={AGENTS_PROJECT} \\\n  --flatten=bindings --filter=\"bindings.members:{GE_SA}\" --format=\"value(bindings.role)\"")
+          + exp(rt() ? "<code>roles/discoveryengine.serviceAgent</code>" : "<code>roles/run.invoker</code> (same for every <code>&lt;key&gt;-a2a</code> service)", rt() ? "<code>roles/discoveryengine.serviceAgent</code>" : "<code>roles/run.invoker</code> (idem pour chaque service <code>&lt;clé&gt;-a2a</code>)")
+          + warn("nothing displayed? The project number of the app (<code>NUM_APP</code>) is probably wrong: fix it in the configuration file, load it again and apply again.", "rien ne s'affiche ? Le numéro du projet de l'app (<code>NUM_APP</code>) est sans doute faux : le corriger dans le fichier de configuration, le recharger et relancer apply.");
+      } },
+    { id: "p-add", who: "adm", where: CSCON, t: { en: "Add the agents to the app", fr: "Ajouter les agents dans l'app" },
+      when: function () { return !same(); },
+      why: { en: "In the same-project case Terraform already did it. Here, three ways; choose one.", fr: "Dans le cas même projet, Terraform l'a déjà fait. Ici, trois façons ; en choisir une." },
+      body: function () {
+        var tf = "cd {DOSSIER}     # first set PUBLIER=oui in config/12-1-agents-dans-projet-exp.env\nsource scripts/config.sh config/12-1-agents-dans-projet-exp.env     # « publication dans l'app : oui »\ncd {FOLDER}/terraform && terraform plan && terraform apply     # « Plan: 7 to add » : 6 publications + the Discovery Engine API (already on)";
+        var script = rt()
+          ? "cd {DOSSIER} && export GE_PROJECT={GE_PROJECT} GE_APP={APP_ID} GE_LOCATION=eu\nterraform -chdir=02-bis-agent-runtime/terraform output -json agents > /tmp/agents.json\nfor K in $(echo $AGENTS_LISTE); do\n  RES=$(python3 -c \"import json; print(json.load(open('/tmp/agents.json'))['$K'])\")\n  NOM=$(python3 -c \"import json; print(json.load(open('agents/trio/catalogue.json'))['$K']['nom_affiche'])\")\n  DESC=$(python3 -c \"import json; print(json.load(open('agents/trio/catalogue.json'))['$K']['description'])\")\n  ./scripts/add_agent_to_ge.sh adk \"$RES\" \"$NOM\" \"$DESC\"\ndone\n./scripts/add_agent_to_ge.sh list"
+          : "cd {DOSSIER} && export GE_PROJECT={GE_PROJECT} GE_APP={APP_ID} GE_LOCATION=eu\nfor K in $(echo $AGENTS_LISTE); do\n  terraform -chdir=01-bis-cloud-run-a2a/terraform output -json cards | python3 -c \"import json,sys; print(json.load(sys.stdin)['$K'])\" > carte-$K.json\n  ./scripts/add_agent_to_ge.sh a2a carte-$K.json \"$K (A2A)\"\ndone\n./scripts/add_agent_to_ge.sh list";
+        return P("<b>Option 1, Terraform</b> (you have rights on both projects): set <code>PUBLIER=oui</code>, reload, apply again.", "<b>Option 1, Terraform</b> (vous avez les droits sur les deux projets) : passer <code>PUBLIER=oui</code>, recharger, relancer.") + cmd(tf)
+          + exp("<code>registered …</code> ×6, <code>Apply complete! Resources: 7 added</code>. <code>terraform destroy</code> will also remove them from the app.", "<code>registered …</code> ×6, <code>Apply complete! Resources: 7 added</code>. <code>terraform destroy</code> les retirera aussi de l'app.")
+          + P("<b>Option 2, script</b> (your account, Terraform unchanged):", "<b>Option 2, script</b> (votre compte, Terraform inchangé) :") + cmd(script)
+          + exp("<code>ajouté : projects/…/engines/<APP_ID>/assistants/default_assistant/agents/<ID></code> for each, then the list with the 6 agents.", "<code>ajouté : projects/…/engines/<APP_ID>/assistants/default_assistant/agents/<ID></code> pour chacun, puis la liste avec les 6 agents.")
+          + P("<b>Option 3, console</b>: app › <b>Agents</b> › <b>+ Add agent</b> › <b>" + (rt() ? "Custom agent via Agent Runtime</b> › name, description, resource path" : "Custom agent via A2A</b> › paste the card JSON › Preview › Next › Finish") + ". Details per mode: section « The 5 add modes ».",
+              "<b>Option 3, console</b> : app › <b>Agents</b> › <b>+ Ajouter un agent</b> › <b>" + (rt() ? "Agent personnalisé via Agent Runtime</b> › nom, description, chemin de ressource" : "Agent personnalisé via A2A</b> › coller la carte JSON › Prévisualiser › Suivant › Terminer") + ". Détail par mode : section « Les 5 modes d'ajout ».");
+      } },
+    { id: "p-access", who: "adm", where: CON, t: { en: "Give access and test in the chat", fr: "Donner l'accès et tester dans le chat" },
+      why: { en: "Without the Agent User role nobody sees the agent, not even its developers.", fr: "Sans le rôle Agent User, personne ne voit l'agent, pas même ses développeurs." },
+      body: function () {
+        return OL([{ en: "App › <b>Agents</b> › the agent › tab <b>User permissions</b> › <b>Add</b> › a <b>Google group</b> › role <b>Agent User</b> › <b>Save</b>.", fr: "App › <b>Agents</b> › l'agent › onglet <b>Autorisations utilisateur</b> › <b>Ajouter</b> › un <b>groupe Google</b> › rôle <b>Agent User</b> › <b>Enregistrer</b>." },
+                   { en: "Members need a licence: Gemini Enterprise › <b>Licences</b>.", fr: "Les membres ont besoin d'une licence : Gemini Enterprise › <b>Licences</b>." },
+                   { en: "Open the web app link (app › <b>Integration</b>) with a member account › <b>Agents</b> › the agent › ask a question from its test.", fr: "Ouvrir le lien de l'app web (app › <b>Intégration</b>) avec un compte membre › <b>Agents</b> › l'agent › poser une question de son test." }])
+          + exp("« Traduis en allemand : retour gratuit sur les chaussures Kiprun » answers « Kostenlose Rücksendung … Kiprun … ». The first answer can take 20-40 s. A non-member must not see the agent.",
+                "« Traduis en allemand : retour gratuit sur les chaussures Kiprun » répond « Kostenlose Rücksendung … Kiprun … ». La première réponse peut prendre 20 à 40 s. Un non-membre ne doit pas voir l'agent.");
+      } }
+  ];
+
+  /* ---------------- Terraform ---------------- */
+  function renderTerraform() {
+    document.getElementById("tf-means").innerHTML = [
+      { en: "Terraform runs on the machine where you type <code>terraform apply</code>: your laptop or Cloud Shell.", fr: "Terraform s'exécute sur la machine où vous tapez <code>terraform apply</code> : votre poste ou Cloud Shell." },
+      { en: "It acts with <b>your</b> Google identity (<code>gcloud auth application-default login</code>): your rights are its rights.", fr: "Il agit avec <b>votre</b> identité Google (<code>gcloud auth application-default login</code>) : vos droits sont ses droits." },
+      { en: "It remembers what it created in <code>terraform.tfstate.d/scenario-12-1/</code> (or <code>scenario-12-2</code>): one workspace per scenario, chosen by the configuration file, in the <code>terraform/</code> folder it ran from.", fr: "Il retient ce qu'il a créé dans <code>terraform.tfstate.d/scenario-12-1/</code> (ou <code>scenario-12-2</code>) : un espace de travail par scénario, choisi par le fichier de configuration, dans le dossier <code>terraform/</code> d'où il a été lancé." },
+      { en: "Lose that file and Terraform forgets the resources: it would try to create them again and fail.", fr: "Perdez ce fichier et Terraform oublie les ressources : il essaierait de les recréer et échouerait." },
+      { en: "Cloud Shell keeps your home folder (5 GB), but deletes it after 120 days without use.", fr: "Cloud Shell garde votre dossier personnel (5 Go), mais le supprime après 120 jours sans utilisation." }
+    ].map(function (x) { return "<li>" + T(x) + "</li>"; }).join("");
+    document.getElementById("tf-rules").innerHTML = [
+      { en: "<b>One owner per folder</b> (01-bis, 02-bis, terraform/): only that person runs apply.", fr: "<b>Un responsable par dossier</b> (01-bis, 02-bis, terraform/) : seule cette personne lance apply." },
+      { en: "<b>Back up the state</b> after every apply, to a restricted location (it contains resource details).", fr: "<b>Sauvegarder l'état</b> après chaque apply, dans un emplacement restreint (il contient le détail des ressources)." },
+      { en: "<b>Never commit</b> the state (<code>terraform.tfstate.d/</code>) or <code>terraform.tfvars</code> (both git-ignored).", fr: "<b>Ne jamais committer</b> l'état (<code>terraform.tfstate.d/</code>) ni <code>terraform.tfvars</code> (tous deux ignorés par git)." },
+      { en: "<b>Always read</b> <code>terraform plan</code> before apply: nothing should be destroyed unless you asked for it. Adding an agent shows only its lines, <code>0 to change, 0 to destroy</code>; removing a key from <code>AGENTS</code> destroys that agent.", fr: "<b>Toujours lire</b> <code>terraform plan</code> avant apply : rien ne doit être détruit sans que vous l'ayez demandé. Ajouter un agent ne montre que ses lignes, <code>0 to change, 0 to destroy</code> ; retirer une clé de <code>AGENTS</code> détruit cet agent." },
+      { en: "<b>Handover</b>: give the state and tfvars to the next owner; never start again from scratch.", fr: "<b>Passation</b> : donner l'état et le tfvars au responsable suivant ; ne jamais repartir de zéro." }
+    ].map(function (x) { return "<li>" + T(x) + "</li>"; }).join("");
+    var h = lang === "fr" ? ["Dossier", "Ce qu'il gère", "Lancé par", "Fichier d'état"] : ["Folder", "What it manages", "Run by", "State file"];
+    var rows = [
+      ["02-bis-agent-runtime/terraform", { en: "Our agents on Agent Runtime, their identities, Model Armor templates (if none given), Gemini Enterprise permission, publication (same project)", fr: "Nos agents sur Agent Runtime, leurs identités, templates Model Armor (si non fournis), droit de Gemini Enterprise, publication (même projet)" }, { en: "Developer", fr: "Développeur" }],
+      ["01-bis-cloud-run-a2a/terraform", { en: "Our agents on Cloud Run (A2A), one image per agent built by Cloud Build (its own account agents-a2a-build-sa), identities, Agent Registry entries, Gemini Enterprise permission, publication (same project)", fr: "Nos agents sur Cloud Run (A2A), une image par agent construite par Cloud Build (son propre compte agents-a2a-build-sa), les identités, les entrées Agent Registry, le droit de Gemini Enterprise, publication (même projet)" }, { en: "Developer (no Docker)", fr: "Développeur (sans Docker)" }],
+      ["terraform/", { en: "Reference demo: stock agent + orchestrator across two projects", fr: "Démo de référence : agent stock + orchestrateur entre deux projets" }, { en: "Admin, optional", fr: "Admin, optionnel" }]
+    ];
+    document.getElementById("tf-stacks").innerHTML = "<thead><tr>" + h.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>"
+      + rows.map(function (r) { return "<tr><td><code>" + r[0] + "</code></td><td>" + T(r[1]) + "</td><td>" + T(r[2]) + "</td><td><code>" + r[0] + (r[0] === "terraform/" ? "terraform.tfstate" : "/terraform.tfstate.d/scenario-…/") + "</code></td></tr>"; }).join("") + "</tbody>";
+    document.getElementById("tf-cmds").innerHTML = cmd("source scripts/config.sh config/12-1-agents-dans-projet-exp.env     # from {DOSSIER}, in every new terminal\ncd {DOSSIER}/02-bis-agent-runtime/terraform\nterraform init        # once per folder\nterraform plan        # what would change\nterraform apply       # apply it (type yes)\nterraform output      # names, URLs, cards\nterraform destroy     # remove everything, also from the app\ncp -r terraform.tfstate.d ~/backup-$(date +%F)-02bis-tfstate.d   # after each apply");
+    document.getElementById("tf-later").innerHTML = P("Each <code>versions.tf</code> already has a commented <code>backend \"gcs\"</code> block. To move the state to a bucket:", "Chaque <code>versions.tf</code> contient déjà un bloc <code>backend \"gcs\"</code> en commentaire. Pour déplacer l'état dans un bucket :")
+      + cmd("gcloud storage buckets create gs://{GE_PROJECT}-tfstate --location=europe-west1 --uniform-bucket-level-access\ngcloud storage buckets update gs://{GE_PROJECT}-tfstate --versioning")
+      + OL([{ en: "Uncomment the <code>backend \"gcs\"</code> block and set the bucket name.", fr: "Décommenter le bloc <code>backend \"gcs\"</code> et mettre le nom du bucket." },
+            { en: "Run <code>terraform init -migrate-state</code>, answer yes: the local state is copied to the bucket.", fr: "Lancer <code>terraform init -migrate-state</code>, répondre yes : l'état local est copié dans le bucket." },
+            { en: "Then plan/apply from CI with a dedicated service account; people only open pull requests.", fr: "Ensuite plan/apply depuis la CI avec un compte de service dédié ; les personnes n'ouvrent que des pull requests." }]);
+  }
+
+  /* ---------------- ajouter un agent ---------------- */
+  var AGENT_TPL = "from agentplatform.frameworks.adk import AdkApp\nfrom google.adk.agents import Agent\n\nimport commun\n\n\ndef stock_rayon(sku: str) -> dict:\n    \"\"\"Shelf stock of an item (one sentence: the model reads it).\n\n    Args:\n        sku: Acme item code, e.g. \"8771234\".\n    \"\"\"\n    return {\"status\": \"success\", \"sku\": sku, \"stock\": 12}   # replace with the real call\n\n\nroot_agent = Agent(\n    name=\"rayon_agent\",                       # = folder name\n    model=commun.modele(),                    # Gemini through Vertex AI, no API key\n    description=\"Gives the shelf stock of a Acme item from its code.\",\n    instruction=\"Always call stock_rayon; never guess a stock.\",\n    tools=[stock_rayon],\n)\n\napp = commun.app_securisee(root_agent)        # adds Model Armor\nagent_runtime_app = AdkApp(app=app)           # entry point for Agent Runtime";
+  var CAT_TPL = "\"rayon\": {\n  \"dossier\": \"rayon_agent\",\n  \"nom_affiche\": \"Stock rayon\",\n  \"description\": \"Gives the shelf stock of a Acme item from its code.\",\n  \"competences\": [\n    {\"id\": \"stock\", \"name\": \"Shelf stock\", \"description\": \"Stock of an item on the shelf.\",\n     \"tags\": [\"stock\"], \"examples\": [\"Stock of 8771234?\"]}\n  ]\n}";
+  var ADD = [
+    { id: "own-runtime", t: { en: "Our agent · Agent Runtime", fr: "Notre agent · Agent Runtime" }, s: { en: "recommended", fr: "recommandé" },
+      body: function () {
+        return OL([{ en: "<b>Create the skeleton</b> (configuration loaded): folder, <code>agent.py</code> and the catalogue entry. The key (<code>rayon</code>) gives all its names in Google Cloud: lowercase letters and digits, starts with a letter, 2 to 15 characters; the display name must be unique.", fr: "<b>Créer le squelette</b> (configuration chargée) : dossier, <code>agent.py</code> et l'entrée du catalogue. La clé (<code>rayon</code>) donne tous ses noms dans Google Cloud : minuscules et chiffres, commence par une lettre, 2 à 15 caractères ; le nom affiché doit être unique." }])
+          + cmd("cd {DOSSIER} && source .venv/bin/activate\npython scripts/nouvel_agent.py rayon \"Stock rayon\" \"Gives the shelf stock of a Acme item from its code.\"")
+          + OL([{ en: "<b>Write the real tools</b> in <code>agents/trio/rayon_agent/agent.py</code> (Cloud Shell: <b>Open Editor</b> button), like this template:", fr: "<b>Écrire les vrais outils</b> dans <code>agents/trio/rayon_agent/agent.py</code> (Cloud Shell : bouton <b>Ouvrir l'éditeur</b>), comme ce modèle :" }], 2)
+          + cmd(AGENT_TPL)
+          + OL([{ en: "<b>Complete its entry</b> in <code>agents/trio/catalogue.json</code> with real skills and examples:", fr: "<b>Compléter son entrée</b> dans <code>agents/trio/catalogue.json</code> avec de vraies compétences et de vrais exemples :" }], 3)
+          + cmd(CAT_TPL)
+          + OL([{ en: "<b>Check and test locally</b> (empty templates: the Model Armor ones may not exist yet):", fr: "<b>Vérifier et tester en local</b> (templates vides : ceux de Model Armor n'existent peut-être pas encore) :" }], 4)
+          + cmd("python3 -m json.tool agents/trio/catalogue.json > /dev/null && echo \"catalogue OK\"\nPROMPT_TEMPLATE= RESPONSE_TEMPLATE= LOCAL_DEV=1 GOOGLE_CLOUD_PROJECT={AGENTS_PROJECT} adk web --port 8080 agents/trio")
+          + OL([{ en: "<b>Deploy</b>: <code>AGENTS=\"\"</code> already includes it; with a list, add <code>rayon</code> to it and reload the configuration.", fr: "<b>Déployer</b> : <code>AGENTS=\"\"</code> l'inclut déjà ; avec une liste, y ajouter <code>rayon</code> et recharger la configuration." }], 5)
+          + cmd("cd 02-bis-agent-runtime/terraform && terraform plan && terraform apply")
+          + exp("<code>créé : agents/trio/rayon_agent/agent.py et l'entrée « rayon » du catalogue</code>; <code>catalogue OK</code>; the agent answers in the web UI; the plan shows only <code>[\"rayon\"]</code> lines, <code>Plan: 7 to add, 0 to change, 0 to destroy</code> (the other agents are not touched: each has its own archive). After apply, <code>terraform output agents</code> lists <code>rayon</code>.",
+                "<code>créé : agents/trio/rayon_agent/agent.py et l'entrée « rayon » du catalogue</code> ; <code>catalogue OK</code> ; l'agent répond dans l'interface web ; le plan ne montre que des lignes <code>[\"rayon\"]</code>, <code>Plan: 7 to add, 0 to change, 0 to destroy</code> (les autres agents ne sont pas touchés : chacun a sa propre archive). Après apply, <code>terraform output agents</code> liste <code>rayon</code>.")
+          + warn("never put <code>AGENTS=\"rayon\"</code> alone: the list says what must exist, Terraform would destroy the others. Step by step, OAuth, app data sources: <code>docs/12-3-ajouter-des-agents-un-par-un.md</code>.", "ne mettez jamais <code>AGENTS=\"rayon\"</code> seul : la liste dit ce qui doit exister, Terraform détruirait les autres. Pas à pas, OAuth, sources de l'app : <code>docs/12-3-ajouter-des-agents-un-par-un.md</code>.");
+      } },
+    { id: "own-a2a", t: { en: "Our agent · Cloud Run A2A", fr: "Notre agent · Cloud Run A2A" }, s: { en: "open protocol", fr: "protocole ouvert" },
+      body: function () {
+        return OL([{ en: "Do steps 1 to 4 of « Our agent · Agent Runtime » (skeleton, agent.py, catalogue.json, local test). Nothing to change in the <code>Dockerfile</code>: it takes the agent folder as a parameter.", fr: "Faire les étapes 1 à 4 de « Notre agent · Agent Runtime » (squelette, agent.py, catalogue.json, test local). Rien à changer dans le <code>Dockerfile</code> : il reçoit le dossier de l'agent en paramètre." },
+                   { en: "<b>Deploy</b>: its own image built by Cloud Build (no Docker, ~1 min 20 s), a new private service <code>rayon-a2a</code>, its identity, its card, its registry entry and the Gemini Enterprise permission.", fr: "<b>Déployer</b> : sa propre image construite par Cloud Build (sans Docker, ~1 min 20 s), un nouveau service privé <code>rayon-a2a</code>, son identité, sa carte, son entrée de registre et le droit de Gemini Enterprise." }])
+          + cmd("cd {DOSSIER}/01-bis-cloud-run-a2a/terraform && terraform plan && terraform apply")
+          + exp("<code>Plan: 8 to add, 0 to change, 0 to destroy</code> (7 without the app number), only <code>[\"rayon\"]</code> lines. <code>terraform output urls</code> lists <code>rayon</code>; its URL answers 403 in a browser (private). Its card: <code>terraform output -json cards</code>.", "<code>Plan: 8 to add, 0 to change, 0 to destroy</code> (7 sans le numéro de l'app), seulement des lignes <code>[\"rayon\"]</code>. <code>terraform output urls</code> liste <code>rayon</code> ; son URL répond 403 dans un navigateur (privé). Sa carte : <code>terraform output -json cards</code>.");
+      } },
+    { id: "partner-runtime", t: { en: "Partner agent · Agent Runtime", fr: "Agent partenaire · Agent Runtime" }, s: { en: "their project", fr: "leur projet" },
+      body: function () {
+        return P("The partner followed the portal and sent a request with the resource path. Check it with the « Handle a partner request » list, then:", "Le partenaire a suivi le portail et envoyé une demande avec le chemin de ressource. La vérifier avec la liste « Traiter une demande de partenaire », puis :")
+          + cmd("cd {DOSSIER}\nexport GE_PROJECT={GE_PROJECT} GE_APP={APP_ID} GE_LOCATION=eu\n./scripts/add_agent_to_ge.sh adk projects/PARTNER_PROJECT/locations/europe-west1/reasoningEngines/ID \\\n  \"Display name\" \"The one-sentence description from the request.\"\n./scripts/add_agent_to_ge.sh list      # check")
+          + exp("<code>ajouté : projects/…/agents/…</code>, and the agent in <code>list</code>. If the script prints « Droit NON accordé », the partner must grant the permission (it is in their portal checklist).",
+                "<code>ajouté : projects/…/agents/…</code>, et l'agent dans <code>list</code>. Si le script affiche « Droit NON accordé », le partenaire doit donner le droit (c'est dans sa liste du portail).")
+          + warn("<code>terraform/</code> also has <code>external_adk_agents</code>, but that folder also deploys the stock/orchestrator demo. Use the script.", "<code>terraform/</code> propose aussi <code>external_adk_agents</code>, mais ce dossier déploie aussi la démo stock/orchestrateur. Utilisez le script.");
+      } },
+    { id: "partner-a2a", t: { en: "Partner agent · A2A", fr: "Agent partenaire · A2A" }, s: { en: "card file", fr: "carte en fichier" },
+      body: function () {
+        return P("The partner attached their agent card (<code>agent-card.json</code>). Their service is private, so add it from the file:", "Le partenaire a joint sa carte d'agent (<code>agent-card.json</code>). Son service est privé : l'ajouter depuis le fichier :")
+          + cmd("cd {DOSSIER}      # upload agent-card.json here (three-dot menu › Upload)\npython3 -m json.tool agent-card.json | grep -E '\"(protocolVersion|url|name)\"'     # check 0.3 and a run.app url\nexport GE_PROJECT={GE_PROJECT} GE_APP={APP_ID} GE_LOCATION=eu\n./scripts/add_agent_to_ge.sh a2a agent-card.json \"Display name (A2A)\"")
+          + exp("<code>\"protocolVersion\": \"0.3\"</code>, a <code>…run.app</code> URL, then <code>ajouté : projects/…/agents/…</code>. In the console: <b>+ Add agent</b> › <b>Custom agent via A2A</b> › paste the file content.",
+                "<code>\"protocolVersion\": \"0.3\"</code>, une URL <code>…run.app</code>, puis <code>ajouté : projects/…/agents/…</code>. Dans la console : <b>+ Ajouter un agent</b> › <b>Agent personnalisé via A2A</b> › coller le contenu du fichier.");
+      } }
+  ];
+  function renderAdd() {
+    document.getElementById("add-tabs").innerHTML = ADD.map(function (a) {
+      return '<button type="button" role="tab" id="tab-' + a.id + '" data-tab="' + a.id + '" aria-selected="' + (addTab === a.id) + '">' + esc(T(a.t)) + "<small>" + esc(T(a.s)) + "</small></button>";
+    }).join("");
+    var a = ADD.filter(function (x) { return x.id === addTab; })[0] || ADD[0];
+    var p = document.getElementById("add-panel"); p.setAttribute("aria-labelledby", "tab-" + a.id); p.innerHTML = '<div class="card">' + a.body() + "</div>";
+    document.getElementById("visible-card").innerHTML = "<h3>" + L("Then: make it visible in Gemini Enterprise", "Ensuite : le rendre visible dans Gemini Enterprise") + "</h3>"
+      + OL([{ en: "App › <b>Agents</b> › the agent › <b>User permissions</b> › <b>Add</b> › the Google group › <b>Agent User</b> › Save.", fr: "App › <b>Agents</b> › l'agent › <b>Autorisations utilisateur</b> › <b>Ajouter</b> › le groupe Google › <b>Agent User</b> › Enregistrer." },
+            { en: "Check that the group's members have a Gemini Enterprise licence.", fr: "Vérifier que les membres du groupe ont une licence Gemini Enterprise." },
+            { en: "It is visible right away for the group; the first answer takes 20-40 s (the agent starts).", fr: "Il est visible tout de suite pour le groupe ; la première réponse prend 20 à 40 s (l'agent démarre)." },
+            { en: "Tell the requester: agent name, group, how to report a problem.", fr: "Prévenir le demandeur : nom de l'agent, groupe, comment signaler un problème." }]);
+  }
+  document.getElementById("add-tabs").addEventListener("click", function (e) { var b = e.target.closest("[data-tab]"); if (!b) return; addTab = b.getAttribute("data-tab"); store.set("addTab", addTab); renderAdd(); });
+
+  /* ---------------- demandes partenaires ---------------- */
+  var REQ = [
+    { en: "<b>Complete request</b>: name, one-sentence description, mode, resource (or card file), group, data, contact.", fr: "<b>Demande complète</b> : nom, description en une phrase, mode, ressource (ou carte en fichier), groupe, données, contact." },
+    { en: "<b>Region</b> <code>europe-*</code> in the resource path or the card URL.", fr: "<b>Région</b> <code>europe-*</code> dans le chemin de ressource ou l'URL de la carte." },
+    { en: "<b>A2A card</b>: <code>protocolVersion \"0.3\"</code>, default <code>…run.app</code> URL.", fr: "<b>Carte A2A</b> : <code>protocolVersion \"0.3\"</code>, URL <code>…run.app</code> par défaut." },
+    { en: "<b>Permission granted</b> to our Gemini Enterprise account in their project (they paste the output of the check command).", fr: "<b>Droit donné</b> à notre compte Gemini Enterprise dans leur projet (ils collent le résultat de la commande de vérification)." },
+    { en: "<b>Model Armor in the agent</b>: confirmed.", fr: "<b>Model Armor dans l'agent</b> : confirmé." },
+    { en: "<b>Personal data or write actions?</b> If yes: security and DPO approval, and user confirmation before writes.", fr: "<b>Données personnelles ou actions d'écriture ?</b> Si oui : accord sécurité et DPO, et confirmation utilisateur avant écriture." },
+    { en: "<b>Add the agent</b> (tabs « Partner agent » above).", fr: "<b>Ajouter l'agent</b> (onglets « Agent partenaire » ci-dessus)." },
+    { en: "<b>Agent User</b> for a small test group first (the requesting team).", fr: "<b>Agent User</b> d'abord pour un petit groupe de test (l'équipe demandeuse)." },
+    { en: "<b>Test in the chat</b> with the requester; then widen to the requested groups.", fr: "<b>Tester dans le chat</b> avec le demandeur ; puis élargir aux groupes demandés." },
+    { en: "<b>Record</b> the agent (name, project, mode, owner, date) in the team's register.", fr: "<b>Consigner</b> l'agent (nom, projet, mode, responsable, date) dans le registre de l'équipe." }
+  ];
+  function renderReq() {
+    document.getElementById("req-list").innerHTML = REQ.map(function (r, i) {
+      return '<label class="ck' + (reqDone[i] ? " ok" : "") + '"><input type="checkbox" data-req="' + i + '"' + (reqDone[i] ? " checked" : "") + "><span>" + T(r) + "</span></label>";
+    }).join("");
+  }
+  document.getElementById("req-list").addEventListener("change", function (e) { var i = e.target.getAttribute("data-req"); if (i === null) return; reqDone[i] = e.target.checked; store.set("req", reqDone); renderReq(); });
+  document.getElementById("req-reset").addEventListener("click", function () { reqDone = {}; store.set("req", reqDone); renderReq(); });
+
+  /* ---------------- modes ---------------- */
+  var modeTab = store.get("modeTab", "m-runtime");
+  var MODES = [
+    { id: "m-runtime", t: "Agent Runtime", s: { en: "other project: yes · tested", fr: "autre projet : oui · testé" },
+      body: function () {
+        return OL([{ en: "<b>Agents project</b>: deploy the agent on Agent Runtime in <code>europe-west1</code> (« Deploy » section, or <code>terraform apply</code> in 02-bis).", fr: "<b>Projet des agents</b> : déployer l'agent sur Agent Runtime en <code>europe-west1</code> (section « Déployer », ou <code>terraform apply</code> dans 02-bis)." },
+                   { en: "<b>Agents project</b>: grant <code>roles/discoveryengine.serviceAgent</code> on the project to the Gemini Enterprise account (Terraform does it with <code>ge_project_number</code>):", fr: "<b>Projet des agents</b> : donner <code>roles/discoveryengine.serviceAgent</code> sur le projet au compte de Gemini Enterprise (Terraform le fait avec <code>ge_project_number</code>) :" }])
+          + cmd("gcloud projects add-iam-policy-binding {AGENTS_PROJECT} --condition=None \\\n  --role=roles/discoveryengine.serviceAgent --member=serviceAccount:{GE_SA}")
+          + OL([{ en: "<b>App project</b> ({GE_PROJECT}): app › <b>Agents</b› › <b>+ Add agent</b> › <b>Custom agent via Agent Runtime</b> › <b>Agent name</b>, <b>Describe your agent</b>, <b>Agent Runtime resource path</b> (<code>projects/…/reasoningEngines/ID</code>) › <b>Create</b>. Or: <code>./scripts/add_agent_to_ge.sh adk &lt;resource&gt; \"Name\" \"Description\"</code>.".replace("</b›", "</b>"), fr: "<b>Projet de l'app</b> ({GE_PROJECT}) : app › <b>Agents</b> › <b>+ Ajouter un agent</b> › <b>Agent personnalisé via Agent Runtime</b> › <b>Nom de l'agent</b>, <b>Décrivez votre agent</b>, <b>Chemin de ressource Agent Runtime</b> (<code>projects/…/reasoningEngines/ID</code>) › <b>Créer</b>. Ou : <code>./scripts/add_agent_to_ge.sh adk &lt;ressource&gt; \"Nom\" \"Description\"</code>." },
+                { en: "<b>App project</b>: agent › <b>User permissions</b> › group › <b>Agent User</b>.", fr: "<b>Projet de l'app</b> : l'agent › <b>Autorisations utilisateur</b> › groupe › <b>Agent User</b>." }], 3).replace(/\{GE_PROJECT\}/g, esc(v("GE_PROJECT")));
+      } },
+    { id: "m-a2a", t: "A2A", s: { en: "other project: yes · tested", fr: "autre projet : oui · testé" },
+      body: function () {
+        return OL([{ en: "<b>Agents project</b>: a private Cloud Run service exposing A2A v0.3 (01-bis), default <code>…run.app</code> URL.", fr: "<b>Projet des agents</b> : un service Cloud Run privé qui expose A2A v0.3 (01-bis), URL <code>…run.app</code> par défaut." },
+                   { en: "<b>Agents project</b>: grant <code>roles/run.invoker</code> on <b>each service</b> to the Gemini Enterprise account (Terraform does it):", fr: "<b>Projet des agents</b> : donner <code>roles/run.invoker</code> sur <b>chaque service</b> au compte de Gemini Enterprise (Terraform le fait) :" }])
+          + cmd("gcloud run services add-iam-policy-binding SERVICE --region=europe-west1 --project={AGENTS_PROJECT} \\\n  --role=roles/run.invoker --member=serviceAccount:{GE_SA}")
+          + OL([{ en: "<b>App project</b>: app › <b>Agents</b> › <b>+ Add agent</b> › <b>Custom agent via A2A</b> › paste the card JSON (<code>terraform output -json cards</code>) › <b>Preview agent details</b> › <b>Next</b> › Authentication: skip › <b>Finish</b>. Or: <code>./scripts/add_agent_to_ge.sh a2a card.json \"Name\"</code>.", fr: "<b>Projet de l'app</b> : app › <b>Agents</b> › <b>+ Ajouter un agent</b> › <b>Agent personnalisé via A2A</b> › coller la carte JSON (<code>terraform output -json cards</code>) › <b>Prévisualiser les détails de l'agent</b> › <b>Suivant</b> › Authentification : ignorer › <b>Terminer</b>. Ou : <code>./scripts/add_agent_to_ge.sh a2a carte.json \"Nom\"</code>." },
+                { en: "<b>App project</b>: <b>Agent User</b> for the group.", fr: "<b>Projet de l'app</b> : <b>Agent User</b> pour le groupe." }], 3)
+          + warn("card: <code>protocolVersion \"0.3\"</code>; URL: the default run.app one (no custom domain). This traffic does not go through Agent Gateway.", "carte : <code>protocolVersion \"0.3\"</code> ; URL : celle en run.app par défaut (pas de domaine personnalisé). Ce trafic ne passe pas par Agent Gateway.");
+      } },
+    { id: "m-registry", t: "Agent Registry", s: { en: "app project only · step 1 tested", fr: "projet de l'app seulement · étape 1 testée" },
+      body: function () {
+        return P("The app only imports from <b>its own</b> registry (app project, <code>europe-west1</code>), linked to its Agent Gateway. An agent of another project enters by <b>declaring its A2A card</b> in the app project's registry.",
+                 "L'app n'importe que depuis <b>son</b> registre (projet de l'app, <code>europe-west1</code>), relié à son Agent Gateway. Un agent d'un autre projet y entre par la <b>déclaration de sa carte A2A</b> dans le registre du projet de l'app.")
+          + OL([{ en: "<b>App project</b>: declare the card (tested):", fr: "<b>Projet de l'app</b> : déclarer la carte (testé) :" }])
+          + cmd("gcloud agent-registry services create traduction-equipe-x --location=europe-west1 --project={GE_PROJECT} \\\n  --display-name=\"Traduction (équipe X)\" --description=\"Traduit un texte en 7 langues.\" \\\n  --agent-spec-type=A2A_AGENT_CARD --agent-spec-content=\"$(cat carte-traduction.json)\"     # no --interfaces with a card")
+          + exp("<code>Created service [traduction-equipe-x].</code>", "<code>Created service [traduction-equipe-x].</code>")
+          + OL([{ en: "<b>App project</b>: create the Agent Gateway (once):", fr: "<b>Projet de l'app</b> : créer l'Agent Gateway (une fois) :" }], 2)
+          + cmd("gcloud services enable networkservices.googleapis.com iap.googleapis.com --project={GE_PROJECT}\nprintf 'name: ge-egress\\ngoogleManaged:\\n  governedAccessPath: AGENT_TO_ANYWHERE\\nregistries:\\n- //agentregistry.googleapis.com/projects/{GE_PROJECT}/locations/europe-west1\\n' > ge-egress.yaml\ngcloud network-services agent-gateways import ge-egress --location=europe-west1 --source=ge-egress.yaml --project={GE_PROJECT}")
+          + OL([{ en: "<b>App project</b>: Agent Registry › the entry › <b>Permissions</b> › Gemini Enterprise account › <b>IAP-secured Egressor</b>. <b>Agents project</b>: <code>run.invoker</code> on the service (as for A2A).", fr: "<b>Projet de l'app</b> : Agent Registry › l'entrée › <b>Autorisations</b> › compte de Gemini Enterprise › <b>IAP-secured Egressor</b>. <b>Projet des agents</b> : <code>run.invoker</code> sur le service (comme en A2A)." },
+                { en: "<b>App project</b>: app › <b>Security</b> › <b>Configuration</b› › Agent Gateway: <code>projects/…/locations/europe-west1/agentGateways/ge-egress</code>.".replace("</b›", "</b>"), fr: "<b>Projet de l'app</b> : app › <b>Sécurité</b> › <b>Configuration</b> › Agent Gateway : <code>projects/…/locations/europe-west1/agentGateways/ge-egress</code>." },
+                { en: "<b>App project</b>: app › <b>Agents</b> › <b>+ Add agent</b> › <b>Agents from Agent Registry</b> › choose the agent › <b>Add agent</b> › <b>Next</b› › <b>Finish</b>; then <b>Agent User</b>.".replace("</b›", "</b>"), fr: "<b>Projet de l'app</b> : app › <b>Agents</b> › <b>+ Ajouter un agent</b> › <b>Agents depuis Agent Registry</b> › choisir l'agent › <b>Ajouter un agent</b> › <b>Suivant</b> › <b>Terminer</b> ; puis <b>Agent User</b>." }], 3)
+          + warn("once the gateway is linked, <b>all</b> app traffic goes through it, model included. Decide it with security; a missing iap.egressor blocks the chat. Steps 2 to 5: to confirm on the first real run.", "une fois la passerelle reliée, <b>tout</b> le trafic de l'app passe par elle, modèle compris. À décider avec la sécurité ; un iap.egressor manquant bloque le chat. Étapes 2 à 5 : à constater au premier passage réel.");
+      } },
+    { id: "m-dialogflow", t: "Dialogflow", s: { en: "app project recommended", fr: "projet de l'app conseillé" },
+      body: function () {
+        return OL([{ en: "<b>App project</b> (recommended): console › « Conversational Agents » › <b>Create agent</b> › region <code>eu</code> or <code>europe-west1</code> › build and test it in the Dialogflow simulator.", fr: "<b>Projet de l'app</b> (conseillé) : console › « Conversational Agents » › <b>Créer un agent</b> › région <code>eu</code> ou <code>europe-west1</code> › le construire et le tester dans le simulateur de Dialogflow." },
+                   { en: "Note its resource: agent settings › <code>projects/PROJECT/locations/LOCATION/agents/AGENT_ID</code>.", fr: "Noter sa ressource : paramètres de l'agent › <code>projects/PROJET/locations/LOCATION/agents/ID_AGENT</code>." },
+                   { en: "<b>App project</b>: app › <b>Agents</b> › <b>+ Add agent</b> › <b>Custom agent via Dialogflow</b> › <b>Your agent name</b>, <b>Describe your agent</b>, <b>Dialogflow agent source</b> › <b>Create</b>; then <b>Agent User</b>.", fr: "<b>Projet de l'app</b> : app › <b>Agents</b> › <b>+ Ajouter un agent</b> › <b>Agent personnalisé via Dialogflow</b> › <b>Nom de votre agent</b>, <b>Décrivez votre agent</b>, <b>Source de l'agent Dialogflow</b> › <b>Créer</b> ; puis <b>Agent User</b>." }])
+          + warn("Dialogflow agent in <b>another</b> project: Google does not document the permission. Lead to validate: <code>roles/dialogflow.client</code> for the Gemini Enterprise account in that project.", "agent Dialogflow dans un <b>autre</b> projet : Google ne documente pas le droit. Piste à valider : <code>roles/dialogflow.client</code> pour le compte de Gemini Enterprise dans ce projet.")
+          + cmd("gcloud projects add-iam-policy-binding {AGENTS_PROJECT} --condition=None --role=roles/dialogflow.client --member=serviceAccount:{GE_SA}");
+      } },
+    { id: "m-market", t: "Marketplace", s: { en: "vendor agents", fr: "agents d'éditeurs" },
+      body: function () {
+        return OL([{ en: "Procurement buys the agent on Google Cloud Marketplace (after security and DPO review: it runs at the vendor).", fr: "Les achats acquièrent l'agent sur Google Cloud Marketplace (après avis sécurité et DPO : il tourne chez l'éditeur)." },
+                   { en: "<b>App project</b>: app › <b>Agents</b> › <b>+ Add agent</b> › <b>Agents via Marketplace</b> › choose › <b>Next</b> › check › <b>Next</b> › vendor credentials › <b>Finish</b>; then <b>Agent User</b>.", fr: "<b>Projet de l'app</b> : app › <b>Agents</b> › <b>+ Ajouter un agent</b> › <b>Agents via Marketplace</b> › choisir › <b>Suivant</b> › vérifier › <b>Suivant</b> › identifiants de l'éditeur › <b>Terminer</b> ; puis <b>Agent User</b>." }]);
+      } }
+  ];
+  function renderModes() {
+    var h = lang === "fr" ? ["Mode (console)", "On fournit", "Agent d'un autre projet", "Droit dans le projet de l'agent"] : ["Mode (console)", "You provide", "Agent in another project", "Permission in the agent's project"];
+    var rows = [
+      [{ en: "Custom agent via Agent Runtime", fr: "Agent personnalisé via Agent Runtime" }, { en: "Resource path <code>projects/…/reasoningEngines/ID</code>", fr: "Chemin de ressource <code>projects/…/reasoningEngines/ID</code>" }, { en: "<b>Yes</b> (tested)", fr: "<b>Oui</b> (testé)" }, { en: "<code>discoveryengine.serviceAgent</code> on the project", fr: "<code>discoveryengine.serviceAgent</code> sur le projet" }],
+      [{ en: "Custom agent via A2A", fr: "Agent personnalisé via A2A" }, { en: "Agent card JSON (A2A v0.3)", fr: "Carte d'agent JSON (A2A v0.3)" }, { en: "<b>Yes</b> (tested)", fr: "<b>Oui</b> (testé)" }, { en: "<code>run.invoker</code> on the service", fr: "<code>run.invoker</code> sur le service" }],
+      [{ en: "Agents from Agent Registry", fr: "Agents depuis Agent Registry" }, { en: "Agent declared in the app project's registry, linked to its Agent Gateway", fr: "Agent déclaré dans le registre du projet de l'app, relié à son Agent Gateway" }, { en: "Through a declaration in the app's registry", fr: "Par une déclaration dans le registre de l'app" }, { en: "<code>run.invoker</code> + <code>iap.egressor</code>", fr: "<code>run.invoker</code> + <code>iap.egressor</code>" }],
+      [{ en: "Custom agent via Dialogflow", fr: "Agent personnalisé via Dialogflow" }, { en: "Source <code>projects/…/locations/…/agents/ID</code>", fr: "Source <code>projects/…/locations/…/agents/ID</code>" }, { en: "Not documented by Google", fr: "Non documenté par Google" }, { en: "To validate: <code>dialogflow.client</code>", fr: "À valider : <code>dialogflow.client</code>" }],
+      [{ en: "Agents via Marketplace", fr: "Agents via Marketplace" }, { en: "Agent bought through procurement", fr: "Agent acheté via les achats" }, "—", "—"]
+    ];
+    document.getElementById("modes-table").innerHTML = "<thead><tr>" + h.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>"
+      + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + T(c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody>";
+    document.getElementById("mode-tabs").innerHTML = MODES.map(function (m) {
+      return '<button type="button" role="tab" id="mt-' + m.id + '" data-mtab="' + m.id + '" aria-selected="' + (modeTab === m.id) + '">' + esc(m.t) + "<small>" + esc(T(m.s)) + "</small></button>"; }).join("");
+    var m = MODES.filter(function (x) { return x.id === modeTab; })[0] || MODES[0];
+    var panel = document.getElementById("mode-panel"); panel.setAttribute("aria-labelledby", "mt-" + m.id); panel.innerHTML = '<div class="card">' + m.body() + "</div>";
+  }
+  document.getElementById("mode-tabs").addEventListener("click", function (e) { var b = e.target.closest("[data-mtab]"); if (!b) return; modeTab = b.getAttribute("data-mtab"); store.set("modeTab", modeTab); renderModes(); });
+
+  /* ---------------- RH ---------------- */
+  var HR = [
+    [{ en: "What is an agent?", fr: "Qu'est-ce qu'un agent ?" }, { en: "An assistant specialised in one task (translate with our glossary, answer HR policy questions, check a stock). Users open it from the Agents list of Gemini Enterprise and talk to it in the chat.", fr: "Un assistant spécialisé dans une tâche (traduire avec notre glossaire, répondre aux questions de règles RH, vérifier un stock). Les utilisateurs l'ouvrent depuis la liste Agents de Gemini Enterprise et lui parlent dans le chat." }],
+    [{ en: "Two ways to get one", fr: "Deux façons d'en obtenir un" }, { en: "<b>No code</b>: anyone can create an agent in the web app (Agents › Create an agent), from documents they can read. <b>Developed</b>: when the agent must call an internal tool or apply exact rules, ask the developers; it follows the steps on this page.", fr: "<b>Sans code</b> : chacun peut créer un agent dans l'app web (Agents › Créer un agent), à partir des documents qu'il peut lire. <b>Développé</b> : quand l'agent doit appeler un outil interne ou appliquer des règles exactes, demandez aux développeurs ; il suit les étapes de cette page." }],
+    [{ en: "Who can use an agent?", fr: "Qui peut utiliser un agent ?" }, { en: "Only members of the Google groups that received the Agent User role on it, with a Gemini Enterprise licence. To open an agent to a team, send the group's address to the admin.", fr: "Seulement les membres des groupes Google qui ont reçu le rôle Agent User sur cet agent, avec une licence Gemini Enterprise. Pour ouvrir un agent à une équipe, envoyez l'adresse du groupe à l'admin." }],
+    [{ en: "And personal data?", fr: "Et les données personnelles ?" }, { en: "An agent that reads personal data (payroll, reviews, absences) needs the DPO's opinion before publication. No-code agents only see what the user can already see.", fr: "Un agent qui lit des données personnelles (paie, entretiens, absences) demande l'avis du DPO avant publication. Un agent sans code ne voit que ce que l'utilisateur voit déjà." }],
+    [{ en: "How to ask for a developed agent", fr: "Demander un agent développé" }, { en: "Describe: the task in one sentence, who uses it (group), which data it reads, whether it changes anything, two example questions with the expected answer. Send it to the Gemini Enterprise admin.", fr: "Décrire : la tâche en une phrase, qui l'utilise (groupe), quelles données il lit, s'il modifie quelque chose, deux exemples de questions avec la réponse attendue. L'envoyer à l'admin Gemini Enterprise." }],
+    [{ en: "Is it safe?", fr: "Est-ce sûr ?" }, { en: "Every developed agent filters what it receives and answers (Model Armor), runs with its own limited identity, and is reviewed before publication. Access can be removed at any time.", fr: "Chaque agent développé filtre ce qu'il reçoit et répond (Model Armor), tourne avec sa propre identité limitée, et est relu avant publication. L'accès peut être retiré à tout moment." }]
+  ];
+  function renderHR() { document.getElementById("hr-grid").innerHTML = HR.map(function (h) { return '<div class="card"><h3>' + esc(T(h[0])) + "</h3><p>" + T(h[1]) + "</p></div>"; }).join(""); }
+
+  /* ---------------- dépannage ---------------- */
+  var TR = [
+    ["403 Cloud Resource Manager API has not been used", { en: "API off on the project", fr: "API désactivée sur le projet" }, { en: "Step « Enable the 2 APIs »", fr: "Étape « Activer les 2 API »" }],
+    ["Error creating service account: IAM API has not been used", { en: "IAM API off", fr: "API IAM désactivée" }, { en: "gcloud services enable iam.googleapis.com, then apply again", fr: "gcloud services enable iam.googleapis.com, puis relancer apply" }],
+    ["No API key was provided", { en: "ADK older than 2.10", fr: "ADK antérieur à 2.10" }, { en: "pip show google-adk; reinstall the requirements", fr: "pip show google-adk ; réinstaller les dépendances" }],
+    ["default credentials were not found", { en: "No application default login", fr: "Pas de connexion par défaut" }, { en: "gcloud auth application-default login", fr: "gcloud auth application-default login" }],
+    ["PERMISSION_DENIED during apply", { en: "A role is missing for your account", fr: "Un rôle manque à votre compte" }, { en: "Step « Your rights »; ask the project owner", fr: "Étape « Vos droits » ; demander au propriétaire du projet" }],
+    ["gcloud builds submit: PERMISSION_DENIED / build FAILURE", { en: "Image build (Cloud Run path): Cloud Build API off, or the build account lacks rights (the default Cloud Build account usually has none)", fr: "Construction de l'image (parcours Cloud Run) : API Cloud Build désactivée, ou compte de construction sans droits (le compte Cloud Build par défaut n'en a en général aucun)" }, { en: "Enable cloudbuild.googleapis.com; build account with storage.objectViewer, artifactregistry.writer, logging.logWriter (Terraform 01-bis does it: agents-a2a-build-sa); you need cloudbuild.builds.editor", fr: "Activer cloudbuild.googleapis.com ; compte de construction avec storage.objectViewer, artifactregistry.writer, logging.logWriter (Terraform 01-bis le fait : agents-a2a-build-sa) ; il vous faut cloudbuild.builds.editor" }],
+    ["adk web: every answer « … filtrée par Model Armor »", { en: "Configuration loaded locally: its Model Armor templates do not exist (yet)", fr: "Configuration chargée en local : ses templates Model Armor n'existent pas (encore)" }, { en: "PROMPT_TEMPLATE= RESPONSE_TEMPLATE= LOCAL_DEV=1 adk web", fr: "PROMPT_TEMPLATE= RESPONSE_TEMPLATE= LOCAL_DEV=1 adk web" }],
+    ["Error 409: already exists", { en: "Lost state file, or two people deploying", fr: "Fichier d'état perdu, ou deux personnes qui déploient" }, { en: "Restore the state backup; one owner per folder", fr: "Restaurer la sauvegarde de l'état ; un responsable par dossier" }],
+    ["contains child resources: sessions", { en: "Old module without deletion_policy FORCE", fr: "Ancien module sans deletion_policy FORCE" }, { en: "Update the code, terraform apply, then destroy", fr: "Mettre à jour le code, terraform apply, puis destroy" }],
+    ["All answers: « … filtrée par Model Armor »", { en: "Agent lacks modelarmor.user on the templates project", fr: "L'agent n'a pas modelarmor.user sur le projet des templates" }, { en: "Ask security for the role, or let Terraform create templates", fr: "Demander le rôle à la sécurité, ou laisser Terraform créer les templates" }],
+    ["Add refused: region", { en: "Agent outside europe-*, app is eu", fr: "Agent hors europe-*, app en eu" }, { en: "region = europe-west1", fr: "region = europe-west1" }],
+    ["Card preview refused (A2A)", { en: "Truncated JSON or protocolVersion not 0.3", fr: "JSON tronqué ou protocolVersion différent de 0.3" }, { en: "Use terraform output -json cards or the partner's file", fr: "Utiliser terraform output -json cards ou le fichier du partenaire" }],
+    ["Chat: agent not listed", { en: "No Agent User for the group, or no licence", fr: "Pas d'Agent User pour le groupe, ou pas de licence" }, { en: "User permissions; Licences", fr: "Autorisations utilisateur ; Licences" }],
+    ["Chat: « could not answer » (Agent Runtime, other project)", { en: "discoveryengine.serviceAgent missing on the agents project", fr: "discoveryengine.serviceAgent manquant sur le projet des agents" }, { en: "Grant it; check with the step « Check the permission »", fr: "Le donner ; vérifier avec l'étape « Vérifier le droit »" }],
+    ["Chat: « could not answer »; Cloud Run logs 403", { en: "run.invoker missing for the Gemini Enterprise account", fr: "run.invoker manquant pour le compte Gemini Enterprise" }, { en: "Grant it on the service; check with the step « Check the permission »", fr: "Le donner sur le service ; vérifier avec l'étape « Vérifier le droit »" }],
+    ["PERMISSION_DENIED vpcServiceControlsUniqueIdentifier", { en: "VPC Service Controls perimeter between projects", fr: "Périmètre VPC Service Controls entre projets" }, { en: "Same perimeter or an egress rule (docs/05 §3)", fr: "Même périmètre ou règle de sortie (docs/05 §3)" }]
+  ];
+  function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  function renderTrouble() {
+    var s = document.getElementById("t-search"); s.placeholder = lang === "fr" ? "Rechercher : 403, région, état, Model Armor…" : "Search: 403, region, state, Model Armor…";
+    var q = norm(s.value.trim());
+    var rows = TR.filter(function (r) { return !q || norm(r[0] + " " + T(r[1]) + " " + T(r[2])).indexOf(q) >= 0; });
+    var lb = lang === "fr" ? ["Symptôme", "Cause probable", "Correction"] : ["Symptom", "Likely cause", "Fix"];
+    document.getElementById("t-list").innerHTML = rows.length ? rows.map(function (r) {
+      return '<div class="tr"><div><span class="lbl">' + lb[0] + "</span><code>" + esc(r[0]) + '</code></div><div><span class="lbl">' + lb[1] + "</span>" + esc(T(r[1])) + '</div><div><span class="lbl">' + lb[2] + "</span>" + esc(T(r[2])) + "</div></div>";
+    }).join("") : '<p class="empty">' + (lang === "fr" ? "Aucun résultat." : "No result.") + "</p>";
+  }
+  document.getElementById("t-search").addEventListener("input", renderTrouble);
+
+  /* ---------------- FAQ ---------------- */
+  var FC = { team: { en: "Admin", fr: "Admin" }, dev: { en: "Developers", fr: "Développeurs" }, hr: { en: "HR & managers", fr: "RH et managers" } };
+  var FAQ = [
+    ["team", { en: "Where does the Gemini Enterprise app live?", fr: "Où vit l'app Gemini Enterprise ?" }, { en: "In aiml-gemini-entreprise-ldbr, location eu. Agents may live there or in any other project of the organisation.", fr: "Dans aiml-gemini-entreprise-ldbr, localisation eu. Les agents peuvent y vivre, ou dans tout autre projet de l'organisation." }],
+    ["team", { en: "Why is Terraform run locally?", fr: "Pourquoi Terraform est-il lancé en local ?" }, { en: "It is the starting setup, with no CI pipeline yet. The rules in the Terraform section keep it safe until the state moves to a bucket and runs move to CI.", fr: "C'est la mise en place de départ, sans chaîne CI pour l'instant. Les règles de la section Terraform la sécurisent jusqu'au passage de l'état dans un bucket et des exécutions dans la CI." }],
+    ["team", { en: "What if I lose terraform.tfstate?", fr: "Et si je perds terraform.tfstate ?" }, { en: "Restore your latest backup. Without it, resources must be imported (terraform import) or deleted by hand before applying again; back up after every apply.", fr: "Restaurez votre dernière sauvegarde. Sans elle, il faut importer les ressources (terraform import) ou les supprimer à la main avant de relancer ; sauvegardez après chaque apply." }],
+    ["team", { en: "Can two people deploy at the same time?", fr: "Deux personnes peuvent-elles déployer en même temps ?" }, { en: "Not from the same folder: with a local state, nothing prevents conflicting changes. One owner per folder.", fr: "Pas depuis le même dossier : avec un état local, rien n'empêche des modifications contradictoires. Un responsable par dossier." }],
+    ["team", { en: "Does a partner need access to our project?", fr: "Un partenaire a-t-il besoin d'accès à notre projet ?" }, { en: "No. They only need our project number, to grant a permission to our Gemini Enterprise service account in their project.", fr: "Non. Il a seulement besoin de notre numéro de projet, pour donner un droit au compte de service de notre Gemini Enterprise dans son projet." }],
+    ["team", { en: "Can we import partner agents from their Agent Registry?", fr: "Peut-on importer les agents partenaires depuis leur Agent Registry ?" }, { en: "No, Google does not support a registry in another project. Add them by resource (Agent Runtime) or by card (A2A).", fr: "Non, Google ne prend pas en charge un registre d'un autre projet. On les ajoute par ressource (Agent Runtime) ou par carte (A2A)." }],
+    ["team", { en: "How do I remove an agent quickly?", fr: "Comment retirer un agent rapidement ?" }, { en: "App › Agents › the agent › Delete. It disappears for users at once; the agent itself stays in its project.", fr: "App › Agents › l'agent › Supprimer. Il disparaît aussitôt pour les utilisateurs ; l'agent lui-même reste dans son projet." }],
+    ["dev", { en: "Do I need a Gemini API key?", fr: "Ai-je besoin d'une clé d'API Gemini ?" }, { en: "No. By default agents call Gemini through Vertex AI with their identity (yours locally). « No API key was provided » means an old ADK version.", fr: "Non. Par défaut, les agents appellent Gemini via Vertex AI avec leur identité (la vôtre en local). « No API key was provided » signifie une ancienne version d'ADK." }],
+    ["dev", { en: "Can an agent use an API key?", fr: "Un agent peut-il utiliser une clé d'API ?" }, { en: "Yes. Locally: export GEMINI_API_KEY (Google AI Studio key) or VERTEX_API_KEY (Vertex AI key). Deployed: create a Secret Manager secret in the agents project, then set model_api_key_secret (and model_api_key_type = gemini or vertex) in terraform.tfvars; each agent can read that secret only.", fr: "Oui. En local : exporter GEMINI_API_KEY (clé Google AI Studio) ou VERTEX_API_KEY (clé Vertex AI). Déployé : créer un secret Secret Manager dans le projet des agents, puis renseigner model_api_key_secret (et model_api_key_type = gemini ou vertex) dans terraform.tfvars ; chaque agent ne lit que ce secret." }],
+    ["dev", { en: "Agent Runtime or Cloud Run?", fr: "Agent Runtime ou Cloud Run ?" }, { en: "Agent Runtime by default (managed, sessions, automatic registry). Cloud Run A2A when the agent must also be called outside Google, or you need the container.", fr: "Agent Runtime par défaut (géré, sessions, registre automatique). Cloud Run A2A quand l'agent doit aussi être appelé hors Google, ou qu'il faut le conteneur." }],
+    ["dev", { en: "Does changing one agent redeploy the others?", fr: "Modifier un agent redéploie-t-il les autres ?" }, { en: "No. Each agent has its own image (Cloud Run) or archive (Agent Runtime) with only its folder and the common code: only that agent is rebuilt or updated in place, same name and ID, nothing to do in Gemini Enterprise. Changing commun.py updates all of them, by design.", fr: "Non. Chaque agent a sa propre image (Cloud Run) ou archive (Agent Runtime) avec seulement son dossier et le code commun : seul cet agent est reconstruit ou mis à jour sur place, même nom et même ID, rien à faire dans Gemini Enterprise. Modifier commun.py les met tous à jour, c'est voulu." }],
+    ["dev", { en: "How long does a deployment take?", fr: "Combien de temps dure un déploiement ?" }, { en: "Agent Runtime: 10 to 15 minutes for all agents. Cloud Run: about 10 minutes; each image is built by Cloud Build in about 1 min 20 s (no Docker needed).", fr: "Agent Runtime : 10 à 15 minutes pour tous les agents. Cloud Run : environ 10 minutes ; chaque image est construite par Cloud Build en 1 min 20 s environ (pas besoin de Docker)." }],
+    ["dev", { en: "How do I clean up what the guides created?", fr: "Comment nettoyer ce que les guides ont créé ?" }, { en: "python scripts/nettoyer.py lists it (Cloud Run, Agent Runtime, Agent Registry, Dialogflow, service accounts and their roles, image repositories, Model Armor templates) and deletes nothing; --agent meteo narrows it; --supprimer deletes after you type the project ID. Terraform-made items are skipped unless --avec-terraform: prefer terraform destroy, or remove the key from AGENTS.", fr: "python scripts/nettoyer.py en fait l'inventaire (Cloud Run, Agent Runtime, Agent Registry, Dialogflow, comptes de service et leurs rôles, dépôts d'images, templates Model Armor) sans rien supprimer ; --agent meteo restreint ; --supprimer supprime après avoir tapé l'ID du projet. Ce que Terraform a créé est ignoré sauf --avec-terraform : préférez terraform destroy, ou retirez la clé de AGENTS." }],
+    ["dev", { en: "Can our agents use the app's connectors (Airtable, Drive…)?", fr: "Nos agents peuvent-ils utiliser les connecteurs de l'app (Airtable, Drive…) ?" }, { en: "Not their actions: custom agents do not inherit Gemini Enterprise's connector tools. They can search the app's connected data with the user's OAuth token (commun.recherche_gemini_enterprise), or call the provider's MCP server with that token. OAuth: scripts/autorisation_oauth.sh and AGENTS_OAUTH; check it with the identite agent (docs/12-3).", fr: "Pas leurs actions : les agents personnalisés n'héritent pas des outils des connecteurs de Gemini Enterprise. Ils peuvent chercher dans les données connectées de l'app avec le jeton OAuth de l'utilisateur (commun.recherche_gemini_enterprise), ou appeler le serveur MCP du fournisseur avec ce jeton. OAuth : scripts/autorisation_oauth.sh et AGENTS_OAUTH ; le vérifier avec l'agent identite (docs/12-3)." }],
+    ["dev", { en: "Where are the logs?", fr: "Où sont les journaux ?" }, { en: "In the agents project: Agent Runtime › the agent › Logs and Sessions, or Cloud Run › the service › Logs.", fr: "Dans le projet des agents : Agent Runtime › l'agent › Journaux et Sessions, ou Cloud Run › le service › Journaux." }],
+    ["dev", { en: "Can an agent call another agent?", fr: "Un agent peut-il appeler un autre agent ?" }, { en: "Yes: it finds it in Agent Registry and calls it with its own identity, which gets aiplatform.viewer on that agent only (docs/06, orchestrator).", fr: "Oui : il le trouve dans Agent Registry et l'appelle avec sa propre identité, qui reçoit aiplatform.viewer sur cet agent seulement (docs/06, orchestrateur)." }],
+    ["dev", { en: "Why must the Cloud Run URL stay the default run.app one?", fr: "Pourquoi l'URL Cloud Run doit-elle rester celle en run.app ?" }, { en: "Gemini Enterprise's automatic authentication only works with default run.app URLs.", fr: "L'authentification automatique de Gemini Enterprise ne fonctionne qu'avec les URL run.app par défaut." }],
+    ["hr", { en: "Can I create an agent myself?", fr: "Puis-je créer un agent moi-même ?" }, { en: "Yes, without code, in the web app (Agents › Create an agent), from documents you can read. Sharing it is validated by the admin.", fr: "Oui, sans code, dans l'app web (Agents › Créer un agent), à partir des documents que vous pouvez lire. Son partage est validé par l'admin." }],
+    ["hr", { en: "Why can't my colleague see an agent?", fr: "Pourquoi mon collègue ne voit-il pas un agent ?" }, { en: "They are not in a group with the Agent User role on it, or have no licence. Ask the admin, with the group's address.", fr: "Il n'est pas dans un groupe qui a le rôle Agent User sur cet agent, ou n'a pas de licence. Demandez à l'admin, avec l'adresse du groupe." }],
+    ["hr", { en: "Do agents see my conversations?", fr: "Les agents voient-ils mes conversations ?" }, { en: "An agent receives the messages sent to it. Colleagues never see your conversations, even when an agent is shared.", fr: "Un agent reçoit les messages qui lui sont envoyés. Vos collègues ne voient jamais vos conversations, même quand un agent est partagé." }],
+    ["hr", { en: "Can an agent act for me (send, modify)?", fr: "Un agent peut-il agir pour moi (envoyer, modifier) ?" }, { en: "Only if it has that tool, and always after your confirmation.", fr: "Seulement s'il a cet outil, et toujours après votre confirmation." }],
+    ["hr", { en: "Can we build an agent on payroll data?", fr: "Peut-on faire un agent sur des données de paie ?" }, { en: "Not as a no-code agent: it is a developed agent, after the DPO's opinion.", fr: "Pas en agent sans code : c'est un agent développé, après avis du DPO." }]
+  ];
+  function renderFaq() {
+    var s = document.getElementById("f-search"); s.placeholder = lang === "fr" ? "Rechercher dans la FAQ…" : "Search the FAQ…";
+    document.getElementById("f-cats").innerHTML = [["all", { en: "All", fr: "Tout" }]].concat(Object.keys(FC).map(function (k) { return [k, FC[k]]; })).map(function (c) {
+      return '<button type="button" data-fc="' + c[0] + '" aria-pressed="' + (fcat === c[0]) + '">' + esc(T(c[1])) + "</button>"; }).join("");
+    var q = norm(s.value.trim());
+    var rows = FAQ.filter(function (x) { return (fcat === "all" || x[0] === fcat) && (!q || norm(T(x[1]) + " " + T(x[2])).indexOf(q) >= 0); });
+    document.getElementById("f-list").innerHTML = rows.length ? rows.map(function (x) {
+      return "<details><summary>" + esc(T(x[1])) + '<span class="cat">' + esc(T(FC[x[0]])) + '</span></summary><div class="a"><p>' + esc(T(x[2])) + "</p></div></details>"; }).join("")
+      : '<p class="empty">' + (lang === "fr" ? "Aucune question ne correspond." : "No matching question.") + "</p>";
+  }
+  document.getElementById("f-search").addEventListener("input", renderFaq);
+  document.getElementById("f-cats").addEventListener("click", function (e) { var b = e.target.closest("[data-fc]"); if (!b) return; fcat = b.getAttribute("data-fc"); renderFaq(); });
+
+  /* ---------------- testé ---------------- */
+  var TESTED = [
+    ["ok", { en: "6 agents, real Gemini", fr: "6 agents, vrai Gemini" }, { en: "Real weather, writing, translation, size, returns, identity; right tools, right order; expected refusals.", fr: "Météo réelle, rédaction, traduction, taille, retours, identité ; bons outils, bon ordre ; refus attendus." }],
+    ["ok", "Cloud Run + A2A", { en: "Deployed; images built by Cloud Build (no Docker), one per agent; A2A v0.3, streaming, multi-turn.", fr: "Déployé ; images construites par Cloud Build (sans Docker), une par agent ; A2A v0.3, streaming, multi-tours." }],
+    ["ok", "Agent Runtime", { en: "Deployed; each agent answers with its tools.", fr: "Déployé ; chaque agent répond avec ses outils." }],
+    ["ok", "Model Armor", { en: "Injection blocked, normal request accepted.", fr: "Injection bloquée, demande normale acceptée." }],
+    ["ok", "Agent Registry", { en: "A2A cards declared; Agent Runtime agents registered automatically.", fr: "Cartes A2A déclarées ; agents Agent Runtime inscrits automatiquement." }],
+    ["ok", { en: "Between two projects", fr: "Entre deux projets" }, { en: "No right on the app project; permission granted to the real Gemini Enterprise account.", fr: "Aucun droit sur le projet de l'app ; droit donné au vrai compte de Gemini Enterprise." }],
+    ["ok", { en: "Access from the app project", fr: "Accès depuis le projet de l'app" }, { en: "An account of the app project is refused without the permission, accepted with it, service by service.", fr: "Un compte du projet de l'app est refusé sans le droit, accepté avec, service par service." }],
+    ["ok", { en: "Destroy", fr: "Suppression" }, { en: "terraform destroy removes everything, sessions included.", fr: "terraform destroy supprime tout, sessions comprises." }],
+    ["todo", "aiml-gemini-entreprise-ldbr", { en: "Adding to the real app and the first chat answer: to confirm on the first real run.", fr: "Ajout dans la vraie app et première réponse dans le chat : à constater au premier passage réel." }]
+  ];
+  function renderTested() {
+    document.getElementById("tested-grid").innerHTML = TESTED.map(function (t) {
+      return '<div class="card"><span class="st ' + t[0] + '">' + (t[0] === "ok" ? (lang === "fr" ? "Testé" : "Tested") : (lang === "fr" ? "À constater" : "To confirm")) + "</span><b>" + esc(T(t[1])) + "</b><span>" + esc(T(t[2])) + "</span></div>"; }).join("");
+  }
+
+  /* ---------------- réglages, langue, thème ---------------- */
+  var defaults = { GE_PROJECT: CONFIG.geProject, GE_NUM: CONFIG.geProjectNumber, APP_ID: CONFIG.appId };
+  document.querySelectorAll("[data-var]").forEach(function (inp) {
+    var k = inp.getAttribute("data-var");
+    if (vars[k]) inp.value = vars[k]; else if (defaults[k]) inp.value = defaults[k];
+    inp.addEventListener("input", function () { vars[k] = inp.value; store.set("vars", vars); refresh(); });
+  });
+  document.querySelectorAll(".seg[data-key]").forEach(function (seg) {
+    var key = seg.getAttribute("data-key");
+    seg.addEventListener("click", function (e) { var b = e.target.closest("[data-val]"); if (!b) return; state[key] = b.getAttribute("data-val"); store.set("state", state); renderAll(); });
+  });
+  function refresh() { document.querySelectorAll("pre.cmd[data-tpl]").forEach(function (p) { p.querySelector("code").innerHTML = codeHtml(p.getAttribute("data-tpl")); }); }
+  function renderAll() {
+    root.setAttribute("data-lang", lang); root.setAttribute("lang", lang);
+    document.getElementById("lang-btn").innerHTML = lang === "en" ? "<b>EN</b> · FR" : "EN · <b>FR</b>";
+    document.querySelectorAll("[data-cfg]").forEach(function (el) { var k = el.getAttribute("data-cfg"); el.innerHTML = CONFIG[k] ? esc(CONFIG[k]) : todo(); });
+    document.querySelectorAll(".seg[data-key]").forEach(function (seg) { var k = seg.getAttribute("data-key"); seg.querySelectorAll("[data-val]").forEach(function (b) { b.setAttribute("aria-pressed", String(state[k] === b.getAttribute("data-val"))); }); });
+    document.getElementById("v-AGENTS_PROJECT").closest(".field").hidden = same();
+    renderRoles(); renderSteps("admin-steps", ADMIN); renderSteps("path-steps", PATH); renderTerraform(); renderAdd(); renderReq(); renderModes(); renderHR(); renderTrouble(); renderFaq(); renderTested(); updateProg();
+  }
+  document.getElementById("lang-btn").addEventListener("click", function () { lang = lang === "en" ? "fr" : "en"; store.set("lang", lang); renderAll(); });
+  var theme = store.get("theme", null), tb = document.getElementById("theme-btn");
+  function applyTheme() { if (theme) root.setAttribute("data-theme", theme); else root.removeAttribute("data-theme"); tb.title = theme || "system"; }
+  tb.addEventListener("click", function () { theme = theme === null ? "light" : theme === "light" ? "dark" : null; store.set("theme", theme); applyTheme(); });
+  applyTheme(); renderAll();
+})();
+</script>
+</body>
+</html>

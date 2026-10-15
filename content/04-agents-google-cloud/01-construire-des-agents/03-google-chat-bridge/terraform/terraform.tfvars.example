@@ -1,0 +1,2 @@
+project_id          = "your-project-id"
+agent_resource_name = "projects/123456/locations/europe-west1/reasoningEngines/987654321"

@@ -1,0 +1,3 @@
+{"id": "rh-001", "categorie": "frequent", "question": "Combien de jours de congés ?", "attendu": "25 jours ouvrés.", "doit_contenir": ["25 jours"], "interdit": ["30 jours"], "sources": ["conges-2026"], "critere": "Indique 25 jours ouvrés.", "checks": ["contient", "interdit", "citation"]}
+{"id": "rh-002", "categorie": "sans-reponse", "question": "Quelle est la politique vélo ?", "checks": ["refus"]}
+{"id": "rh-003", "categorie": "frequent", "question": "Combien de jours de télétravail ?", "doit_contenir": ["3 jours"], "sources": ["teletravail-2026"], "checks": ["contient", "citation"]}

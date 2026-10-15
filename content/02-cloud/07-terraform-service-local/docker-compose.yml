@@ -1,0 +1,69 @@
+# Service Terraform « managé » local : Gitea (≈ GitHub) + Atlantis (≈ service managé) + MinIO (≈ Cloud Storage)
+name: tfsvc
+
+services:
+  gitea:
+    image: gitea/gitea:latest
+    environment:
+      GITEA__security__INSTALL_LOCK: "true"           # pas d'assistant d'installation
+      GITEA__server__ROOT_URL: "http://gitea:3000/"   # URL vue par Atlantis (réseau Docker)
+      GITEA__server__HTTP_PORT: "3000"
+      GITEA__server__PUBLIC_URL_DETECTION: "never"    # Gitea >= 1.24 : toujours utiliser ROOT_URL (sinon URL = hôte de la requête)
+      GITEA__database__DB_TYPE: sqlite3
+      GITEA__service__DISABLE_REGISTRATION: "true"
+      # Webhooks autorisés vers les adresses PRIVÉES (atlantis:4141 sur le réseau Docker).
+      # Gitea >= 28 : section [security] ; versions antérieures : section [webhook].
+      GITEA__security__ALLOWED_HOST_LIST: "private"
+      GITEA__webhook__ALLOWED_HOST_LIST: "private"
+      GITEA__repository__DEFAULT_BRANCH: main
+    ports: ["${GITEA_PORT:-3000}:3000"]
+    volumes: [gitea-data:/data]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/api/healthz"]
+      interval: 5s
+      retries: 30
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-tfstate-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-change-me-please}
+    ports: ["${MINIO_PORT:-9000}:9000", "${MINIO_CONSOLE_PORT:-9001}:9001"]
+    volumes: [minio-data:/data]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      retries: 30
+
+  atlantis:
+    image: ghcr.io/runatlantis/atlantis:latest
+    depends_on:
+      gitea: { condition: service_healthy }
+      minio: { condition: service_healthy }
+    environment:
+      ATLANTIS_ATLANTIS_URL: "http://localhost:${ATLANTIS_PORT:-4141}"
+      ATLANTIS_GITEA_BASE_URL: "http://gitea:3000"
+      ATLANTIS_GITEA_USER: atlantis-bot
+      ATLANTIS_GITEA_TOKEN: ${ATLANTIS_GITEA_TOKEN}
+      ATLANTIS_GITEA_WEBHOOK_SECRET: ${ATLANTIS_WEBHOOK_SECRET}
+      ATLANTIS_REPO_ALLOWLIST: "gitea/acme/*,gitea:3000/acme/*"   # seuls les dépôts de l organisation acme
+      ATLANTIS_REPO_CONFIG: /config/repos.yaml        # règles serveur (non modifiables par les dépôts)
+      ATLANTIS_ENABLE_POLICY_CHECKS: "true"
+      ATLANTIS_DEFAULT_TF_VERSION: "v1.16.3"          # version embarquée dans l'image : pas de téléchargement
+      ATLANTIS_TF_DOWNLOAD: "false"
+      ATLANTIS_HIDE_PREV_PLAN_COMMENTS: "true"
+      ATLANTIS_LOG_LEVEL: ${ATLANTIS_LOG_LEVEL:-info}   # "debug" pour diagnostiquer
+      # Identifiants du backend d'état (MinIO = « Cloud Storage » local)
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-tfstate-admin}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-change-me-please}
+    ports: ["${ATLANTIS_PORT:-4141}:4141"]
+    volumes:
+      - ./atlantis/repos.yaml:/config/repos.yaml:ro
+      - ./policies:/policies:ro
+      - atlantis-data:/atlantis-data
+
+volumes:
+  gitea-data:
+  minio-data:
+  atlantis-data:

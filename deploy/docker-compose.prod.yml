@@ -1,0 +1,20 @@
+# Production on the server (~/apps/formation). The image is built by CI and loaded here
+# (`docker load`), never built on the server: it is shared and short on memory.
+services:
+  web:
+    image: atelier-formation:${IMAGE_TAG:-latest}
+    container_name: formation-web
+    ports:
+      - "127.0.0.1:${PORT:-3090}:3000"   # only nginx reaches it
+    env_file: .env
+    volumes:
+      - formation-data:/data            # analytics + reading progress (SQLite)
+    restart: unless-stopped
+    mem_limit: 768m
+    cpus: 1.5
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+volumes:
+  formation-data:

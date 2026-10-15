@@ -1,0 +1,7 @@
+IT security policy (demo document for the tutorial)
+
+Never share your password, MFA codes or API keys, including with colleagues or IT support.
+Do not paste customer personal data or secrets into AI tools other than the approved
+Gemini Enterprise app. Company AI tools are protected by Model Armor, which blocks prompt
+injection, jailbreak attempts, malicious links and sensitive data such as card numbers.
+Report suspicious emails to security@example.com. Laptops must be locked when unattended.

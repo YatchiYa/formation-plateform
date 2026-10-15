@@ -1,0 +1,4 @@
+google-adk[a2a]==2.10.0
+google-cloud-aiplatform[agent_engines,adk]==2.2.0
+mcp==2.3.0          # client MCP utilisé par McpToolset : google-adk ne l'installe PAS tout seul (vu au 1er déploiement)
+uvicorn==0.54.0

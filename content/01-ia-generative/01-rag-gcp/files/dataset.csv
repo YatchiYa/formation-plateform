@@ -1,0 +1,6 @@
+question,reponse_attendue,source,score_retrieval
+Qu'est-ce que RAG Engine ?,Un service managé de Vertex AI pour le RAG,rag-overview.html,0.91
+Quel modèle d'embedding par défaut ?,text-embedding-005,embeddings.html,0.87
+Taille de chunk recommandée ?,512 à 1024 tokens,chunking.html,0.78
+Comment protéger les prompts ?,Model Armor,model-armor.html,0.83
+Où déployer l'agent ?,Cloud Run ou Agent Engine,deploy.html,0.88

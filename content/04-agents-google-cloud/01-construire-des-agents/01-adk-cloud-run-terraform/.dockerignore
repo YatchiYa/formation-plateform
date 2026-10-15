@@ -1,0 +1,6 @@
+terraform/
+**/__pycache__/
+**/.env
+.adk/
+*.md
+test.sh

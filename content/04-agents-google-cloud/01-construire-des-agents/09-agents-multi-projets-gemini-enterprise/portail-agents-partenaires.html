@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agent Onboarding Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout : portail compact. Bandeau fixe, colonne centrale de 1120px, sections courtes en blocs ; tout ce qui se règle (projet,
+   mode, formulaire) réécrit le contenu en direct. Langue : EN par défaut, FR au clic (attribut lang sur chaque bloc). */
+:root {
+  --blue: #3643BA; --blue-deep: #1E2A7A; --sky: #E9ECFB; --track: #F5F6FB; --surface: #FFFFFF;
+  --ink: #161B33; --muted: #59607F; --line: #D9DEF0;
+  --go: #0F8A5F; --go-bg: #E4F5EE; --warn: #B4570A; --warn-bg: #FCF0E3; --stop: #B42318; --stop-bg: #FDECEA;
+  --code-bg: #10163A; --code-fg: #E3E7FA; --code-var: #FFD34E; --sun: #FFD34E; --hero: #3643BA;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #8D97F5; --blue-deep: #0D1236; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA; --muted: #A3AACC;
+    --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80; --stop-bg: #3B1716;
+    --code-bg: #070A1E; --hero: #232C8F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --blue: #8D97F5; --blue-deep: #0D1236; --sky: #1B2150; --track: #0B0F26; --surface: #141A3E; --ink: #E8EBFA; --muted: #A3AACC;
+  --line: #2B3366; --go: #4FD39E; --go-bg: #10322A; --warn: #F2A35C; --warn-bg: #3A2412; --stop: #FF8A80; --stop-bg: #3B1716;
+  --code-bg: #070A1E; --hero: #232C8F; color-scheme: dark;
+}
+html[data-lang="en"] [lang="fr"]:not(html), html[data-lang="fr"] [lang="en"]:not(html) { display: none !important; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body { margin: 0; background: var(--track); color: var(--ink); font: 400 15.5px/1.6 var(--font-body); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(1.7rem, 3.6vw, 2.3rem); font-weight: 800; font-style: italic; text-transform: uppercase; color: var(--blue); }
+h3 { font-size: 1.25rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--blue); }
+code { font-family: var(--font-mono); font-size: .84em; background: var(--sky); padding: .08em .35em; border-radius: 4px; word-break: break-word; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--blue-deep); color: #fff; }
+.topbar-in { max-width: 1120px; margin: 0 auto; padding: 8px 20px; display: flex; align-items: center; gap: 14px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-style: italic; font-size: 1.2rem; text-transform: uppercase; white-space: nowrap; }
+.brand span { color: var(--sun); }
+.nav { display: flex; gap: 2px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.nav a { color: #DDE2FF; text-decoration: none; font-weight: 600; font-size: .86rem; padding: 6px 9px; border-radius: 6px; white-space: nowrap; }
+.nav a:hover { background: rgba(255,255,255,.12); color: #fff; }
+.tools { display: flex; gap: 6px; }
+.tbtn { background: transparent; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 6px; padding: 4px 9px; cursor: pointer; font-size: .82rem; font-weight: 600; }
+.lang-btn b { color: var(--sun); }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+section { padding-block: 44px 4px; }
+.eyebrow { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: .88rem; color: var(--muted); margin-bottom: 4px; }
+.lead { color: var(--muted); max-width: 72ch; margin-top: 8px; font-size: 1.04rem; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; display: grid; gap: 10px; align-content: start; }
+.card > *, .step-body > *, .tabpanel > * { min-width: 0; }
+
+.hero { background: var(--hero); color: #fff; position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(-58deg, transparent 0 46px, rgba(255,255,255,.06) 46px 50px); pointer-events: none; }
+.hero .wrap { position: relative; padding-block: 34px 30px; display: grid; gap: 16px; }
+.hero h1 { font-size: clamp(2.1rem, 5.6vw, 3.6rem); font-weight: 800; font-style: italic; text-transform: uppercase; }
+.hero h1 em { color: var(--sun); font-style: italic; }
+.hero p { color: #E4E8FF; max-width: 70ch; font-size: 1.06rem; }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.fact { background: #fff; color: #1E2A7A; border-radius: 9px; padding: 9px 12px; box-shadow: 0 3px 0 rgba(0,0,0,.18); min-width: 0; }
+.fact small { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 600; color: #4E5682; }
+.fact b { font-family: var(--font-mono); font-size: .84rem; word-break: break-all; }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; padding: 9px 16px; font-weight: 600; text-decoration: none; border: 0; cursor: pointer; }
+.btn.sun { background: var(--sun); color: #161B33; }
+.btn.ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.5); }
+.btn.primary { background: var(--blue); color: #fff; }
+
+.timeline { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-top: 20px; }
+.tl { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 6px; align-content: start; border-top: 4px solid var(--blue); min-width: 0; }
+.tl.us { border-top-color: var(--sun); }
+.tl b.n { font-family: var(--font-display); font-size: 2rem; font-weight: 800; font-style: italic; color: var(--blue); line-height: 1; }
+.who { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 2px 7px; border-radius: 99px; justify-self: start; }
+.who.you { background: var(--sky); color: var(--blue); }
+.who.us { background: var(--warn-bg); color: var(--warn); }
+.tl p { font-size: .9rem; color: var(--muted); }
+
+.modes2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+.mode { border-top: 5px solid var(--blue); }
+.mode .badge { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--go); background: var(--go-bg); padding: 3px 8px; border-radius: 99px; justify-self: start; }
+.kv { display: grid; grid-template-columns: 150px minmax(0, 1fr); border-top: 1px solid var(--line); font-size: .93rem; }
+.kv > div { padding: 7px 2px; border-bottom: 1px solid var(--line); min-width: 0; }
+.kv > div:nth-child(odd) { font-weight: 600; color: var(--muted); }
+.other { margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.other .card { padding: 12px 14px; font-size: .92rem; }
+.no { color: var(--stop); font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .07em; }
+
+.config { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 16px; margin-top: 20px; align-items: start; }
+.field { display: grid; gap: 4px; }
+.field label { font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.field input, .field select, .field textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--track); }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px var(--sky); }
+.field .sub { font-size: .76rem; color: var(--muted); }
+.seg { display: flex; background: var(--sky); border-radius: 9px; padding: 3px; gap: 3px; }
+.seg button { flex: 1; border: 0; background: transparent; padding: 7px 10px; border-radius: 7px; font-weight: 600; cursor: pointer; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+.checklist { display: grid; gap: 8px; }
+.chk { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; align-items: start; }
+.chk input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--blue); cursor: pointer; }
+.chk.ok { border-color: var(--go); background: var(--go-bg); }
+.chk h4 { margin: 0; font-size: 1rem; }
+.chk p { color: var(--muted); font-size: .92rem; }
+.chk > div { display: grid; gap: 6px; min-width: 0; }
+.meter { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: .9rem; }
+.meter i { flex: 1; height: 8px; border-radius: 99px; background: var(--sky); overflow: hidden; position: relative; }
+.meter i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--p, 0%); background: var(--go); transition: width .3s; }
+
+pre.cmd { position: relative; margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 9px; padding: 11px 14px; padding-right: 76px; overflow-x: auto; font: 400 .8rem/1.6 var(--font-mono); }
+pre.cmd code { background: none; padding: 0; color: inherit; font-size: inherit; word-break: normal; border-radius: 0; }
+pre.cmd .c { color: #8C95C6; } pre.cmd .v { color: var(--code-var); font-weight: 600; }
+.copy { position: absolute; top: 7px; right: 7px; border: 1px solid #39407A; background: #1D2557; color: #DDE2FF; border-radius: 6px; padding: 3px 9px; font-size: .74rem; cursor: pointer; font-family: var(--font-body); font-weight: 600; }
+.copy:hover { background: #3643BA; color: #fff; }
+.note { border-radius: 9px; padding: 10px 13px; font-size: .92rem; border-left: 4px solid var(--blue); background: var(--sky); }
+.note.go { border-color: var(--go); background: var(--go-bg); }
+.note.warn { border-color: var(--warn); background: var(--warn-bg); }
+.note.stop { border-color: var(--stop); background: var(--stop-bg); }
+.todo { background: var(--warn-bg); color: var(--warn); border: 1px dashed var(--warn); border-radius: 5px; padding: 0 5px; font-family: var(--font-mono); font-size: .82em; }
+
+table.t { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.tbl { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-top: 16px; }
+.tbl table { min-width: 680px; }
+table.t th, table.t td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+table.t thead th { background: var(--blue-deep); color: #fff; font-family: var(--font-display); font-size: 1rem; text-transform: uppercase; letter-spacing: .04em; }
+table.t td:first-child { font-weight: 600; }
+
+.shared { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.shared ul { margin: 0; padding-left: 1.1em; display: grid; gap: 5px; font-size: .94rem; }
+
+.form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 20px; align-items: start; }
+.form .card { gap: 12px; }
+.row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.inline-chk { display: flex; gap: 8px; align-items: center; font-size: .93rem; cursor: pointer; }
+.missing { color: var(--warn); font-size: .88rem; }
+pre.out { white-space: pre-wrap; word-break: break-word; }
+
+.faq-tools { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; align-items: center; }
+.search { flex: 1 1 280px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 10px; background: var(--surface); }
+.search:focus { border-color: var(--blue); outline: none; }
+.cats { display: flex; gap: 6px; flex-wrap: wrap; }
+.cats button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 5px 12px; font-weight: 600; font-size: .86rem; cursor: pointer; color: var(--muted); }
+.cats button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+.faq { display: grid; gap: 8px; margin-top: 14px; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.faq summary { cursor: pointer; padding: 12px 16px; font-weight: 600; display: flex; gap: 10px; align-items: baseline; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before { content: "+"; font-family: var(--font-display); font-weight: 800; color: var(--blue); width: 12px; }
+.faq details[open] summary::before { content: "–"; }
+.faq summary .cat { margin-left: auto; font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.faq .a { padding: 0 16px 14px 38px; color: var(--ink); font-size: .95rem; display: grid; gap: 8px; }
+.empty { color: var(--muted); padding: 8px 2px; }
+
+.contact { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+.contact .card b { font-family: var(--font-mono); font-size: .9rem; word-break: break-all; }
+footer { margin-top: 50px; padding-block: 22px; background: var(--blue-deep); color: #C9CFF2; font-size: .86rem; }
+footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--surface); padding: 8px 16px; border-radius: 8px; font-weight: 600; z-index: 50; }
+
+@media (max-width: 980px) {
+  .timeline { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .config, .form, .modes2, .shared, .grid2 { grid-template-columns: 1fr; }
+  .other, .contact { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .wrap, .topbar-in { padding-inline: 16px; }
+  .topbar { position: static; } html { scroll-padding-top: 0; }
+  .topbar-in { flex-wrap: wrap; }
+  .nav { order: 3; flex-basis: 100%; }
+  .timeline { grid-template-columns: 1fr 1fr; }
+  .kv { grid-template-columns: 1fr; } .kv > div:nth-child(odd) { border-bottom: 0; padding-bottom: 0; }
+  .row2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">Gemini Enterprise <span>·</span> Agents</div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#how"><span lang="en">How it works</span><span lang="fr">Fonctionnement</span></a>
+      <a href="#modes"><span lang="en">Connection</span><span lang="fr">Connexion</span></a>
+      <a href="#setup"><span lang="en">Setup</span><span lang="fr">Configuration</span></a>
+      <a href="#identity"><span lang="en">Service accounts</span><span lang="fr">Comptes de service</span></a>
+      <a href="#security"><span lang="en">Security</span><span lang="fr">Sécurité</span></a>
+      <a href="#verify"><span lang="en">Check</span><span lang="fr">Vérifier</span></a>
+      <a href="#request"><span lang="en">Request</span><span lang="fr">Demande</span></a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="tools">
+      <button class="tbtn lang-btn" id="lang-btn" type="button" aria-label="Language / Langue"><b>EN</b> · FR</button>
+      <button class="tbtn" id="theme-btn" type="button" aria-label="Theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:#C9D0FF"><span lang="en">For teams and partners who own an agent</span><span lang="fr">Pour les équipes et partenaires qui ont un agent</span></div>
+    <h1><span lang="en">Make your agent available in <em>Gemini Enterprise</em></span><span lang="fr">Rendez votre agent disponible dans <em>Gemini Enterprise</em></span></h1>
+    <p lang="en">Your agent stays in <strong>your</strong> Google Cloud project. You grant one permission to our Gemini Enterprise service account,
+      check that the permission is in place, and send us a request. We review it and publish the agent to the groups you choose.</p>
+    <p lang="fr">Votre agent reste dans <strong>votre</strong> projet Google Cloud. Vous donnez un seul droit au compte de service de notre
+      Gemini Enterprise, vous vérifiez que ce droit est en place, et vous nous envoyez une demande. Nous la relisons et
+      publions l'agent pour les groupes que vous indiquez.</p>
+    <div class="facts">
+      <div class="fact"><small><span lang="en">Our app project</span><span lang="fr">Projet de notre app</span></small><b data-cfg="geProject"></b></div>
+      <div class="fact"><small><span lang="en">App location</span><span lang="fr">Localisation de l'app</span></small><b data-cfg="geLocation"></b></div>
+      <div class="fact"><small><span lang="en">Your agent's region</span><span lang="fr">Région de votre agent</span></small><b data-cfg="region"></b></div>
+      <div class="fact"><small><span lang="en">Supported modes</span><span lang="fr">Modes acceptés</span></small><b>Agent Runtime · A2A</b></div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn sun" href="#setup"><span lang="en">Start the setup</span><span lang="fr">Commencer la configuration</span></a>
+      <a class="btn ghost" href="#request"><span lang="en">Fill in the request</span><span lang="fr">Remplir la demande</span></a>
+    </div>
+  </div>
+</div>
+
+<main>
+<!-- =========================================================== HOW -->
+<section id="how"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Six steps, two parties</span><span lang="fr">Six étapes, deux parties</span></div>
+  <h2><span lang="en">How it works</span><span lang="fr">Comment ça marche</span></h2>
+  <p class="lead" lang="en">You never need access to our project, and we never need access to yours. The only link between the two is one IAM permission that you grant and can revoke at any time.</p>
+  <p class="lead" lang="fr">Vous n'avez jamais besoin d'accès à notre projet, et nous n'avons jamais besoin d'accès au vôtre. Le seul lien entre les deux est un droit IAM que vous donnez, et que vous pouvez retirer à tout moment.</p>
+  <div class="timeline" id="timeline"></div>
+</div></section>
+
+<!-- =========================================================== MODES -->
+<section id="modes"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Choose how Gemini Enterprise reaches your agent</span><span lang="fr">Choisir comment Gemini Enterprise joint votre agent</span></div>
+  <h2><span lang="en">Connection modes</span><span lang="fr">Modes de connexion</span></h2>
+  <p class="lead" lang="en">For an agent hosted in your own project, two modes work. Pick the one that matches where your agent runs.</p>
+  <p class="lead" lang="fr">Pour un agent hébergé dans votre propre projet, deux modes fonctionnent. Choisissez celui qui correspond à l'endroit où tourne votre agent.</p>
+  <div class="modes2" id="modes2"></div>
+  <div class="other" id="other"></div>
+</div></section>
+
+<!-- =========================================================== SETUP -->
+<section id="setup"><div class="wrap">
+  <div class="eyebrow"><span lang="en">In your project</span><span lang="fr">Dans votre projet</span></div>
+  <h2><span lang="en">What to configure</span><span lang="fr">Ce qu'il faut configurer</span></h2>
+  <p class="lead" lang="en">Enter your values: the commands below are written for your project. Tick each item when it is done; the checklist is kept in this browser.</p>
+  <p class="lead" lang="fr">Saisissez vos valeurs : les commandes ci-dessous sont écrites pour votre projet. Cochez chaque point quand il est fait ; la liste est gardée dans ce navigateur.</p>
+  <div class="config">
+    <div class="card">
+      <div class="field"><label><span lang="en">Connection mode</span><span lang="fr">Mode de connexion</span></label>
+        <div class="seg" id="mode-seg"><button type="button" data-mode="runtime">Agent Runtime</button><button type="button" data-mode="a2a">A2A · Cloud Run</button></div></div>
+      <div class="field"><label for="v-PROJECT"><span lang="en">Your project ID</span><span lang="fr">ID de votre projet</span></label>
+        <input id="v-PROJECT" data-var="PROJECT" value="my-team-agents-prod" autocomplete="off"></div>
+      <div class="field" data-show="runtime"><label for="v-ENGINE"><span lang="en">Agent Runtime ID</span><span lang="fr">ID Agent Runtime</span></label>
+        <input id="v-ENGINE" data-var="ENGINE" value="1234567890" autocomplete="off" inputmode="numeric">
+        <div class="sub"><span lang="en">the number at the end of projects/…/reasoningEngines/ID</span><span lang="fr">le nombre à la fin de projects/…/reasoningEngines/ID</span></div></div>
+      <div class="field" data-show="a2a"><label for="v-SERVICE"><span lang="en">Cloud Run service name</span><span lang="fr">Nom du service Cloud Run</span></label>
+        <input id="v-SERVICE" data-var="SERVICE" value="my-agent" autocomplete="off"></div>
+      <div class="field" data-show="a2a"><label for="v-URL"><span lang="en">Service URL</span><span lang="fr">URL du service</span></label>
+        <input id="v-URL" data-var="URL" value="https://my-agent-123456789012.europe-west1.run.app" autocomplete="off">
+        <div class="sub"><span lang="en">the default run.app URL, never a custom domain</span><span lang="fr">l'URL run.app par défaut, jamais un domaine personnalisé</span></div></div>
+      <div class="meter"><span id="meter-label">0 / 0</span><i id="meter"></i></div>
+    </div>
+    <div class="checklist" id="checklist"></div>
+  </div>
+</div></section>
+
+<!-- =========================================================== IDENTITY -->
+<section id="identity"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Who calls whom</span><span lang="fr">Qui appelle qui</span></div>
+  <h2><span lang="en">Service accounts and connection</span><span lang="fr">Comptes de service et connexion</span></h2>
+  <p class="lead" lang="en">Three identities are involved. None of them needs a key: Google signs every call. Never create or send a service account key.</p>
+  <p class="lead" lang="fr">Trois identités interviennent. Aucune n'a besoin de clé : Google signe chaque appel. Ne créez et n'envoyez jamais de clé de compte de service.</p>
+  <div class="tbl"><table class="t" id="id-table"></table></div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="card">
+      <h3>Agent Runtime</h3>
+      <p lang="en">Gemini Enterprise calls the Agent Runtime API in your project with its service account. Google's documented permission is the role <code>Discovery Engine Service Agent</code> on your project.</p>
+      <p lang="fr">Gemini Enterprise appelle l'API Agent Runtime de votre projet avec son compte de service. Le droit documenté par Google est le rôle <code>Discovery Engine Service Agent</code> sur votre projet.</p>
+      <div class="note warn" lang="en">This role applies to the whole project. Host the agents you expose in a project dedicated to them, not next to unrelated workloads.</div>
+      <div class="note warn" lang="fr">Ce rôle vaut pour tout le projet. Hébergez les agents que vous exposez dans un projet qui leur est dédié, pas à côté d'autres charges.</div>
+    </div>
+    <div class="card">
+      <h3>A2A · Cloud Run</h3>
+      <p lang="en">Gemini Enterprise sends a Google-signed OIDC token for its service account in the <code>X-Serverless-Authorization</code> header. Cloud Run checks it: you grant <code>Cloud Run Invoker</code> on <strong>that service only</strong>. The service stays private. The <code>Authorization</code> header stays free: it carries the user's OAuth token only if an authorization is configured (see FAQ).</p>
+      <p lang="fr">Gemini Enterprise envoie un jeton OIDC signé par Google pour son compte de service, dans l'en-tête <code>X-Serverless-Authorization</code>. Cloud Run le vérifie : vous donnez <code>Cloud Run Invoker</code> sur <strong>ce service seulement</strong>. Le service reste privé. L'en-tête <code>Authorization</code> reste libre : il porte le jeton OAuth de l'utilisateur seulement si une autorisation est configurée (voir FAQ).</p>
+      <div class="note" lang="en">Works only with the default <code>…run.app</code> URL. API keys, static headers and the security fields of the agent card are not used.</div>
+      <div class="note" lang="fr">Fonctionne seulement avec l'URL <code>…run.app</code> par défaut. Les clés d'API, les en-têtes fixes et les champs de sécurité de la carte ne sont pas utilisés.</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- =========================================================== SECURITY -->
+<section id="security"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Shared responsibility</span><span lang="fr">Responsabilité partagée</span></div>
+  <h2><span lang="en">Security and compliance</span><span lang="fr">Sécurité et conformité</span></h2>
+  <div class="note stop" style="margin-top:14px" lang="en"><strong>Gemini Enterprise's own Model Armor does not filter external agents.</strong> Your agent must screen its own inputs and outputs (Model Armor plugin or equivalent). We check this before publishing.</div>
+  <div class="note stop" style="margin-top:14px" lang="fr"><strong>Le Model Armor de Gemini Enterprise ne filtre pas les agents externes.</strong> Votre agent doit filtrer lui-même ses questions et ses réponses (plugin Model Armor ou équivalent). Nous le vérifions avant la publication.</div>
+  <div class="shared">
+    <div class="card"><h3><span lang="en">You are responsible for</span><span lang="fr">Vous êtes responsable de</span></h3><ul id="resp-you"></ul></div>
+    <div class="card"><h3><span lang="en">We are responsible for</span><span lang="fr">Nous sommes responsables de</span></h3><ul id="resp-us"></ul></div>
+  </div>
+  <h3 style="margin-top:24px"><span lang="en">What we check before publishing</span><span lang="fr">Ce que nous vérifions avant de publier</span></h3>
+  <div class="tbl"><table class="t" id="review-table"></table></div>
+</div></section>
+
+<!-- =========================================================== VERIFY -->
+<section id="verify"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Before sending your request</span><span lang="fr">Avant d'envoyer votre demande</span></div>
+  <h2><span lang="en">Check the permission</span><span lang="fr">Vérifier le droit</span></h2>
+  <p class="lead" lang="en">Without this permission, your agent is added to our app but never answers. Run the check for your mode and paste its output in your request.</p>
+  <p class="lead" lang="fr">Sans ce droit, votre agent est ajouté à notre app mais ne répond jamais. Lancez la vérification de votre mode et collez son résultat dans votre demande.</p>
+  <div class="grid2" style="margin-top:16px" id="verify-steps"></div>
+</div></section>
+
+<!-- =========================================================== REQUEST -->
+<section id="request"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Step 5</span><span lang="fr">Étape 5</span></div>
+  <h2><span lang="en">Publication request</span><span lang="fr">Demande de publication</span></h2>
+  <p class="lead" lang="en">Fill in the form. The request is written on the right, in the language you choose, ready to send to us. Nothing leaves this page.</p>
+  <p class="lead" lang="fr">Remplissez le formulaire. La demande s'écrit à droite, dans la langue choisie, prête à nous envoyer. Rien ne quitte cette page.</p>
+  <div class="form">
+    <form class="card" id="req-form" autocomplete="off">
+      <div class="row2">
+        <div class="field"><label for="r-name"><span lang="en">Display name</span><span lang="fr">Nom affiché</span></label><input id="r-name" value="Price checker"></div>
+        <div class="field"><label for="r-team"><span lang="en">Team</span><span lang="fr">Équipe</span></label><input id="r-team" value="Pricing"></div>
+      </div>
+      <div class="field"><label for="r-desc"><span lang="en">Description (one precise sentence: the model uses it to pick your agent)</span><span lang="fr">Description (une phrase précise : le modèle s'en sert pour choisir votre agent)</span></label>
+        <textarea id="r-desc" rows="2">Gives the current price and active promotions of a Acme product from its item code.</textarea></div>
+      <div class="row2">
+        <div class="field"><label for="r-mode"><span lang="en">Mode</span><span lang="fr">Mode</span></label><select id="r-mode"><option value="runtime">Agent Runtime</option><option value="a2a">A2A · Cloud Run</option></select></div>
+        <div class="field"><label for="r-lang"><span lang="en">Request language</span><span lang="fr">Langue de la demande</span></label><select id="r-lang"><option value="en">English</option><option value="fr">Français</option></select></div>
+      </div>
+      <div class="field"><label for="r-ref"><span lang="en">Agent Runtime resource, or Cloud Run service URL (A2A: attach the card JSON file)</span><span lang="fr">Ressource Agent Runtime, ou URL du service Cloud Run (A2A : joindre la carte en fichier JSON)</span></label>
+        <input id="r-ref" value="projects/my-team-agents-prod/locations/europe-west1/reasoningEngines/1234567890"></div>
+      <div class="row2">
+        <div class="field"><label for="r-group"><span lang="en">User group</span><span lang="fr">Groupe d'utilisateurs</span></label><input id="r-group" value="pricing-team@acme.example"></div>
+        <div class="field"><label for="r-contact"><span lang="en">Technical contact</span><span lang="fr">Contact technique</span></label><input id="r-contact" value="firstname.lastname@acme.example"></div>
+      </div>
+      <div class="field"><label for="r-data"><span lang="en">Data read and actions performed by the agent</span><span lang="fr">Données lues et actions faites par l'agent</span></label>
+        <input id="r-data" value="Product prices only; read-only; no personal data"></div>
+      <label class="inline-chk"><input type="checkbox" id="r-perm" checked> <span lang="en">Permission granted to your Gemini Enterprise service account</span><span lang="fr">Droit donné au compte de service de votre Gemini Enterprise</span></label>
+      <label class="inline-chk"><input type="checkbox" id="r-simu" checked> <span lang="en">Permission checked (output pasted below)</span><span lang="fr">Droit vérifié (résultat collé ci-dessous)</span></label>
+      <label class="inline-chk"><input type="checkbox" id="r-armor" checked> <span lang="en">Model Armor (or equivalent) inside the agent</span><span lang="fr">Model Armor (ou équivalent) dans l'agent</span></label>
+      <label class="inline-chk"><input type="checkbox" id="r-region" checked> <span lang="en">Agent deployed in a europe-* region</span><span lang="fr">Agent déployé dans une région europe-*</span></label>
+      <label class="inline-chk"><input type="checkbox" id="r-confirm"> <span lang="en">Write actions (if any) ask the user for confirmation</span><span lang="fr">Les actions d'écriture (s'il y en a) demandent confirmation à l'utilisateur</span></label>
+    </form>
+    <div class="card">
+      <h3><span lang="en">Your request</span><span lang="fr">Votre demande</span></h3>
+      <div class="missing" id="req-missing"></div>
+      <pre class="cmd out" id="req-out"></pre>
+      <p style="font-size:.92rem"><span lang="en">Send it to</span><span lang="fr">Envoyez-la à</span> <span id="req-to"></span></p>
+    </div>
+  </div>
+</div></section>
+
+<!-- =========================================================== AFTER -->
+<section id="after"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Once your agent is live</span><span lang="fr">Une fois l'agent en ligne</span></div>
+  <h2><span lang="en">After publication</span><span lang="fr">Après la publication</span></h2>
+  <div class="tbl"><table class="t" id="after-table"></table></div>
+</div></section>
+
+<!-- =========================================================== FAQ -->
+<section id="faq"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Every question we are asked</span><span lang="fr">Toutes les questions qu'on nous pose</span></div>
+  <h2>FAQ</h2>
+  <div class="faq-tools">
+    <label for="faq-search" class="eyebrow" style="position:absolute;left:-9999px"><span lang="en">Search the FAQ</span><span lang="fr">Rechercher dans la FAQ</span></label>
+    <input id="faq-search" class="search" type="search">
+    <div class="cats" id="faq-cats"></div>
+  </div>
+  <div class="faq" id="faq-list"></div>
+</div></section>
+
+<!-- =========================================================== CONTACT -->
+<section id="contact"><div class="wrap">
+  <div class="eyebrow"><span lang="en">Gemini Enterprise team</span><span lang="fr">Équipe Gemini Enterprise</span></div>
+  <h2>Contact</h2>
+  <div class="contact">
+    <div class="card"><h3><span lang="en">Publication requests</span><span lang="fr">Demandes de publication</span></h3><b data-cfg="contactEmail"></b>
+      <p class="sub" style="color:var(--muted);font-size:.9rem"><span lang="en">Send the request from the form above.</span><span lang="fr">Envoyez la demande issue du formulaire ci-dessus.</span></p></div>
+    <div class="card"><h3><span lang="en">Questions</span><span lang="fr">Questions</span></h3><b data-cfg="contactChannel"></b>
+      <p style="color:var(--muted);font-size:.9rem"><span lang="en">Region, permissions, Model Armor, card format: ask before you deploy.</span><span lang="fr">Région, droits, Model Armor, format de carte : demandez avant de déployer.</span></p></div>
+    <div class="card"><h3><span lang="en">Values to use</span><span lang="fr">Valeurs à utiliser</span></h3>
+      <p style="font-size:.9rem"><span lang="en">App project</span><span lang="fr">Projet de l'app</span> : <b data-cfg="geProject"></b></p>
+      <p style="font-size:.9rem"><span lang="en">Project number</span><span lang="fr">Numéro du projet</span> : <b data-cfg="geProjectNumber"></b></p>
+      <p style="font-size:.9rem"><span lang="en">Service account</span><span lang="fr">Compte de service</span> : <b class="ge-sa"></b></p></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <span lang="en">Acme · Gemini Enterprise · internal use</span><span lang="fr">Acme · Gemini Enterprise · usage interne</span>
+  <span lang="en">Sources: Google Cloud documentation, October 2026; process tested between two real projects.</span><span lang="fr">Sources : documentation Google Cloud, octobre 2026 ; parcours testé entre deux vrais projets.</span>
+</div></footer>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ======================================================================
+   CONFIGURATION : à compléter par l'équipe Gemini Enterprise.
+   Une valeur vide s'affiche « à compléter » sur toute la page.
+   ====================================================================== */
+var CONFIG = {
+  geProject: "aiml-gemini-entreprise-ldbr",   // projet de l'app Gemini Enterprise
+  geProjectNumber: "98547854221",             // à vérifier : gcloud projects describe aiml-gemini-entreprise-ldbr --format='value(projectNumber)'
+  geLocation: "eu",
+  region: "europe-west1",
+  contactEmail: "",                           // TODO : adresse de l'équipe Gemini Enterprise
+  contactChannel: ""                          // TODO : canal de discussion (Google Chat, Slack…)
+};
+
+(function () {
+  "use strict";
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem("geportal:" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem("geportal:" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  var lang = store.get("lang", "en"), mode = store.get("mode", "runtime"), checks = store.get("checks", {}), vars = store.get("vars", {});
+  var root = document.documentElement;
+
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function T(o) { return typeof o === "string" ? o : (o[lang] || o.en); }
+  function L(en, fr) { return '<span lang="en">' + en + '</span><span lang="fr">' + fr + "</span>"; }
+  function todo() { return '<span class="todo">' + (lang === "fr" ? "à compléter" : "to complete") + "</span>"; }
+  function cfg(k) { return CONFIG[k] || ""; }
+  function geNum() { return cfg("geProjectNumber") || "PROJECT_NUMBER"; }
+  function geSA() { return "service-" + geNum() + "@gcp-sa-discoveryengine.iam.gserviceaccount.com"; }
+  function v(name) { var el = document.querySelector('[data-var="' + name + '"]'); return (el && el.value.trim()) || name; }
+  var VARS = function () { return { PROJECT: v("PROJECT"), ENGINE: v("ENGINE"), SERVICE: v("SERVICE"), URL: v("URL"), GE_SA: geSA(), GE_PROJECT: cfg("geProject"), REGION: cfg("region") }; };
+  function fill(tpl) { var m = VARS(); return tpl.replace(/\{([A-Z_]+)\}/g, function (_, n) { return m[n] || n; }); }
+  function codeHtml(tpl) {
+    var m = VARS();
+    return tpl.split("\n").map(function (line) {
+      var i = line.indexOf("# "), code = i >= 0 && (i === 0 || line[i - 1] === " ") ? line.slice(0, i) : line, com = line.slice(code.length);
+      return esc(code).replace(/\{([A-Z_]+)\}/g, function (_, n) { return '<span class="v">' + esc(m[n] || n) + "</span>"; }) + (com ? '<span class="c">' + esc(com) + "</span>" : "");
+    }).join("\n");
+  }
+  function cmd(tpl) { return '<pre class="cmd" data-tpl="' + esc(tpl).replace(/"/g, "&quot;") + '"><button class="copy" type="button">' + (lang === "fr" ? "Copier" : "Copy") + "</button><code>" + codeHtml(tpl) + "</code></pre>"; }
+  var toastEl = document.getElementById("toast"), tt;
+  function toast(m) { toastEl.textContent = m; toastEl.hidden = false; clearTimeout(tt); tt = setTimeout(function () { toastEl.hidden = true; }, 1600); }
+  function copy(text, node) {
+    var ok = function () { toast(lang === "fr" ? "Copié" : "Copied"); };
+    var fb = function () { var r = document.createRange(); r.selectNodeContents(node); var s = getSelection(); s.removeAllRanges(); s.addRange(r); toast(lang === "fr" ? "Sélectionné : Ctrl+C" : "Selected: press Ctrl+C"); };
+    try { navigator.clipboard.writeText(text).then(ok, fb); } catch (e) { fb(); }
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".copy"); if (!b) return;
+    var pre = b.closest("pre"), node = pre.querySelector("code, .out-text");
+    copy(pre.hasAttribute("data-tpl") ? fill(pre.getAttribute("data-tpl")) : node.textContent, node);
+  });
+
+  /* ---------------- contenus ---------------- */
+  var TIMELINE = [
+    ["you", { en: "Deploy your agent in your project, in a europe-* region, with Model Armor inside.", fr: "Déployez votre agent dans votre projet, en région europe-*, avec Model Armor intégré." }, { en: "Deploy", fr: "Déployer" }],
+    ["you", { en: "Grant one permission to our Gemini Enterprise service account.", fr: "Donnez un droit au compte de service de notre Gemini Enterprise." }, { en: "Grant", fr: "Autoriser" }],
+    ["you", { en: "Check that the permission is in place (one command).", fr: "Vérifiez que le droit est en place (une commande)." }, { en: "Check", fr: "Vérifier" }],
+    ["you", { en: "Send the publication request generated on this page.", fr: "Envoyez la demande de publication générée sur cette page." }, { en: "Request", fr: "Demander" }],
+    ["us", { en: "We review security and data, add the agent to the app and give access to your group.", fr: "Nous relisons sécurité et données, ajoutons l'agent à l'app et ouvrons l'accès à votre groupe." }, { en: "Review & publish", fr: "Relire et publier" }],
+    ["you", { en: "Test in the chat. Logs, sessions and costs stay in your project.", fr: "Testez dans le chat. Journaux, sessions et coûts restent dans votre projet." }, { en: "Go live", fr: "En ligne" }]
+  ];
+  function renderTimeline() {
+    document.getElementById("timeline").innerHTML = TIMELINE.map(function (t, i) {
+      return '<div class="tl ' + (t[0] === "us" ? "us" : "") + '"><b class="n">' + (i + 1) + '</b><span class="who ' + t[0] + '">' + (t[0] === "us" ? (lang === "fr" ? "Nous" : "Us") : (lang === "fr" ? "Vous" : "You")) + "</span><h3>" + esc(T(t[2])) + "</h3><p>" + esc(T(t[1])) + "</p></div>";
+    }).join("");
+  }
+
+  var MODES = [
+    { id: "runtime", name: "Agent Runtime", badge: { en: "Recommended for ADK agents", fr: "Recommandé pour les agents ADK" },
+      rows: [[{ en: "Your agent", fr: "Votre agent" }, { en: "An ADK agent deployed on Agent Runtime (Vertex AI Agent Engine)", fr: "Un agent ADK déployé sur Agent Runtime (Vertex AI Agent Engine)" }],
+             [{ en: "You give us", fr: "Vous nous donnez" }, { en: "The resource path <code>projects/…/locations/europe-west1/reasoningEngines/ID</code>", fr: "Le chemin de ressource <code>projects/…/locations/europe-west1/reasoningEngines/ID</code>" }],
+             [{ en: "Permission", fr: "Droit" }, { en: "<code>roles/discoveryengine.serviceAgent</code> on your <b>project</b>", fr: "<code>roles/discoveryengine.serviceAgent</code> sur votre <b>projet</b>" }],
+             [{ en: "Region", fr: "Région" }, { en: "Any <code>europe-*</code> region (our app is <code>eu</code>)", fr: "Toute région <code>europe-*</code> (notre app est en <code>eu</code>)" }],
+             [{ en: "Sessions", fr: "Sessions" }, { en: "Managed by Agent Runtime, visible in your console", fr: "Gérées par Agent Runtime, visibles dans votre console" }]] },
+    { id: "a2a", name: "A2A · Cloud Run", badge: { en: "Any framework speaking A2A v0.3", fr: "Tout framework qui parle A2A v0.3" },
+      rows: [[{ en: "Your agent", fr: "Votre agent" }, { en: "A private Cloud Run service exposing the A2A v0.3 protocol (streaming)", fr: "Un service Cloud Run privé qui expose le protocole A2A v0.3 (streaming)" }],
+             [{ en: "You give us", fr: "Vous nous donnez" }, { en: "The agent card as a JSON file (we cannot read your private service): <code>protocolVersion \"0.3\"</code>, name, description, skills, <code>url</code>", fr: "La carte d'agent en fichier JSON (nous ne pouvons pas lire votre service privé) : <code>protocolVersion \"0.3\"</code>, nom, description, compétences, <code>url</code>" }],
+             [{ en: "Permission", fr: "Droit" }, { en: "<code>roles/run.invoker</code> on <b>that service only</b>", fr: "<code>roles/run.invoker</code> sur <b>ce service seulement</b>" }],
+             [{ en: "URL", fr: "URL" }, { en: "Default <code>…run.app</code> URL; custom domains are not supported for automatic authentication", fr: "URL <code>…run.app</code> par défaut ; les domaines personnalisés ne sont pas pris en charge pour l'authentification automatique" }],
+             [{ en: "Sessions", fr: "Sessions" }, { en: "Handled by your server (keep one instance, or a session database)", fr: "Gérées par votre serveur (une instance, ou une base de sessions)" }]] }
+  ];
+  var OTHER = [
+    [{ en: "Agent Registry import", fr: "Import depuis Agent Registry" }, { en: "Not supported from another project (Google). Your registry still helps others find your agent.", fr: "Non pris en charge depuis un autre projet (Google). Votre registre aide quand même les autres à trouver votre agent." }],
+    [{ en: "Dialogflow", fr: "Dialogflow" }, { en: "Cross-project access is not documented by Google. Contact us before choosing it.", fr: "L'accès entre projets n'est pas documenté par Google. Contactez-nous avant de le choisir." }],
+    [{ en: "Marketplace", fr: "Marketplace" }, { en: "For vendor agents bought through procurement, not for team agents.", fr: "Pour les agents d'éditeurs achetés via les achats, pas pour les agents d'équipes." }]
+  ];
+  function renderModes() {
+    document.getElementById("modes2").innerHTML = MODES.map(function (m) {
+      return '<div class="card mode"><span class="badge">' + esc(T(m.badge)) + "</span><h3>" + m.name + '</h3><div class="kv">'
+        + m.rows.map(function (r) { return "<div>" + T(r[0]) + "</div><div>" + T(r[1]) + "</div>"; }).join("") + "</div></div>";
+    }).join("");
+    document.getElementById("other").innerHTML = OTHER.map(function (o) {
+      return '<div class="card"><span class="no">' + (lang === "fr" ? "Pas pour vos agents" : "Not for your agents") + "</span><b>" + esc(T(o[0])) + "</b><span>" + esc(T(o[1])) + "</span></div>";
+    }).join("");
+  }
+
+  var CHECKS = [
+    { id: "region", modes: ["runtime", "a2a"], t: { en: "Deploy in a europe-* region", fr: "Déployer en région europe-*" },
+      d: { en: "Our app is in the eu multi-region: Google only accepts agents in europe-* regions. We use europe-west1.", fr: "Notre app est en multi-région eu : Google n'accepte que des agents en région europe-*. Nous utilisons europe-west1." } },
+    { id: "sa", modes: ["runtime", "a2a"], t: { en: "Run the agent with a dedicated service account", fr: "Faire tourner l'agent avec un compte de service dédié" },
+      d: { en: "Least privilege: Vertex AI user, log writer, Model Armor user. Not the project's default account.", fr: "Moindre privilège : utilisateur Vertex AI, écriture des journaux, utilisateur Model Armor. Pas le compte par défaut du projet." } },
+    { id: "armor", modes: ["runtime", "a2a"], t: { en: "Screen inputs and outputs with Model Armor", fr: "Filtrer questions et réponses avec Model Armor" },
+      d: { en: "Our app's Model Armor does not filter external agents. Use the ADK Model Armor plugin or an equivalent filter.", fr: "Le Model Armor de notre app ne filtre pas les agents externes. Utilisez le plugin Model Armor d'ADK ou un filtre équivalent." } },
+    { id: "nokey", modes: ["runtime", "a2a"], t: { en: "Model access: identity, or an API key kept in Secret Manager", fr: "Accès au modèle : identité, ou clé d'API rangée dans Secret Manager" },
+      d: { en: "Recommended: Vertex AI with the agent's identity, no secret to manage. If you use an API key (Google AI Studio or Vertex AI), store it in Secret Manager and give the agent read access to that secret only. Never a service account key.", fr: "Recommandé : Vertex AI avec l'identité de l'agent, aucun secret à gérer. Si vous utilisez une clé d'API (Google AI Studio ou Vertex AI), rangez-la dans Secret Manager et donnez à l'agent la lecture de ce seul secret. Jamais de clé de compte de service." } },
+    { id: "grant-rt", modes: ["runtime"], t: { en: "Grant the permission to our service account", fr: "Donner le droit à notre compte de service" },
+      d: { en: "On your project. Without it, the agent is added but never answers in the chat.", fr: "Sur votre projet. Sans lui, l'agent est ajouté mais ne répond jamais dans le chat." },
+      cmd: "gcloud projects add-iam-policy-binding {PROJECT} --condition=None \\\n  --role=roles/discoveryengine.serviceAgent \\\n  --member=serviceAccount:{GE_SA}" },
+    { id: "check-rt", modes: ["runtime"], t: { en: "Check the permission", fr: "Vérifier le droit" },
+      d: { en: "Expected output: roles/discoveryengine.serviceAgent", fr: "Résultat attendu : roles/discoveryengine.serviceAgent" },
+      cmd: "gcloud projects get-iam-policy {PROJECT} --flatten=bindings \\\n  --filter=\"bindings.members:{GE_SA}\" --format=\"value(bindings.role)\"" },
+    { id: "card", modes: ["a2a"], t: { en: "Serve an A2A v0.3 agent card", fr: "Servir une carte d'agent A2A v0.3" },
+      d: { en: "protocolVersion \"0.3\", url = the default run.app URL, streaming supported. Check it with your own token:", fr: "protocolVersion « 0.3 », url = l'URL run.app par défaut, streaming pris en charge. Vérifiez-la avec votre propre jeton :" },
+      cmd: "curl -s -H \"Authorization: Bearer $(gcloud auth print-identity-token)\" \\\n  {URL}/.well-known/agent-card.json > agent-card.json   # to attach to your request" },
+    { id: "private", modes: ["a2a"], t: { en: "Keep the service private", fr: "Garder le service privé" },
+      d: { en: "Authentication required, no allUsers. Opening the URL in a browser must return 403.", fr: "Authentification obligatoire, jamais allUsers. Ouvrir l'URL dans un navigateur doit renvoyer 403." } },
+    { id: "grant-a2a", modes: ["a2a"], t: { en: "Grant Cloud Run Invoker to our service account", fr: "Donner Cloud Run Invoker à notre compte de service" },
+      d: { en: "On the service only, never on the project.", fr: "Sur le service seulement, jamais sur le projet." },
+      cmd: "gcloud run services add-iam-policy-binding {SERVICE} --region={REGION} --project={PROJECT} \\\n  --role=roles/run.invoker --member=serviceAccount:{GE_SA}" },
+    { id: "describe", modes: ["runtime", "a2a"], t: { en: "Write a precise description", fr: "Rédiger une description précise" },
+      d: { en: "One sentence saying what the agent does. Gemini Enterprise uses it to decide when to call your agent.", fr: "Une phrase qui dit ce que fait l'agent. Gemini Enterprise s'en sert pour décider quand appeler votre agent." } },
+    { id: "group", modes: ["runtime", "a2a"], t: { en: "Choose the user group", fr: "Choisir le groupe d'utilisateurs" },
+      d: { en: "A Google group, never a list of people. Its members need a Gemini Enterprise licence.", fr: "Un groupe Google, jamais une liste de personnes. Ses membres ont besoin d'une licence Gemini Enterprise." } }
+  ];
+  function renderChecks() {
+    var list = CHECKS.filter(function (c) { return c.modes.indexOf(mode) >= 0; });
+    document.getElementById("checklist").innerHTML = list.map(function (c) {
+      return '<div class="chk' + (checks[c.id] ? " ok" : "") + '"><input type="checkbox" id="c-' + c.id + '" data-chk="' + c.id + '"' + (checks[c.id] ? " checked" : "") + ' aria-labelledby="ct-' + c.id + '"><div><h4 id="ct-' + c.id + '">' + esc(T(c.t)) + "</h4><p>" + esc(T(c.d)) + "</p>" + (c.cmd ? cmd(c.cmd) : "") + "</div></div>";
+    }).join("");
+    var n = list.filter(function (c) { return checks[c.id]; }).length;
+    document.getElementById("meter-label").textContent = n + " / " + list.length;
+    document.getElementById("meter").style.setProperty("--p", (100 * n / list.length) + "%");
+    document.querySelectorAll("[data-show]").forEach(function (el) { el.hidden = el.getAttribute("data-show") !== mode; });
+    document.querySelectorAll("#mode-seg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === mode)); });
+  }
+  document.getElementById("checklist").addEventListener("change", function (e) {
+    var id = e.target.getAttribute("data-chk"); if (!id) return; checks[id] = e.target.checked; store.set("checks", checks); renderChecks();
+  });
+  document.getElementById("mode-seg").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-mode]"); if (!b) return; mode = b.getAttribute("data-mode"); store.set("mode", mode); renderChecks(); renderVerify();
+  });
+  document.querySelectorAll("[data-var]").forEach(function (inp) {
+    var k = inp.getAttribute("data-var"); if (vars[k]) inp.value = vars[k];
+    inp.addEventListener("input", function () { vars[k] = inp.value; store.set("vars", vars); refreshCode(); });
+  });
+  function refreshCode() { document.querySelectorAll("pre.cmd[data-tpl]").forEach(function (p) { p.querySelector("code").innerHTML = codeHtml(p.getAttribute("data-tpl")); }); }
+
+  function renderIdentity() {
+    var h = lang === "fr"
+      ? ["Identité", "Adresse", "Rôle dans votre projet", "Qui la crée"]
+      : ["Identity", "Address", "Role in your project", "Who creates it"];
+    var rows = [
+      [L("Our Gemini Enterprise", "Notre Gemini Enterprise"),
+        "<code>" + esc(geSA()) + "</code>" + (cfg("geProjectNumber") ? "" : " " + todo()),
+        L("Calls your agent. Gets <b>one</b> permission: serviceAgent (Agent Runtime) or run.invoker (Cloud Run).", "Appelle votre agent. Reçoit <b>un</b> droit : serviceAgent (Agent Runtime) ou run.invoker (Cloud Run)."),
+        L("Google, in our project", "Google, dans notre projet")],
+      [L("Your agent", "Votre agent"), "<code>my-agent-sa@{PROJECT}.iam…</code>".replace("{PROJECT}", esc(v("PROJECT"))),
+        L("Runs your agent: Vertex AI user, log writer, Model Armor user", "Fait tourner votre agent : utilisateur Vertex AI, écriture des journaux, utilisateur Model Armor"),
+        L("You, in your project", "Vous, dans votre projet")]
+    ];
+    document.getElementById("id-table").innerHTML = "<thead><tr>" + h.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>"
+      + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody>";
+  }
+
+  var RESP_YOU = [
+    { en: "Your agent's code, hosting, availability and costs", fr: "Le code, l'hébergement, la disponibilité et les coûts de votre agent" },
+    { en: "Model Armor (or equivalent) inside the agent", fr: "Model Armor (ou équivalent) dans l'agent" },
+    { en: "The data the agent reads, and its declaration to the DPO if personal data is involved", fr: "Les données lues par l'agent, et leur déclaration au DPO s'il y a des données personnelles" },
+    { en: "Human confirmation before any write action (order, email, update)", fr: "La confirmation humaine avant toute action d'écriture (commande, e-mail, modification)" },
+    { en: "The permission you grant us, and revoking it if needed", fr: "Le droit que vous nous donnez, et son retrait si besoin" },
+    { en: "Logs and incident handling in your project", fr: "Les journaux et la gestion des incidents dans votre projet" }
+  ];
+  var RESP_US = [
+    { en: "The Gemini Enterprise app, its licences and user identities", fr: "L'app Gemini Enterprise, ses licences et l'identité des utilisateurs" },
+    { en: "Reviewing your request before publication", fr: "La relecture de votre demande avant publication" },
+    { en: "Giving access to your group only (Agent User role)", fr: "L'ouverture de l'accès à votre groupe seulement (rôle Agent User)" },
+    { en: "Removing the agent from the app on request or after an incident", fr: "Le retrait de l'agent de l'app sur demande ou après un incident" }
+  ];
+  var REVIEW = [
+    [{ en: "Region", fr: "Région" }, { en: "europe-* (eu app)", fr: "europe-* (app eu)" }, { en: "Required", fr: "Obligatoire" }],
+    [{ en: "Model Armor in the agent", fr: "Model Armor dans l'agent" }, { en: "Inputs and outputs screened", fr: "Questions et réponses filtrées" }, { en: "Required", fr: "Obligatoire" }],
+    [{ en: "Permission", fr: "Droit" }, { en: "Granted to our Gemini Enterprise account, check output pasted in the request", fr: "Donné à notre compte Gemini Enterprise, résultat de la vérification collé dans la demande" }, { en: "Required", fr: "Obligatoire" }],
+    [{ en: "Agent identity", fr: "Identité de l'agent" }, { en: "Dedicated service account, least privilege", fr: "Compte de service dédié, moindre privilège" }, { en: "Required", fr: "Obligatoire" }],
+    [{ en: "Data and actions", fr: "Données et actions" }, { en: "Declared; DPO opinion if personal data", fr: "Déclarées ; avis du DPO si données personnelles" }, { en: "Required", fr: "Obligatoire" }],
+    [{ en: "Write actions", fr: "Actions d'écriture" }, { en: "Confirmed by the user before execution", fr: "Confirmées par l'utilisateur avant exécution" }, { en: "Required if any", fr: "Obligatoire s'il y en a" }],
+    [{ en: "Description", fr: "Description" }, { en: "One precise sentence, no marketing", fr: "Une phrase précise, sans marketing" }, { en: "Required", fr: "Obligatoire" }],
+    [{ en: "Dedicated project", fr: "Projet dédié" }, { en: "Exposed agents separated from other workloads (Agent Runtime)", fr: "Agents exposés séparés des autres charges (Agent Runtime)" }, { en: "Recommended", fr: "Recommandé" }]
+  ];
+  function renderSecurity() {
+    document.getElementById("resp-you").innerHTML = RESP_YOU.map(function (x) { return "<li>" + esc(T(x)) + "</li>"; }).join("");
+    document.getElementById("resp-us").innerHTML = RESP_US.map(function (x) { return "<li>" + esc(T(x)) + "</li>"; }).join("");
+    var h = lang === "fr" ? ["Point", "Ce que nous attendons", "Niveau"] : ["Item", "What we expect", "Level"];
+    document.getElementById("review-table").innerHTML = "<thead><tr>" + h.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr></thead><tbody>"
+      + REVIEW.map(function (r) { return "<tr><td>" + esc(T(r[0])) + "</td><td>" + esc(T(r[1])) + "</td><td>" + esc(T(r[2])) + "</td></tr>"; }).join("") + "</tbody>";
+  }
+
+  function renderVerify() {
+    var check = mode === "runtime"
+      ? "gcloud projects get-iam-policy {PROJECT} --flatten=bindings \\\n  --filter=\"bindings.members:{GE_SA}\" --format=\"value(bindings.role)\""
+      : "gcloud run services get-iam-policy {SERVICE} --region={REGION} --project={PROJECT} \\\n  --flatten=bindings --filter=\"bindings.members:{GE_SA}\" --format=\"value(bindings.role)\"";
+    var S = [
+      [L("1 · Run the check", "1 · Lancer la vérification"), L("In your project, with your account.", "Dans votre projet, avec votre compte."), cmd(check)
+        + '<div class="note go">' + (mode === "runtime" ? L("Expected: <code>roles/discoveryengine.serviceAgent</code>", "Attendu : <code>roles/discoveryengine.serviceAgent</code>") : L("Expected: <code>roles/run.invoker</code>", "Attendu : <code>roles/run.invoker</code>")) + "</div>"],
+      [L("2 · Nothing displayed?", "2 · Rien ne s'affiche ?"), L("The permission is missing, or was given to another address (check our project number). Grant it with the command of the « What to configure » list, wait 2 to 3 minutes, then run the check again.", "Le droit manque, ou a été donné à une autre adresse (vérifiez notre numéro de projet). Donnez-le avec la commande de la liste « Ce qu'il faut configurer », attendez 2 à 3 minutes, puis relancez la vérification."), ""]
+    ];
+    document.getElementById("verify-steps").innerHTML = S.map(function (x) { return '<div class="card"><h3>' + x[0] + "</h3><p>" + x[1] + "</p>" + x[2] + "</div>"; }).join("");
+  }
+
+  /* ---------------- demande ---------------- */
+  function f(id) { return document.getElementById(id); }
+  function renderRequest() {
+    var rl = f("r-lang").value, m = f("r-mode").value === "runtime" ? "Agent Runtime" : "A2A (Cloud Run)";
+    var yes = rl === "fr" ? "oui" : "yes", no = rl === "fr" ? "NON" : "NO";
+    var lines = rl === "fr" ? [
+      "Objet : demande de publication d'un agent dans Gemini Enterprise (" + cfg("geProject") + ")", "",
+      "Nom affiché            : " + f("r-name").value, "Équipe                 : " + f("r-team").value,
+      "Description            : " + f("r-desc").value.replace(/\s+/g, " "), "Mode                   : " + m,
+      (m === "Agent Runtime" ? "Ressource Agent Runtime : " + f("r-ref").value : "Service Cloud Run      : " + f("r-ref").value + "\nCarte A2A              : en pièce jointe (agent-card.json)"),
+      "Groupe d'utilisateurs  : " + f("r-group").value, "Données / actions      : " + f("r-data").value,
+      "Droit donné à " + geSA() + " : " + (f("r-perm").checked ? yes : no),
+      "Droit vérifié          : " + (f("r-simu").checked ? yes : no), "Model Armor dans l'agent : " + (f("r-armor").checked ? yes : no),
+      "Région europe-*        : " + (f("r-region").checked ? yes : no), "Confirmation des écritures : " + (f("r-confirm").checked ? yes : (rl === "fr" ? "sans objet / non" : "n/a / no")),
+      "Contact technique      : " + f("r-contact").value
+    ] : [
+      "Subject: agent publication request for Gemini Enterprise (" + cfg("geProject") + ")", "",
+      "Display name           : " + f("r-name").value, "Team                   : " + f("r-team").value,
+      "Description            : " + f("r-desc").value.replace(/\s+/g, " "), "Mode                   : " + m,
+      (m === "Agent Runtime" ? "Agent Runtime resource : " + f("r-ref").value : "Cloud Run service      : " + f("r-ref").value + "\nA2A card               : attached (agent-card.json)"),
+      "User group             : " + f("r-group").value, "Data / actions         : " + f("r-data").value,
+      "Permission granted to " + geSA() + " : " + (f("r-perm").checked ? yes : no),
+      "Permission checked     : " + (f("r-simu").checked ? yes : no), "Model Armor in agent   : " + (f("r-armor").checked ? yes : no),
+      "Region europe-*        : " + (f("r-region").checked ? yes : no), "Write actions confirmed: " + (f("r-confirm").checked ? yes : "n/a / no"),
+      "Technical contact      : " + f("r-contact").value
+    ];
+    f("req-out").innerHTML = '<button class="copy" type="button">' + (lang === "fr" ? "Copier" : "Copy") + '</button><span class="out-text">' + esc(lines.join("\n")) + "</span>";
+    var miss = [];
+    if (!f("r-perm").checked) miss.push(lang === "fr" ? "le droit pour notre compte de service" : "the permission for our service account");
+    if (!f("r-simu").checked) miss.push(lang === "fr" ? "la vérification du droit" : "the permission check");
+    if (!f("r-armor").checked) miss.push("Model Armor");
+    if (!f("r-region").checked) miss.push(lang === "fr" ? "la région europe-*" : "the europe-* region");
+    f("req-missing").textContent = miss.length ? (lang === "fr" ? "Avant d'envoyer : " : "Before sending: ") + miss.join(", ") + "." : "";
+    f("req-to").innerHTML = cfg("contactEmail") ? "<code>" + esc(cfg("contactEmail")) + "</code>" : todo();
+  }
+  var form = f("req-form");
+  form.addEventListener("input", renderRequest); form.addEventListener("change", renderRequest);
+  form.addEventListener("submit", function (e) { e.preventDefault(); });
+  f("r-mode").addEventListener("change", function () {
+    f("r-ref").value = f("r-mode").value === "runtime" ? "projects/" + v("PROJECT") + "/locations/europe-west1/reasoningEngines/" + v("ENGINE") : v("URL");
+    renderRequest();
+  });
+
+  var AFTER = [
+    [{ en: "Who sees the agent", fr: "Qui voit l'agent" }, { en: "Only members of the groups we grant Agent User, with a Gemini Enterprise licence.", fr: "Seulement les membres des groupes à qui nous donnons Agent User, avec une licence Gemini Enterprise." }],
+    [{ en: "You update your agent", fr: "Vous mettez à jour l'agent" }, { en: "Same resource or same URL: nothing to do on our side. New resource or URL: send a new request.", fr: "Même ressource ou même URL : rien à faire chez nous. Nouvelle ressource ou URL : nouvelle demande." }],
+    [{ en: "You change the description or skills", fr: "Vous changez la description ou les compétences" }, { en: "Tell us; for A2A, send the new card.", fr: "Prévenez-nous ; en A2A, envoyez la nouvelle carte." }],
+    [{ en: "Logs and sessions", fr: "Journaux et sessions" }, { en: "In your project (Agent Runtime sessions, Cloud Run logs). The chat user appears in Agent Runtime sessions.", fr: "Dans votre projet (sessions Agent Runtime, journaux Cloud Run). L'utilisateur du chat apparaît dans les sessions Agent Runtime." }],
+    [{ en: "Costs", fr: "Coûts" }, { en: "Agent hosting and model calls: your project. User licences: ours.", fr: "Hébergement de l'agent et appels au modèle : votre projet. Licences des utilisateurs : les nôtres." }],
+    [{ en: "Cut access immediately", fr: "Couper l'accès immédiatement" }, { en: "Remove the permission you granted (remove-iam-policy-binding). The agent stops answering in the chat; tell us so we remove it from the app.", fr: "Retirez le droit donné (remove-iam-policy-binding). L'agent ne répond plus dans le chat ; prévenez-nous pour que nous le retirions de l'app." }],
+    [{ en: "Retire the agent", fr: "Retirer l'agent" }, { en: "Ask us to remove it from the app, then delete it in your project.", fr: "Demandez-nous de le retirer de l'app, puis supprimez-le dans votre projet." }]
+  ];
+  function renderAfter() {
+    var h = lang === "fr" ? ["Situation", "Ce qui se passe"] : ["Situation", "What happens"];
+    document.getElementById("after-table").innerHTML = "<thead><tr><th>" + h[0] + "</th><th>" + h[1] + "</th></tr></thead><tbody>"
+      + AFTER.map(function (r) { return "<tr><td>" + esc(T(r[0])) + "</td><td>" + esc(T(r[1])) + "</td></tr>"; }).join("") + "</tbody>";
+  }
+
+  /* ---------------- FAQ ---------------- */
+  var CATS = { general: { en: "General", fr: "Général" }, access: { en: "Access & security", fr: "Accès et sécurité" }, tech: { en: "Technical", fr: "Technique" }, life: { en: "Lifecycle & costs", fr: "Cycle de vie et coûts" } };
+  var FAQ = [
+    ["general", { en: "What does publishing my agent in Gemini Enterprise mean?", fr: "Que veut dire publier mon agent dans Gemini Enterprise ?" },
+      { en: "Your agent appears in the Agents list of our Gemini Enterprise app for the groups you choose. Users talk to it in the chat; Gemini Enterprise forwards their messages to your agent, which keeps running in your project.", fr: "Votre agent apparaît dans la liste Agents de notre app Gemini Enterprise pour les groupes choisis. Les utilisateurs lui parlent dans le chat ; Gemini Enterprise transmet leurs messages à votre agent, qui continue de tourner dans votre projet." }],
+    ["general", { en: "Do I have to move my agent into your project?", fr: "Dois-je déplacer mon agent dans votre projet ?" },
+      { en: "No. It stays in your project. You only grant one permission to our service account.", fr: "Non. Il reste dans votre projet. Vous donnez seulement un droit à notre compte de service." }],
+    ["general", { en: "Which agents are supported?", fr: "Quels agents sont acceptés ?" },
+      { en: "ADK agents deployed on Agent Runtime, and agents of any framework exposing the A2A v0.3 protocol on Cloud Run. See Connection modes.", fr: "Les agents ADK déployés sur Agent Runtime, et les agents de tout framework qui exposent le protocole A2A v0.3 sur Cloud Run. Voir Modes de connexion." }],
+    ["general", { en: "Can you import my agent from my Agent Registry?", fr: "Pouvez-vous importer mon agent depuis mon Agent Registry ?" },
+      { en: "Not directly: Google does not support importing from a registry in another project. We add it by resource (Agent Runtime) or by agent card (A2A). Your registry remains useful for discovery and agent-to-agent calls.", fr: "Pas directement : Google ne prend pas en charge l'import depuis le registre d'un autre projet. Nous l'ajoutons par ressource (Agent Runtime) ou par carte (A2A). Votre registre reste utile pour la découverte et les appels entre agents." }],
+    ["general", { en: "Who can see and use my agent?", fr: "Qui peut voir et utiliser mon agent ?" },
+      { en: "Only members of the Google groups you name in the request, who also have a Gemini Enterprise licence. Nobody else sees it.", fr: "Seulement les membres des groupes Google indiqués dans la demande, qui ont aussi une licence Gemini Enterprise. Personne d'autre ne le voit." }],
+    ["general", { en: "Can I test my agent in the chat before it is shared?", fr: "Puis-je tester mon agent dans le chat avant qu'il soit partagé ?" },
+      { en: "Yes: name a small test group first (your team). We widen access later on request.", fr: "Oui : indiquez d'abord un petit groupe de test (votre équipe). Nous élargissons l'accès ensuite, sur demande." }],
+    ["general", { en: "How do I contact you?", fr: "Comment vous contacter ?" },
+      { en: "See the Contact section. Send publication requests by email using the generated request.", fr: "Voir la section Contact. Envoyez les demandes de publication par e-mail avec la demande générée." }],
+    ["access", { en: "Do you need access to my project?", fr: "Avez-vous besoin d'accès à mon projet ?" },
+      { en: "No. We never ask for Owner, Editor or any role for a person on your project. Only our Gemini Enterprise service account receives one permission.", fr: "Non. Nous ne demandons jamais Owner, Editor ni aucun rôle pour une personne sur votre projet. Seul le compte de service de notre Gemini Enterprise reçoit un droit." }],
+    ["access", { en: "Which service account do I grant, and which role?", fr: "À quel compte de service donner quel rôle ?" },
+      { en: "service-PROJECT_NUMBER@gcp-sa-discoveryengine.iam.gserviceaccount.com (our project number is in Contact). Agent Runtime: roles/discoveryengine.serviceAgent on your project. Cloud Run: roles/run.invoker on the service.", fr: "service-NUMERO_PROJET@gcp-sa-discoveryengine.iam.gserviceaccount.com (notre numéro de projet est dans Contact). Agent Runtime : roles/discoveryengine.serviceAgent sur votre projet. Cloud Run : roles/run.invoker sur le service." }],
+    ["access", { en: "Do I need a service account key or an API key for the connection?", fr: "Faut-il une clé de compte de service ou une clé d'API pour la connexion ?" },
+      { en: "No. Calls from Gemini Enterprise to your agent are signed by Google; API keys and static headers are not supported on that link.", fr: "Non. Les appels de Gemini Enterprise vers votre agent sont signés par Google ; les clés d'API et en-têtes fixes ne sont pas pris en charge sur ce lien." }],
+    ["tech", { en: "Can my agent use an API key to call the model?", fr: "Mon agent peut-il utiliser une clé d'API pour appeler le modèle ?" },
+      { en: "Yes. That is between your agent and the model, inside your project. Store the key in Secret Manager (never in code or Terraform files). Our templates read GEMINI_API_KEY (Google AI Studio) or VERTEX_API_KEY (Vertex AI) from a secret; without a key they use Vertex AI with the agent's identity.", fr: "Oui. C'est entre votre agent et le modèle, dans votre projet. Rangez la clé dans Secret Manager (jamais dans le code ni les fichiers Terraform). Nos modèles lisent GEMINI_API_KEY (Google AI Studio) ou VERTEX_API_KEY (Vertex AI) depuis un secret ; sans clé, ils utilisent Vertex AI avec l'identité de l'agent." }],
+    ["access", { en: "What can your service account do in my project?", fr: "Que peut faire votre compte de service dans mon projet ?" },
+      { en: "Cloud Run: invoke that one service. Agent Runtime: the role is granted on the whole project, so host exposed agents in a dedicated project.", fr: "Cloud Run : appeler ce seul service. Agent Runtime : le rôle vaut pour tout le projet ; hébergez donc les agents exposés dans un projet dédié." }],
+    ["access", { en: "How do I revoke access?", fr: "Comment retirer l'accès ?" },
+      { en: "Remove the binding with remove-iam-policy-binding. The agent stops answering at once; tell us so we remove it from the app.", fr: "Retirez le droit avec remove-iam-policy-binding. L'agent cesse de répondre aussitôt ; prévenez-nous pour que nous le retirions de l'app." }],
+    ["access", { en: "Does Gemini Enterprise's Model Armor protect my agent?", fr: "Le Model Armor de Gemini Enterprise protège-t-il mon agent ?" },
+      { en: "No. It only covers the assistant and no-code agents. Your agent must screen its own inputs and outputs; we require it.", fr: "Non. Il ne couvre que l'assistant et les agents sans code. Votre agent doit filtrer ses propres questions et réponses ; nous l'exigeons." }],
+    ["access", { en: "What user data reaches my agent?", fr: "Quelles données utilisateur arrivent à mon agent ?" },
+      { en: "The messages users send to your agent in the chat. The call is made with our service account. The user's OAuth token arrives only if an OAuth authorization is configured for your agent. If your agent processes personal data, a DPO opinion is required before publication.", fr: "Les messages que les utilisateurs envoient à votre agent dans le chat. L'appel est fait avec notre compte de service. Le jeton OAuth de l'utilisateur n'arrive que si une autorisation OAuth est configurée pour votre agent. Si votre agent traite des données personnelles, l'avis du DPO est requis avant publication." }],
+    ["access", { en: "Can my agent act on behalf of the user (Drive, email…)?", fr: "Mon agent peut-il agir au nom de l'utilisateur (Drive, e-mail…) ?" },
+      { en: "Only with an OAuth authorization created in our app and attached when we register the agent (authorizationConfig.agentAuthorization for A2A, toolAuthorizations for Agent Runtime). Gemini Enterprise then passes the user's OAuth token: A2A in the Authorization header (Cloud Run's own check uses X-Serverless-Authorization), Agent Runtime in the session state key temp:AUTH_ID. Contact us first: it needs a security review.", fr: "Seulement avec une autorisation OAuth créée dans notre app et rattachée lors de l'enregistrement de l'agent (authorizationConfig.agentAuthorization en A2A, toolAuthorizations en Agent Runtime). Gemini Enterprise transmet alors le jeton OAuth de l'utilisateur : en A2A dans l'en-tête Authorization (le contrôle de Cloud Run utilise X-Serverless-Authorization), en Agent Runtime dans l'état de session, clé temp:AUTH_ID. Contactez-nous d'abord : cela demande une revue de sécurité." }],
+    ["access", { en: "Does my agent get the app's connectors and their actions (e.g. Airtable)?", fr: "Mon agent reçoit-il les connecteurs de l'app et leurs actions (ex. Airtable) ?" },
+      { en: "No. Custom agents (A2A or Agent Runtime) do not inherit Gemini Enterprise's connector actions or tools. With the user's OAuth token, your agent can search the app's connected data (our templates: commun.recherche_gemini_enterprise), or connect itself to the provider's MCP server (e.g. Airtable's) with that token.", fr: "Non. Les agents personnalisés (A2A ou Agent Runtime) n'héritent pas des actions ni des outils des connecteurs de Gemini Enterprise. Avec le jeton OAuth de l'utilisateur, votre agent peut chercher dans les données connectées de l'app (nos modèles : commun.recherche_gemini_enterprise), ou se connecter lui-même au serveur MCP du fournisseur (ex. celui d'Airtable) avec ce jeton." }],
+    ["access", { en: "My organisation policy blocks granting a role to an outside account. What now?", fr: "Une règle de mon organisation bloque l'ajout d'un compte extérieur. Que faire ?" },
+      { en: "Our service account is a Google-managed service agent of our project. If your policy refuses it, ask your organisation admin and contact us.", fr: "Notre compte de service est un agent de service géré par Google, dans notre projet. Si votre règle le refuse, voyez avec l'admin de votre organisation et contactez-nous." }],
+    ["access", { en: "We use VPC Service Controls. Does it work?", fr: "Nous utilisons VPC Service Controls. Est-ce que ça marche ?" },
+      { en: "A perimeter can block calls between our project and yours. The options are the same perimeter or an ingress/egress rule. Contact us with the violation details from your logs.", fr: "Un périmètre peut bloquer les appels entre nos projets. Les options : même périmètre, ou une règle d'entrée/sortie. Contactez-nous avec le détail de la violation tiré de vos journaux." }],
+    ["tech", { en: "Which region must my agent use?", fr: "Quelle région mon agent doit-il utiliser ?" },
+      { en: "A europe-* region, because our app is in the eu multi-region. We recommend europe-west1.", fr: "Une région europe-*, car notre app est en multi-région eu. Nous recommandons europe-west1." }],
+    ["tech", { en: "Can I use a custom domain for my Cloud Run agent?", fr: "Puis-je utiliser un domaine personnalisé pour mon agent Cloud Run ?" },
+      { en: "No. Automatic authentication only works with the default …run.app URL.", fr: "Non. L'authentification automatique ne fonctionne qu'avec l'URL …run.app par défaut." }],
+    ["tech", { en: "My agent runs outside Google Cloud. Is that possible?", fr: "Mon agent tourne hors de Google Cloud. Est-ce possible ?" },
+      { en: "An A2A agent can run anywhere over HTTPS, but automatic authentication only covers Cloud Run. Other hosting needs an OAuth setup: contact us.", fr: "Un agent A2A peut tourner n'importe où en HTTPS, mais l'authentification automatique ne couvre que Cloud Run. Un autre hébergement demande une configuration OAuth : contactez-nous." }],
+    ["tech", { en: "Which A2A version and transport?", fr: "Quelle version d'A2A et quel transport ?" },
+      { en: "A2A v0.3 with streaming, JSON-RPC. The card must declare protocolVersion \"0.3\". Servers supporting v1.0 with v0.3 compatibility also work.", fr: "A2A v0.3 avec streaming, JSON-RPC. La carte doit déclarer protocolVersion « 0.3 ». Un serveur v1.0 compatible v0.3 fonctionne aussi." }],
+    ["tech", { en: "Does my agent keep the conversation context?", fr: "Mon agent garde-t-il le contexte de la conversation ?" },
+      { en: "Agent Runtime: sessions are managed for you. Cloud Run: your server keeps them; with in-memory sessions keep a single instance, or use a session database.", fr: "Agent Runtime : les sessions sont gérées pour vous. Cloud Run : votre serveur les garde ; avec des sessions en mémoire, gardez une seule instance, ou utilisez une base de sessions." }],
+    ["tech", { en: "How long after granting the permission does it work?", fr: "Combien de temps après le droit est-ce que ça marche ?" },
+      { en: "Up to a few minutes. In our tests, still refused at 60 seconds and accepted shortly after. Wait 2 to 3 minutes before testing again.", fr: "Jusqu'à quelques minutes. Lors de nos tests : encore refusé à 60 secondes, accepté peu après. Attendez 2 à 3 minutes avant de retester." }],
+    ["tech", { en: "Do I need Terraform?", fr: "Ai-je besoin de Terraform ?" },
+      { en: "No. The gcloud commands on this page are enough. If you use Terraform, we can share our templates for Agent Runtime and Cloud Run.", fr: "Non. Les commandes gcloud de cette page suffisent. Si vous utilisez Terraform, nous pouvons partager nos modèles Agent Runtime et Cloud Run." }],
+    ["tech", { en: "Do I need Docker for a Cloud Run agent?", fr: "Ai-je besoin de Docker pour un agent Cloud Run ?" },
+      { en: "No. The image can be built in Google Cloud by Cloud Build (gcloud builds submit, about 1 min 20 s for our agents), with a build service account that has storage.objectViewer, artifactregistry.writer and logging.logWriter. Docker is optional.", fr: "Non. L'image peut être construite dans Google Cloud par Cloud Build (gcloud builds submit, environ 1 min 20 s pour nos agents), avec un compte de service de construction qui a storage.objectViewer, artifactregistry.writer et logging.logWriter. Docker est facultatif." }],
+    ["tech", { en: "Can my agent call other agents?", fr: "Mon agent peut-il appeler d'autres agents ?" },
+      { en: "Yes. It finds them in Agent Registry and calls them with its own identity, which receives a permission on the called agent only. Contact the owning team.", fr: "Oui. Il les trouve dans Agent Registry et les appelle avec sa propre identité, qui reçoit un droit sur l'agent appelé seulement. Contactez l'équipe propriétaire." }],
+    ["tech", { en: "The agent answers in my tests but not in the chat. Why?", fr: "L'agent répond dans mes tests mais pas dans le chat. Pourquoi ?" },
+      { en: "Most often the permission for our service account is missing, or was granted on the wrong project or service. Run the check of the « Check » section: if it shows the role, contact us.", fr: "Le plus souvent, le droit pour notre compte de service manque, ou a été donné sur le mauvais projet ou service. Lancez la vérification de la section « Vérifier » : si elle affiche le rôle, contactez-nous." }],
+    ["life", { en: "Who pays for what?", fr: "Qui paie quoi ?" },
+      { en: "Your project pays for hosting and model calls of your agent. We pay for Gemini Enterprise licences.", fr: "Votre projet paie l'hébergement et les appels au modèle de votre agent. Nous payons les licences Gemini Enterprise." }],
+    ["life", { en: "I redeployed my agent. Do I need to tell you?", fr: "J'ai redéployé mon agent. Dois-je vous prévenir ?" },
+      { en: "Not if the resource or URL is unchanged. If it changed, send a new request.", fr: "Non si la ressource ou l'URL ne change pas. Si elle change, envoyez une nouvelle demande." }],
+    ["life", { en: "How do I add more users or groups?", fr: "Comment ajouter des utilisateurs ou des groupes ?" },
+      { en: "Send us the group addresses; we grant them Agent User on your agent.", fr: "Envoyez-nous les adresses des groupes ; nous leur donnons Agent User sur votre agent." }],
+    ["life", { en: "Where do I see usage and errors?", fr: "Où voir l'usage et les erreurs ?" },
+      { en: "In your project: Agent Runtime sessions and logs, or Cloud Run logs. A 403 there means the permission for our service account is missing.", fr: "Dans votre projet : sessions et journaux Agent Runtime, ou journaux Cloud Run. Un 403 signifie que le droit de notre compte de service manque." }],
+    ["life", { en: "What happens if my agent misbehaves?", fr: "Que se passe-t-il si mon agent pose problème ?" },
+      { en: "We can remove it from the app at once and contact your technical contact. You can also cut access yourself by removing the permission.", fr: "Nous pouvons le retirer de l'app aussitôt et prévenir votre contact technique. Vous pouvez aussi couper l'accès vous-même en retirant le droit." }],
+    ["life", { en: "How do I retire my agent?", fr: "Comment retirer mon agent ?" },
+      { en: "Ask us to remove it from the app, then delete it in your project.", fr: "Demandez-nous de le retirer de l'app, puis supprimez-le dans votre projet." }]
+  ];
+  var cat = "all";
+  function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  function renderFaq() {
+    var q = norm(f("faq-search").value.trim());
+    f("faq-search").placeholder = lang === "fr" ? "Rechercher : clé d'API, région, coût, 403…" : "Search: API key, region, cost, 403…";
+    f("faq-cats").innerHTML = [["all", { en: "All", fr: "Tout" }]].concat(Object.keys(CATS).map(function (k) { return [k, CATS[k]]; })).map(function (c) {
+      return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (cat === c[0]) + '">' + esc(T(c[1])) + "</button>";
+    }).join("");
+    var rows = FAQ.filter(function (x) { return (cat === "all" || x[0] === cat) && (!q || norm(T(x[1]) + " " + T(x[2])).indexOf(q) >= 0); });
+    f("faq-list").innerHTML = rows.length ? rows.map(function (x) {
+      return "<details><summary>" + esc(T(x[1])) + '<span class="cat">' + esc(T(CATS[x[0]])) + '</span></summary><div class="a"><p>' + esc(T(x[2])) + "</p></div></details>";
+    }).join("") : '<p class="empty">' + (lang === "fr" ? "Aucune question ne correspond. Contactez-nous." : "No matching question. Contact us.") + "</p>";
+  }
+  f("faq-search").addEventListener("input", renderFaq);
+  f("faq-cats").addEventListener("click", function (e) { var b = e.target.closest("[data-cat]"); if (!b) return; cat = b.getAttribute("data-cat"); renderFaq(); });
+
+  /* ---------------- config, langue, thème ---------------- */
+  function renderConfig() {
+    document.querySelectorAll("[data-cfg]").forEach(function (el) { var k = el.getAttribute("data-cfg"); el.innerHTML = cfg(k) ? esc(cfg(k)) : todo(); });
+    document.querySelectorAll(".ge-sa").forEach(function (el) { el.innerHTML = esc(geSA()) + (cfg("geProjectNumber") ? "" : " " + todo()); });
+  }
+  function renderAll() {
+    root.setAttribute("data-lang", lang); root.setAttribute("lang", lang);
+    document.getElementById("lang-btn").innerHTML = lang === "en" ? "<b>EN</b> · FR" : "EN · <b>FR</b>";
+    renderConfig(); renderTimeline(); renderModes(); renderChecks(); renderIdentity(); renderSecurity(); renderVerify(); renderRequest(); renderAfter(); renderFaq();
+  }
+  document.getElementById("lang-btn").addEventListener("click", function () {
+    lang = lang === "en" ? "fr" : "en"; store.set("lang", lang);
+    if (f("r-lang").value !== lang) f("r-lang").value = lang;
+    renderAll();
+  });
+  var theme = store.get("theme", null), themeBtn = document.getElementById("theme-btn");
+  function applyTheme() { if (theme) root.setAttribute("data-theme", theme); else root.removeAttribute("data-theme"); themeBtn.title = theme || "system"; }
+  themeBtn.addEventListener("click", function () { theme = theme === null ? "light" : theme === "light" ? "dark" : null; store.set("theme", theme); applyTheme(); });
+  f("r-lang").value = lang;
+  applyTheme(); renderAll();
+})();
+</script>
+</body>
+</html>

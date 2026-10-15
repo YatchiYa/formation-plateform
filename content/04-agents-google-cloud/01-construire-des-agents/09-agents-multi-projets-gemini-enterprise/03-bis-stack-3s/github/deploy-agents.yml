@@ -1,0 +1,46 @@
+# Pipeline « à la 3S » des agents A2A (projet 09, 03-bis). À copier dans .github/workflows/ du dépôt de l'équipe.
+# Variables du dépôt (Settings > Secrets and variables > Actions > Variables) : sortie « github_variables » du socle.
+name: deploy-agents-3s
+
+on:
+  pull_request:
+    paths: ["09-agents-multi-projets-gemini-enterprise/**"]
+  push:
+    branches: [main]
+    paths: ["09-agents-multi-projets-gemini-enterprise/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # jeton OIDC de GitHub, échangé contre un jeton Google (aucune clé de compte de service)
+
+concurrency: deploy-agents-3s # jamais deux apply en même temps sur le même état
+
+env:
+  WORKDIR: 09-agents-multi-projets-gemini-enterprise/03-bis-stack-3s/deploy
+
+jobs:
+  verifier: # pull request : format et validité, sans accès à Google Cloud
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform -chdir=$WORKDIR fmt -check -recursive ../..
+      - run: terraform -chdir=$WORKDIR init -backend=false -input=false && terraform -chdir=$WORKDIR validate
+
+  deployer: # main : plan puis apply, avec le compte du socle
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production # option : approbation manuelle (Settings > Environments)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOYER_SA }}
+      - uses: google-github-actions/setup-gcloud@v2 # Terraform lance « gcloud builds submit » pour les images
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform -chdir=$WORKDIR init -input=false -backend-config=bucket=${{ vars.GCP_TFSTATE_BUCKET }}
+      - run: terraform -chdir=$WORKDIR plan -input=false -out=plan.tfplan
+      - run: terraform -chdir=$WORKDIR apply -input=false plan.tfplan

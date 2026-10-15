@@ -1,0 +1,8 @@
+# Docker (facultatif) : contexte = dossier du projet ; seul le code des agents entre dans l image.
+*
+!agents/trio
+!01-bis-cloud-run-a2a/main.py
+!01-bis-cloud-run-a2a/Dockerfile
+**/__pycache__
+**/.env
+**/.adk

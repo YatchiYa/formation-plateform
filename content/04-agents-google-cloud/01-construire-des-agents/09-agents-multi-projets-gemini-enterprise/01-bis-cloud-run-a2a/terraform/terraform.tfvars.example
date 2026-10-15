@@ -1,0 +1,22 @@
+# cp terraform.tfvars.example terraform.tfvars
+agents_project_id = "acme-agents-demo" # VOTRE projet : il héberge les agents (Cloud Run)
+region            = "europe-west1"
+ge_location       = "eu"
+
+# Donné par l'admin Gemini Enterprise : le NUMÉRO du projet de l'app (pas son ID).
+# Terraform autorise le compte de Gemini Enterprise de ce projet à appeler vos agents. Vide = essai sans Gemini Enterprise.
+ge_project_number = "98547854221"
+
+# Seulement si VOUS publiez dans l'app (admin GE, ou tout dans un seul projet). Sinon : laisser vide, l'admin ajoute
+# les agents avec les informations de `terraform output` (docs/09).
+# ge_project_id = "aiml-gemini-entreprise-ldbr"
+# ge_app_id     = "ID_DE_L_APP"
+
+# Templates Model Armor existants (projet 08 : terraform output model_armor_templates). Vides = créés ici.
+# prompt_template   = "projects/aiml-gemini-entreprise-ldbr/locations/eu/templates/ge-prompt-shield"
+# response_template = "projects/aiml-gemini-entreprise-ldbr/locations/eu/templates/ge-response-shield"
+
+# Optionnel : clé d'API pour le modèle, lue dans Secret Manager (jamais en clair ici). Par défaut : Vertex AI, sans clé.
+#   printf '%s' "VOTRE_CLE" | gcloud secrets create gemini-api-key --data-file=- --project=VOTRE_PROJET
+# model_api_key_secret = "gemini-api-key"
+# model_api_key_type   = "gemini"     # gemini (Google AI Studio) ou vertex (Vertex AI, mode express)

@@ -1,0 +1,5 @@
+project_id       = "acme-gemini-enterprise-prd"
+oauth_client_ids = ["123456789-abcdef.apps.googleusercontent.com"] # client OAuth créé à l'étape 1
+allowed_domains  = ["acme.example"]
+# min_instances  = 1
+# extra_invokers = ["user:moi@acme.example"]   # pour tester avec le proxy Cloud Run
