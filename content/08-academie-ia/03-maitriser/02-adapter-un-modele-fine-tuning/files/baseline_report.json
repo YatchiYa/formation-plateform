@@ -1,0 +1,42 @@
+{
+  "modele": "gemini-2.5-flash-lite",
+  "exemples_test": 15,
+  "zero-shot": {
+    "exactitude": 0.933,
+    "hors_etiquette": 0.0,
+    "rappel_par_etiquette": {
+      "facturation": 1.0,
+      "acces_compte": 1.0,
+      "bug_technique": 1.0,
+      "demande_fonctionnalite": 1.0,
+      "resiliation": 0.67
+    },
+    "tokens_entree_moyens": 88,
+    "erreurs": [
+      {
+        "ticket": "C'est beaucoup trop compliqué de partir de chez vous, le bouton pour désactiver ",
+        "attendu": "resiliation",
+        "obtenu": "acces_compte"
+      }
+    ]
+  },
+  "few-shot": {
+    "exactitude": 0.933,
+    "hors_etiquette": 0.0,
+    "rappel_par_etiquette": {
+      "facturation": 1.0,
+      "acces_compte": 1.0,
+      "bug_technique": 1.0,
+      "demande_fonctionnalite": 1.0,
+      "resiliation": 0.67
+    },
+    "tokens_entree_moyens": 497,
+    "erreurs": [
+      {
+        "ticket": "Bonjour, nous souhaitons rétrograder notre formule vers la version basique gratu",
+        "attendu": "resiliation",
+        "obtenu": "facturation"
+      }
+    ]
+  }
+}

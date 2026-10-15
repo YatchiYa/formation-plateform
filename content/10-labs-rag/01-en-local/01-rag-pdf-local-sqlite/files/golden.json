@@ -1,0 +1,13 @@
+[
+  {"question": "Combien de jours par semaine peut-on télétravailler ?", "attendu": ["politique-teletravail.pdf#1"]},
+  {"question": "Quel est le montant de l'indemnité de télétravail ?", "attendu": ["politique-teletravail.pdf#2"]},
+  {"question": "Avant quelle date faut-il saisir ses notes de frais ?", "attendu": ["notes-de-frais.pdf#1"]},
+  {"question": "Quel est le plafond pour une nuit d'hôtel à Paris ?", "attendu": ["notes-de-frais.pdf#2"]},
+  {"question": "Quand a-t-on droit à la première classe en train ?", "attendu": ["notes-de-frais.pdf#2"]},
+  {"question": "Combien de caractères doit faire le mot de passe ?", "attendu": ["guide-accueil.pdf#2"]},
+  {"question": "À quelle heure ferme la cantine ?", "attendu": ["guide-accueil.pdf#3"]},
+  {"question": "Où récupérer son badge d'accès le premier jour ?", "attendu": ["guide-accueil.pdf#1"]},
+  {"question": "Quel est le salaire de la directrice générale ?", "attendu": []},
+  {"question": "Combien de jours de congés payés a-t-on par an ?", "attendu": []},
+  {"question": "Quelle est la capitale de l'Australie ?", "attendu": []}
+]

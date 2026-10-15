@@ -1,0 +1,4 @@
+.env
+journal.jsonl
+__pycache__/
+.pytest_cache/

@@ -1,0 +1,22 @@
+[
+  {"id": "T01", "texte": "Bonjour, j'ai été prélevé deux fois pour la facture F-2026-0412. Merci de corriger.", "equipe": "facturation", "priorite": "P1"},
+  {"id": "T02", "texte": "Comment télécharger mes factures de l'année dernière ?", "equipe": "facturation", "priorite": "P3"},
+  {"id": "T03", "texte": "Je voudrais passer de l'offre mensuelle à l'offre annuelle, c'est possible ?", "equipe": "facturation", "priorite": "P3"},
+  {"id": "T04", "texte": "La TVA indiquée sur ma dernière facture est fausse, notre numéro de TVA intracommunautaire n'a pas été pris en compte.", "equipe": "facturation", "priorite": "P2"},
+  {"id": "T05", "texte": "J'ai résilié il y a un mois et vous m'avez encore débité ce mois-ci. Je veux être remboursé.", "equipe": "facturation", "priorite": "P2"},
+  {"id": "T06", "texte": "Ma facture F-2026-0398 apparaît impayée alors que j'ai fait le virement lundi.", "equipe": "facturation", "priorite": "P2"},
+  {"id": "T07", "texte": "Plus personne dans l'équipe ne peut ouvrir l'application web, page blanche pour tout le monde depuis ce matin !", "equipe": "technique", "priorite": "P1"},
+  {"id": "T08", "texte": "L'export PDF des rapports ne fonctionne plus, j'ai une erreur 500. J'arrive à exporter en CSV en attendant.", "equipe": "technique", "priorite": "P2"},
+  {"id": "T09", "texte": "Nos appels à votre API sont très lents depuis ce matin, parfois plus de 10 secondes.", "equipe": "technique", "priorite": "P2"},
+  {"id": "T10", "texte": "Sur l'application mobile, le bouton 'Partager' est mal aligné sur Android. Rien de grave.", "equipe": "technique", "priorite": "P3"},
+  {"id": "T11", "texte": "Est-ce que votre API propose des webhooks pour être notifié des nouvelles commandes ?", "equipe": "technique", "priorite": "P3"},
+  {"id": "T12", "texte": "La synchronisation mobile a dupliqué toutes mes fiches clients, j'en ai maintenant deux de chaque.", "equipe": "technique", "priorite": "P2"},
+  {"id": "T13", "texte": "Notre intégration API renvoie 'Erreur 503' sur tous les appels, nos ventes en ligne sont bloquées.", "equipe": "technique", "priorite": "P1"},
+  {"id": "T14", "texte": "J'ai oublié mon mot de passe et je ne reçois pas l'e-mail de réinitialisation.", "equipe": "compte", "priorite": "P2"},
+  {"id": "T15", "texte": "Quelqu'un s'est connecté à mon compte depuis un autre pays et a changé mon adresse e-mail !", "equipe": "compte", "priorite": "P1"},
+  {"id": "T16", "texte": "Comment ajouter un collègue à notre espace avec des droits de lecture seule ?", "equipe": "compte", "priorite": "P3"},
+  {"id": "T17", "texte": "J'ai changé de téléphone et je n'ai plus accès à la double authentification.", "equipe": "compte", "priorite": "P2"},
+  {"id": "T18", "texte": "Je souhaite supprimer définitivement mon compte et toutes mes données personnelles.", "equipe": "compte", "priorite": "P3"},
+  {"id": "T19", "texte": "Je voudrais changer l'adresse e-mail de connexion de mon compte.", "equipe": "compte", "priorite": "P3"},
+  {"id": "T20", "texte": "Mon abonnement a expiré faute de paiement et maintenant je n'ai plus accès à mes données. Comment régulariser ?", "equipe": "facturation", "priorite": "P2"}
+]

@@ -1,0 +1,12 @@
+{"demande": "Mon ordinateur portable ne démarre plus depuis ce matin, je ne peux rien faire.", "service": "it", "urgence": "haute"}
+{"demande": "Pourriez-vous m'installer le logiciel de dessin vectoriel quand vous aurez un moment ?", "service": "it", "urgence": "normale"}
+{"demande": "J'ai cliqué sur un lien bizarre dans un e-mail et une page m'a demandé mon mot de passe.", "service": "it", "urgence": "haute"}
+{"demande": "Combien de jours de congés me reste-t-il pour cette année ?", "service": "rh", "urgence": "normale"}
+{"demande": "Ma fiche de paie de septembre n'est pas arrivée et je dois la fournir demain à ma banque.", "service": "rh", "urgence": "haute"}
+{"demande": "Je voudrais des informations sur le télétravail pour l'année prochaine.", "service": "rh", "urgence": "normale"}
+{"demande": "Il nous faut 20 chaises de bureau pour le nouvel open space prévu en janvier.", "service": "achats", "urgence": "normale"}
+{"demande": "Le fournisseur de café demande un bon de commande signé, sinon il ne livre pas.", "service": "achats", "urgence": "normale"}
+{"demande": "Notre stock de cartouches est vide et la facturation clients doit être imprimée aujourd'hui.", "service": "achats", "urgence": "haute"}
+{"demande": "Un client menace de nous attaquer en justice et attend une réponse écrite d'ici demain.", "service": "juridique", "urgence": "haute"}
+{"demande": "Peux-tu relire les conditions générales du nouveau partenaire avant la fin du mois ?", "service": "juridique", "urgence": "normale"}
+{"demande": "Quelle est la règle pour réutiliser des photos trouvées sur internet dans notre brochure ?", "service": "juridique", "urgence": "normale"}

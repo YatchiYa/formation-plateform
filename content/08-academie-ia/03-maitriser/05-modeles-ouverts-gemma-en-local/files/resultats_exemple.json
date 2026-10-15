@@ -1,0 +1,344 @@
+[
+  {
+    "modele": "gemma-4-26b-a4b-it",
+    "score": 15,
+    "total": 15,
+    "latence_mediane_s": 7.47,
+    "latence_max_s": 11.55,
+    "details": [
+      {
+        "id": "q01",
+        "ok": true,
+        "latence_s": 11.55,
+        "jetons": 1,
+        "reponse": "Na"
+      },
+      {
+        "id": "q02",
+        "ok": true,
+        "latence_s": 8.16,
+        "jetons": 3,
+        "reponse": "288"
+      },
+      {
+        "id": "q03",
+        "ok": true,
+        "latence_s": 7.02,
+        "jetons": 2,
+        "reponse": "90"
+      },
+      {
+        "id": "q04",
+        "ok": true,
+        "latence_s": 10.24,
+        "jetons": 2,
+        "reponse": "15"
+      },
+      {
+        "id": "q05",
+        "ok": true,
+        "latence_s": 9.03,
+        "jetons": 10,
+        "reponse": "2026-04-29"
+      },
+      {
+        "id": "q06",
+        "ok": true,
+        "latence_s": 7.47,
+        "jetons": 40,
+        "reponse": "```json\n{\n  \"nom\": \"Léa Martin\",\n  \"ville\": \"Nantes\",\n  \"montant\": 129.90\n}\n```"
+      },
+      {
+        "id": "q07",
+        "ok": true,
+        "latence_s": 7.47,
+        "jetons": 2,
+        "reponse": "B2"
+      },
+      {
+        "id": "q08",
+        "ok": true,
+        "latence_s": 4.7,
+        "jetons": 3,
+        "reponse": "NEGATIF"
+      },
+      {
+        "id": "q09",
+        "ok": true,
+        "latence_s": 5.83,
+        "jetons": 4,
+        "reponse": "SERVICES_GENERAUX"
+      },
+      {
+        "id": "q10",
+        "ok": true,
+        "latence_s": 5.6,
+        "jetons": 2,
+        "reponse": "OUI"
+      },
+      {
+        "id": "q11",
+        "ok": true,
+        "latence_s": 4.33,
+        "jetons": 1,
+        "reponse": "NON"
+      },
+      {
+        "id": "q12",
+        "ok": true,
+        "latence_s": 5.47,
+        "jetons": 2,
+        "reponse": "T2"
+      },
+      {
+        "id": "q13",
+        "ok": true,
+        "latence_s": 8.14,
+        "jetons": 3,
+        "reponse": "465"
+      },
+      {
+        "id": "q14",
+        "ok": true,
+        "latence_s": 5.82,
+        "jetons": 18,
+        "reponse": "```sql\nSELECT COUNT(*) FROM commandes WHERE statut = 'annulee';\n```"
+      },
+      {
+        "id": "q15",
+        "ok": true,
+        "latence_s": 7.88,
+        "jetons": 1,
+        "reponse": "Hugo"
+      }
+    ]
+  },
+  {
+    "modele": "gemma-4-31b-it",
+    "score": 15,
+    "total": 15,
+    "latence_mediane_s": 6.01,
+    "latence_max_s": 8.18,
+    "details": [
+      {
+        "id": "q01",
+        "ok": true,
+        "latence_s": 3.82,
+        "jetons": 1,
+        "reponse": "Na"
+      },
+      {
+        "id": "q02",
+        "ok": true,
+        "latence_s": 6.41,
+        "jetons": 3,
+        "reponse": "288"
+      },
+      {
+        "id": "q03",
+        "ok": true,
+        "latence_s": 7.19,
+        "jetons": 2,
+        "reponse": "90"
+      },
+      {
+        "id": "q04",
+        "ok": true,
+        "latence_s": 6.76,
+        "jetons": 2,
+        "reponse": "15"
+      },
+      {
+        "id": "q05",
+        "ok": true,
+        "latence_s": 6.32,
+        "jetons": 10,
+        "reponse": "2026-04-29"
+      },
+      {
+        "id": "q06",
+        "ok": true,
+        "latence_s": 8.18,
+        "jetons": 40,
+        "reponse": "```json\n{\n  \"nom\": \"Léa Martin\",\n  \"ville\": \"Nantes\",\n  \"montant\": 129.90\n}\n```"
+      },
+      {
+        "id": "q07",
+        "ok": true,
+        "latence_s": 5.66,
+        "jetons": 2,
+        "reponse": "B2"
+      },
+      {
+        "id": "q08",
+        "ok": true,
+        "latence_s": 5.05,
+        "jetons": 2,
+        "reponse": "NEGATIF"
+      },
+      {
+        "id": "q09",
+        "ok": true,
+        "latence_s": 6.82,
+        "jetons": 4,
+        "reponse": "SERVICES_GENERAUX"
+      },
+      {
+        "id": "q10",
+        "ok": true,
+        "latence_s": 6.01,
+        "jetons": 2,
+        "reponse": "OUI"
+      },
+      {
+        "id": "q11",
+        "ok": true,
+        "latence_s": 4.3,
+        "jetons": 1,
+        "reponse": "NON"
+      },
+      {
+        "id": "q12",
+        "ok": true,
+        "latence_s": 5.7,
+        "jetons": 2,
+        "reponse": "T2"
+      },
+      {
+        "id": "q13",
+        "ok": true,
+        "latence_s": 6.24,
+        "jetons": 3,
+        "reponse": "465"
+      },
+      {
+        "id": "q14",
+        "ok": true,
+        "latence_s": 5.79,
+        "jetons": 18,
+        "reponse": "```sql\nSELECT COUNT(*) FROM commandes WHERE statut = 'annulee';\n```"
+      },
+      {
+        "id": "q15",
+        "ok": true,
+        "latence_s": 4.19,
+        "jetons": 1,
+        "reponse": "Hugo"
+      }
+    ]
+  },
+  {
+    "modele": "gemini-3.5-flash",
+    "score": 15,
+    "total": 15,
+    "latence_mediane_s": 2.07,
+    "latence_max_s": 3.57,
+    "details": [
+      {
+        "id": "q01",
+        "ok": true,
+        "latence_s": 1.5,
+        "jetons": 1,
+        "reponse": "Na"
+      },
+      {
+        "id": "q02",
+        "ok": true,
+        "latence_s": 2.71,
+        "jetons": 3,
+        "reponse": "288"
+      },
+      {
+        "id": "q03",
+        "ok": true,
+        "latence_s": 1.74,
+        "jetons": 2,
+        "reponse": "90"
+      },
+      {
+        "id": "q04",
+        "ok": true,
+        "latence_s": 2.58,
+        "jetons": 2,
+        "reponse": "15"
+      },
+      {
+        "id": "q05",
+        "ok": true,
+        "latence_s": 3.57,
+        "jetons": 10,
+        "reponse": "2026-04-29"
+      },
+      {
+        "id": "q06",
+        "ok": true,
+        "latence_s": 3.19,
+        "jetons": 34,
+        "reponse": "{\n  \"nom\": \"Léa Martin\",\n  \"ville\": \"Nantes\",\n  \"montant\": 129.9\n}"
+      },
+      {
+        "id": "q07",
+        "ok": true,
+        "latence_s": 2.28,
+        "jetons": 2,
+        "reponse": "B2"
+      },
+      {
+        "id": "q08",
+        "ok": true,
+        "latence_s": 2.07,
+        "jetons": 3,
+        "reponse": "NEGATIF"
+      },
+      {
+        "id": "q09",
+        "ok": true,
+        "latence_s": 2.07,
+        "jetons": 4,
+        "reponse": "SERVICES_GENERAUX"
+      },
+      {
+        "id": "q10",
+        "ok": true,
+        "latence_s": 2.2,
+        "jetons": 2,
+        "reponse": "OUI"
+      },
+      {
+        "id": "q11",
+        "ok": true,
+        "latence_s": 1.98,
+        "jetons": 1,
+        "reponse": "NON"
+      },
+      {
+        "id": "q12",
+        "ok": true,
+        "latence_s": 2.06,
+        "jetons": 2,
+        "reponse": "T2"
+      },
+      {
+        "id": "q13",
+        "ok": true,
+        "latence_s": 1.96,
+        "jetons": 3,
+        "reponse": "465"
+      },
+      {
+        "id": "q14",
+        "ok": true,
+        "latence_s": 2.29,
+        "jetons": 13,
+        "reponse": "SELECT COUNT(*) FROM commandes WHERE statut = 'annulee';"
+      },
+      {
+        "id": "q15",
+        "ok": true,
+        "latence_s": 1.89,
+        "jetons": 1,
+        "reponse": "Hugo"
+      }
+    ]
+  }
+]

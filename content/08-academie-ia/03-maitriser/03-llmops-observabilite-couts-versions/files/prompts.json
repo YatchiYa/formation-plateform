@@ -1,0 +1,25 @@
+{
+  "router": {
+    "production": "v1",
+    "versions": {
+      "v1": {
+        "created": "2026-10-01",
+        "note": "Version de référence : liste fermée de services et d'urgences, sortie JSON.",
+        "model": "gemini-3.5-flash-lite",
+        "config": {"temperature": 0, "response_mime_type": "application/json"},
+        "system": "Tu routes les demandes internes des salariés vers le bon service.\nRéponds en JSON : {\"service\": ..., \"urgence\": ...}\n- service : une valeur parmi it, rh, achats, juridique\n- urgence : haute si le travail est bloqué, s'il y a un risque de sécurité, juridique ou une échéance sous 48 h ; sinon normale.",
+        "template": "Demande : {demande}",
+        "sha256": "7dc8e870b139"
+      },
+      "v2": {
+        "created": "2026-10-14",
+        "note": "Prompt raccourci pour économiser des tokens (proposition à évaluer).",
+        "model": "gemini-3.5-flash-lite",
+        "config": {"temperature": 0, "response_mime_type": "application/json"},
+        "system": "Indique en JSON le service concerné et l'urgence de la demande.",
+        "template": "{demande}",
+        "sha256": "0aaa739777c1"
+      }
+    }
+  }
+}

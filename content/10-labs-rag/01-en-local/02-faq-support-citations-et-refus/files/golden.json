@@ -1,0 +1,15 @@
+[
+  {"question": "Je n'ai toujours pas reçu mon vélo, c'est normal au bout de 6 jours ?", "attendu": ["FAQ-01"]},
+  {"question": "La livraison est-elle gratuite ?", "attendu": ["FAQ-02"]},
+  {"question": "Vous expédiez à Genève ?", "attendu": ["FAQ-03"]},
+  {"question": "Je veux annuler ma commande passée hier", "attendu": ["FAQ-05"]},
+  {"question": "J'ai renvoyé mon casque il y a une semaine, quand vais-je récupérer mon argent ?", "attendu": ["FAQ-07"]},
+  {"question": "Combien de temps le moteur est-il garanti ?", "attendu": ["FAQ-08"]},
+  {"question": "Le voyant de ma batterie reste éteint quand je la branche", "attendu": ["FAQ-09"]},
+  {"question": "Est-ce que je peux payer en plusieurs fois ?", "attendu": ["FAQ-12"]},
+  {"question": "Combien de kilomètres peut-on faire avec une charge ?", "attendu": ["FAQ-15"]},
+  {"question": "Vendez-vous des trottinettes électriques ?", "attendu": []},
+  {"question": "Proposez-vous la location de vélos au mois ?", "attendu": []},
+  {"question": "Proposez-vous une assurance contre le vol ?", "attendu": []},
+  {"question": "Quelle est la recette de la tarte tatin ?", "attendu": []}
+]

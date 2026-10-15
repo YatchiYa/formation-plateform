@@ -1,0 +1,6 @@
+google-adk==2.10.0
+pypdf
+reportlab
+pydantic>=2
+python-dotenv
+pytest

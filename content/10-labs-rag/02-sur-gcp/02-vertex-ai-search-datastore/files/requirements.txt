@@ -1,0 +1,5 @@
+google-cloud-discoveryengine>=0.13
+google-cloud-storage
+google-cloud-resource-manager
+python-dotenv
+pytest

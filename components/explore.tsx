@@ -168,7 +168,7 @@ export function Explore({ cards, themes, d, l }: { cards: Hit[]; themes: ThemeCa
           ))}
         </div>
         <div className="filter-group" role="group" aria-label={d.level}>
-          {['beginner', 'intermediate', 'advanced'].map((k) => (
+          {['beginner', 'intermediate', 'advanced', 'expert'].map((k) => (
             <button key={k} type="button" className={`chip ${level === k ? 'on' : ''}`} aria-pressed={level === k} onClick={() => setLevel(level === k ? '' : k)} data-track={`level-${k}`}>
               <span className={`level level-${k}`}><i /><i /><i /></span>{L(d, k)}
             </button>

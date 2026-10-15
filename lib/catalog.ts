@@ -101,7 +101,7 @@ export function themes(l: Locale, n: Node = getTree().root): ThemeCard[] {
 
 /** Items to show first to someone new: beginner level, then courses. */
 export function starters(l: Locale, max = 4) {
-  const rank = (c: Card) => (c.level === 'beginner' ? 0 : c.level === 'intermediate' ? 1 : 2) * 2 + (c.format === 'course' ? 0 : 1)
+  const rank = (c: Card) => (c.level === 'beginner' ? 0 : c.level === 'intermediate' ? 1 : c.level === 'advanced' ? 2 : 3) * 2 + (c.format === 'course' ? 0 : 1)
   return items(getTree())
     .map((n) => card(n, l))
     .filter((c) => c.format === 'course' || c.format === 'article' || c.format === 'video')

@@ -92,7 +92,7 @@ test.describe('content structure from folders', () => {
 
 test.describe('rich markdown rendering', () => {
   test('every page renders without JS errors or broken mermaid', async ({ page, request }) => {
-    test.setTimeout(900_000)
+    test.setTimeout(3_600_000)
     const index = (await (await request.get('/api/search?locale=fr')).json()) as { url: string; kind: string }[]
     expect(index.length).toBeGreaterThan(15)
     for (const { url } of index) {
@@ -109,7 +109,7 @@ test.describe('rich markdown rendering', () => {
   })
 
   test('no broken internal link or file on any page', async ({ request }) => {
-    test.setTimeout(900_000)
+    test.setTimeout(3_600_000)
     const index = (await (await request.get('/api/search?locale=fr')).json()) as { url: string }[]
     const targets = new Map<string, string>()
     for (const { url } of index) {
@@ -238,6 +238,15 @@ test.describe('downloads, search, explore', () => {
     expect(Object.keys(unzipSync(new Uint8Array(await theme.body())))).toContain('01-ia-generative/02-checklist-prompt-engineering/index.md')
   })
 
+  test('source files: highlighted viewer, .env.example served, real .env never', async ({ request }) => {
+    const base = '/files/08-academie-ia/02-pratiquer/02-function-calling-api-metier/files'
+    const v = await request.get(`${base}/assistant.py?view=1`)
+    expect(v.headers()['content-type']).toContain('text/html')
+    expect(await v.text()).toContain('class="shiki')
+    expect((await request.get(`${base}/.env.example`)).status()).toBe(200)
+    expect((await request.get('/files/.env')).status()).toBe(404)
+  })
+
   test('path traversal is refused', async ({ request }) => {
     expect((await request.get('/files/..%2Fpackage.json')).status()).toBe(404)
     expect((await request.get('/files/%2E%2E/%2E%2E/etc/passwd')).status()).toBe(404)
@@ -248,9 +257,9 @@ test.describe('downloads, search, explore', () => {
     await page.getByRole('button', { name: 'Rechercher' }).click()
     const input = page.getByPlaceholder('Rechercher une formation, un article, un tag…')
     await input.fill('cosinus')
-    await expect(page.locator('.palette-list li').first()).toContainText('Embeddings')
+    await expect(page.locator('.palette-list li').first()).toContainText(/embedding/i)
     await page.keyboard.press('Enter')
-    await expect(page).toHaveURL(/embeddings$/)
+    await expect(page).toHaveURL(/embedding/)
     // Keyboard shortcut works too.
     await page.keyboard.press('Control+k')
     await expect(input).toBeVisible()

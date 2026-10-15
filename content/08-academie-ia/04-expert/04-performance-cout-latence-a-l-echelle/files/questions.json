@@ -1,0 +1,18 @@
+[
+  {"id": "q01", "question": "Combien coûte la livraison standard et à partir de quel montant est-elle offerte ?", "expect": ["4,90", "60"]},
+  {"id": "q02", "question": "Je peux retourner un article pendant combien de temps ?", "expect": ["30 jours"]},
+  {"id": "q03", "question": "Livrez-vous en Suisse, et à quel prix ?", "expect": ["12"]},
+  {"id": "q04", "question": "Ma lampe Nomade peut-elle rester sur ma terrasse ?", "expect": ["ip54"]},
+  {"id": "q05", "question": "Puis-je payer en plusieurs fois ?", "expect": ["3 fois", "150"]},
+  {"id": "q06", "question": "Quelle est la durée de garantie d'une suspension de la gamme Atelier Pro ?", "expect": ["5 ans"]},
+  {"id": "q07", "question": "Sous quel délai dois-je signaler un produit arrivé cassé ?", "expect": ["48"]},
+  {"id": "q08", "question": "Tous les combien de centimètres peut-on couper le ruban Fil ?", "expect": ["5 cm"]},
+  {"id": "q09", "question": "Mon colis n'a pas bougé depuis 9 jours ouvrés, que faites-vous ?", "expect": ["enquête"]},
+  {"id": "q10", "question": "Je suis pro : j'achète 2 suspensions Halo à 80 € pièce avec la remise pro et la livraison standard. Combien je paie au total ?", "expect": ["136"]},
+  {"id": "q11", "question": "J'ai un code promo de 10 % et un code de 5 €, puis-je utiliser les deux sur la même commande ?", "expect": ["un seul|ne se cumulent pas|pas cumulables|non cumulables|pas cumulable|non cumulable"]},
+  {"id": "q12", "question": "Je commande en express un vendredi à 15 h, quand est-ce que je reçois mon colis ?", "expect": ["mardi"]},
+  {"id": "r01", "repeat_of": "q01", "question": "Quel est le prix de la livraison standard, et dès combien d'achat devient-elle gratuite ?", "expect": ["4,90", "60"]},
+  {"id": "r02", "repeat_of": "q02", "question": "Combien de temps ai-je pour retourner un article ?", "expect": ["30 jours"]},
+  {"id": "r03", "repeat_of": "q05", "question": "Est-il possible de régler en plusieurs fois ?", "expect": ["3 fois", "150"]},
+  {"id": "r04", "repeat_of": "q08", "question": "Le ruban LED Fil se coupe tous les combien ?", "expect": ["5 cm"]}
+]

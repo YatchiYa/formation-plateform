@@ -1,0 +1,14 @@
+[
+ {"question": "Quelle a été la consommation électrique de l'entrepôt de Lyon au troisième trimestre ?", "expected": ["412"], "page": 2, "source": "figure"},
+ {"question": "Quel entrepôt consomme le moins d'électricité ?", "expected": ["Toulouse"], "page": 2, "source": "figure"},
+ {"question": "Quel site est visé en priorité par le plan de réduction énergétique ?", "expected": ["Lyon"], "page": 2, "source": "figure"},
+ {"question": "Quel mois la disponibilité des chambres froides est-elle passée sous l'objectif ?", "expected": ["août"], "page": 3, "source": "figure"},
+ {"question": "Quel était le taux de disponibilité des chambres froides en août ?", "expected": ["96,8", "96.8"], "page": 3, "source": "figure"},
+ {"question": "Quel est l'objectif contractuel de disponibilité ?", "expected": ["98,5", "98.5"], "page": 3, "source": "figure"},
+ {"question": "Quel composant se trouve entre la passerelle LoRaWAN et la base de données dans la supervision ?", "expected": ["MQTT"], "page": 4, "source": "figure"},
+ {"question": "Dans quelle base de données sont stockées les mesures de température ?", "expected": ["TimescaleDB"], "page": 4, "source": "figure"},
+ {"question": "Combien a coûté la maintenance des compresseurs ce trimestre ?", "expected": ["86"], "page": 5, "source": "figure"},
+ {"question": "Quel équipement a demandé le plus d'interventions de maintenance ?", "expected": ["sondes"], "page": 5, "source": "figure"},
+ {"question": "Quel est le chiffre d'affaires du trimestre ?", "expected": ["18,4", "18.4"], "page": 1, "source": "texte"},
+ {"question": "Quelle sera la capacité du nouvel entrepôt de Rennes ?", "expected": ["12000"], "page": 6, "source": "texte"}
+]

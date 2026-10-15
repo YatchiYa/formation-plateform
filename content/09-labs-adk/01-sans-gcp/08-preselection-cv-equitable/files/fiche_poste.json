@@ -1,0 +1,10 @@
+{
+  "intitule": "Développeur back-end Python confirmé (H/F) - entreprise fictive Atelier Nimbus",
+  "criteres": [
+    {"id": "python_backend", "poids": 3, "attendu": "Au moins 3 ans de développement Python côté serveur (API REST, FastAPI, Django ou Flask)."},
+    {"id": "bases_donnees", "poids": 2, "attendu": "SQL et bases relationnelles (PostgreSQL, MySQL) : requêtes, modélisation, migrations."},
+    {"id": "cloud_devops", "poids": 2, "attendu": "Conteneurs (Docker), intégration continue, déploiement sur un cloud."},
+    {"id": "qualite", "poids": 2, "attendu": "Tests automatisés (pytest), revue de code, maintenabilité."},
+    {"id": "communication", "poids": 1, "attendu": "Documentation, travail en équipe, anglais technique écrit."}
+  ]
+}

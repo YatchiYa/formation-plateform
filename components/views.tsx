@@ -93,6 +93,8 @@ export function References({ refs, d }: { refs: Reference[]; d: Dict }) {
   )
 }
 
+const CODE_EXT = new Set(['py', 'tf', 'sh', 'yaml', 'yml', 'json', 'ts', 'js', 'sql', 'md', 'txt', 'csv', 'toml', 'ipynb'])
+
 export function Resources({ files, d, zip }: { files: Asset[]; d: Dict; zip?: string }) {
   if (!files.length && !zip) return null
   return (
@@ -100,12 +102,13 @@ export function Resources({ files, d, zip }: { files: Asset[]; d: Dict; zip?: st
       <h2 id="res" className="block-title">{d.resources}</h2>
       <ul className="files">
         {files.map((f) => (
-          <li key={f.url}>
+          <li key={f.url} className="file-item">
             <a className="file-card" href={`${f.url}?dl=1`} download data-track="download">
               <span className="file-ext" data-ext={f.ext}>{f.ext}</span>
               <span className="file-name">{f.name}</span>
               <span className="file-size">{fmtSize(f.size)}</span>
             </a>
+            {CODE_EXT.has(f.ext) && <a className="file-view" href={`${f.url}?view=1`} target="_blank" rel="noopener" data-track="view-code">{d.view}</a>}
           </li>
         ))}
       </ul>

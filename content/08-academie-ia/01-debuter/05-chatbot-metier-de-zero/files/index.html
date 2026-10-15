@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alti, Salle Altitude</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 16px; background: #f6f7f9; }
+  #fil { display: flex; flex-direction: column; gap: 8px; min-height: 50vh; }
+  .msg { padding: 10px 14px; border-radius: 12px; white-space: pre-wrap; max-width: 85%; }
+  .user { align-self: flex-end; background: #1d4ed8; color: #fff; }
+  .bot { align-self: flex-start; background: #fff; border: 1px solid #ddd; }
+  .avis button { border: none; background: none; cursor: pointer; font-size: 14px; }
+  form { display: flex; gap: 8px; margin-top: 12px; }
+  input { flex: 1; padding: 10px; font-size: 16px; }
+</style>
+</head>
+<body>
+<h1>Alti, l'assistant de la Salle Altitude</h1>
+<div id="fil" aria-live="polite">
+  <div class="msg bot">Bonjour, je suis Alti. Horaires, abonnements, cours : que puis-je faire pour vous ?</div>
+</div>
+<form id="form">
+  <label for="q" hidden>Votre question</label>
+  <input id="q" autocomplete="off" placeholder="Votre question..." required maxlength="2000">
+  <button>Envoyer</button>
+</form>
+<script>
+const session = crypto.randomUUID();          // une conversation par onglet
+const fil = document.getElementById("fil");
+
+function bulle(texte, classe) {
+  const d = document.createElement("div");
+  d.className = "msg " + classe;
+  d.textContent = texte;                        // textContent : jamais de HTML injecté
+  fil.appendChild(d);
+  return d;
+}
+
+function boutonsAvis(bulleBot, echangeId) {
+  const zone = document.createElement("div");
+  zone.className = "avis";
+  for (const [note, libelle] of [[1, "👍 Utile"], [-1, "👎 Pas utile"]]) {
+    const b = document.createElement("button");
+    b.textContent = libelle;
+    b.onclick = async () => {
+      await fetch("/avis", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ echange_id: echangeId, note }) });
+      zone.textContent = "Merci pour votre avis.";
+    };
+    zone.appendChild(b);
+  }
+  bulleBot.after(zone);
+}
+
+document.getElementById("form").onsubmit = async (e) => {
+  e.preventDefault();
+  const champ = document.getElementById("q");
+  const message = champ.value.trim();
+  if (!message) return;
+  champ.value = "";
+  bulle(message, "user");
+  const bot = bulle("…", "bot");
+  const rep = await fetch("/chat", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ session, message }) });
+  const lecteur = rep.body.getReader();
+  const decodeur = new TextDecoder();
+  bot.textContent = "";
+  for (;;) {                                    // affiche chaque morceau dès qu'il arrive
+    const { done, value } = await lecteur.read();
+    if (done) break;
+    bot.textContent += decodeur.decode(value, { stream: true });
+  }
+  boutonsAvis(bot, rep.headers.get("X-Echange-Id"));
+};
+</script>
+</body>
+</html>

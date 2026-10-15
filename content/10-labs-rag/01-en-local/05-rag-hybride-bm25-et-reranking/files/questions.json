@@ -1,0 +1,182 @@
+[
+ {
+  "question": "Que signifie l'erreur HEL-6030 et comment la corriger ?",
+  "relevant": [
+   "err-HEL-6030"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "J'obtiens HEL-4040, que dois-je faire ?",
+  "relevant": [
+   "err-HEL-4040"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "Comment résoudre HEL-7050 ?",
+  "relevant": [
+   "err-HEL-7050"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "Quelle est la cause de l'erreur HEL-5020 ?",
+  "relevant": [
+   "err-HEL-5020"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "HEL-6010 apparaît chaque nuit, pourquoi ?",
+  "relevant": [
+   "err-HEL-6010"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "Quelle est la valeur par défaut de archive.parallelism ?",
+  "relevant": [
+   "par-archive.parallelism"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "À quoi sert sync.batch_size ?",
+  "relevant": [
+   "par-sync.batch_size"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "Valeur par défaut de import.log_level ?",
+  "relevant": [
+   "par-import.log_level"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "Que fait la commande helio support bundle ?",
+  "relevant": [
+   "proc-diagnostic",
+   "note-3-5-0"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "À quoi sert l'en-tête X-Helio-Delivery-Id ?",
+  "relevant": [
+   "inc-2026-05"
+  ],
+  "type": "identifiant"
+ },
+ {
+  "question": "Comment vider la mémoire temporaire d'une source de données qui renvoie des infos dépassées ?",
+  "relevant": [
+   "proc-purger-cache"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Mon collègue doit pouvoir se connecter à l'outil, comment lui donner accès ?",
+  "relevant": [
+   "proc-ajout-utilisateur"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Comment revenir à l'état d'hier après une fausse manipulation ?",
+  "relevant": [
+   "proc-restauration"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Peut-on cacher les numéros de sécurité sociale dans les tableaux partagés ?",
+  "relevant": [
+   "proc-masquage"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Comment être prévenu quand un traitement plante ?",
+  "relevant": [
+   "proc-alerte",
+   "proc-webhook"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Nos bases internes ne sont pas accessibles depuis Internet, comment les relier à l'outil ?",
+  "relevant": [
+   "proc-passerelle"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Qui a téléchargé des données le mois dernier ?",
+  "relevant": [
+   "proc-audit"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Mon tableur de plusieurs millions de lignes sortait coupé, c'est réglé ?",
+  "relevant": [
+   "inc-2026-02",
+   "proc-export-manuel"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Est-ce que nos informations peuvent partir aux États-Unis ?",
+  "relevant": [
+   "faq-regions"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Le service est-il joignable le week-end en cas de panne grave ?",
+  "relevant": [
+   "faq-support"
+  ],
+  "type": "paraphrase"
+ },
+ {
+  "question": "Combien de fois l'archivage nocturne réessaie-t-il après un échec ?",
+  "relevant": [
+   "par-archive.retry_max"
+  ],
+  "type": "mixte"
+ },
+ {
+  "question": "Quel délai par défaut pour les appels distants de la synchronisation ERP ?",
+  "relevant": [
+   "par-sync.timeout_s",
+   "note-3-4-1"
+  ],
+  "type": "mixte"
+ },
+ {
+  "question": "L'import CSV refuse mon jeton, quel code d'erreur et quelle solution ?",
+  "relevant": [
+   "err-HEL-5020"
+  ],
+  "type": "mixte"
+ },
+ {
+  "question": "Pourquoi la synchronisation ERP a-t-elle créé des doublons ?",
+  "relevant": [
+   "inc-2026-04",
+   "note-3-4-0"
+  ],
+  "type": "mixte"
+ },
+ {
+  "question": "Quelle taille maximale pour un fichier CSV importé ?",
+  "relevant": [
+   "faq-limites"
+  ],
+  "type": "mixte"
+ }
+]

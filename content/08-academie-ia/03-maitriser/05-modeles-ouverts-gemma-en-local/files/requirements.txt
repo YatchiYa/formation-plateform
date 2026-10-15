@@ -1,0 +1,4 @@
+httpx
+python-dotenv
+google-auth      # seulement pour LLM_FOURNISSEUR=vertex
+pytest

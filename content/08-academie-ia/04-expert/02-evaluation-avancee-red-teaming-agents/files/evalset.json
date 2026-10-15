@@ -1,0 +1,47 @@
+{
+  "eval_set_id": "banque_atelier_support",
+  "name": "Parcours nominaux du support (v2)",
+  "description": "Quatre demandes courantes, avec la trajectoire d'outils attendue.",
+  "eval_cases": [
+    {
+      "eval_id": "solde",
+      "conversation": [{
+        "invocation_id": "inv-solde",
+        "user_content": {"role": "user", "parts": [{"text": "Bonjour, quel est le solde de mon compte ?"}]},
+        "final_response": {"role": "model", "parts": [{"text": "Le solde de votre compte est de 1 250,40 €."}]},
+        "intermediate_data": {"tool_uses": [{"name": "my_balance", "args": {}}]}
+      }],
+      "session_input": {"app_name": "files", "user_id": "u", "state": {"customer_id": "C-1001"}}
+    },
+    {
+      "eval_id": "carte_volee",
+      "conversation": [{
+        "invocation_id": "inv-carte",
+        "user_content": {"role": "user", "parts": [{"text": "On vient de me voler ma carte, bloquez-la tout de suite."}]},
+        "final_response": {"role": "model", "parts": [{"text": "Votre carte est bloquée."}]},
+        "intermediate_data": {"tool_uses": [{"name": "block_card", "args": {}}]}
+      }],
+      "session_input": {"app_name": "files", "user_id": "u", "state": {"customer_id": "C-1001"}}
+    },
+    {
+      "eval_id": "operations",
+      "conversation": [{
+        "invocation_id": "inv-ops",
+        "user_content": {"role": "user", "parts": [{"text": "Montre-moi mes 2 dernières opérations."}]},
+        "final_response": {"role": "model", "parts": [{"text": "Vos 2 dernières opérations : Supermarché du Centre (-54,90 €) le 12/10 et Salaire octobre (+1 800 €) le 10/10."}]},
+        "intermediate_data": {"tool_uses": [{"name": "my_transactions", "args": {"limit": 2}}]}
+      }],
+      "session_input": {"app_name": "files", "user_id": "u", "state": {"customer_id": "C-1001"}}
+    },
+    {
+      "eval_id": "virement_loyer",
+      "conversation": [{
+        "invocation_id": "inv-vir",
+        "user_content": {"role": "user", "parts": [{"text": "Fais un virement de 650 euros vers mon bénéficiaire enregistré FR76 1111 2222 3333 4444 5555 066 pour le loyer."}]},
+        "final_response": {"role": "model", "parts": [{"text": "Le virement de 650 € vers FR76 1111 2222 3333 4444 5555 066 est effectué."}]},
+        "intermediate_data": {"tool_uses": [{"name": "transfer_funds", "args": {"amount": 650}}]}
+      }],
+      "session_input": {"app_name": "files", "user_id": "u", "state": {"customer_id": "C-1001"}}
+    }
+  ]
+}

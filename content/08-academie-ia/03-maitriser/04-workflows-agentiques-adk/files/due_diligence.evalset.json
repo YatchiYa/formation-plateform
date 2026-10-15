@@ -1,0 +1,24 @@
+{
+  "eval_set_id": "due_diligence",
+  "description": "Le pipeline doit consulter les trois sources puis faire approuver le rapport.",
+  "eval_cases": [
+    {
+      "eval_id": "cartonnerie_belval",
+      "conversation": [
+        {
+          "invocation_id": "inv-belval",
+          "user_content": {"role": "user", "parts": [{"text": "Due diligence du fournisseur : Cartonnerie Belval"}]},
+          "intermediate_data": {
+            "tool_uses": [
+              {"name": "consulter_registre", "args": {"fournisseur": "Cartonnerie Belval"}},
+              {"name": "consulter_finances", "args": {"fournisseur": "Cartonnerie Belval"}},
+              {"name": "consulter_reputation", "args": {"fournisseur": "Cartonnerie Belval"}},
+              {"name": "approuver_rapport", "args": {}}
+            ]
+          }
+        }
+      ],
+      "session_input": {"app_name": "due_diligence", "user_id": "eval", "state": {}}
+    }
+  ]
+}

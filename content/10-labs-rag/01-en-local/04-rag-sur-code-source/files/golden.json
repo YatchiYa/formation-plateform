@@ -1,0 +1,14 @@
+[
+  {"question": "Où sont gérées les relances des factures impayées ?", "attendu": ["facturo/relances.py::planifier_relances", "facturo/relances.py::factures_en_retard"]},
+  {"question": "Où est défini le taux de TVA réduit ?", "attendu": ["facturo/tva.py::TAUX_TVA"]},
+  {"question": "Comment est calculé le total TTC d'une facture ?", "attendu": ["facturo/models.py::Facture.total_ttc"]},
+  {"question": "Comment les numéros de facture sont-ils générés et quand la séquence repart-elle à 1 ?", "attendu": ["facturo/numerotation.py::prochain_numero"]},
+  {"question": "Que se passe-t-il si l'envoi d'un e-mail échoue ?", "attendu": ["facturo/email_sender.py::envoyer_facture"]},
+  {"question": "Quelle est la remise maximale autorisée avec un code promo ?", "attendu": ["facturo/remises.py::appliquer_code_promo", "facturo/remises.py::REMISE_MAX_PCT"]},
+  {"question": "Où les mots de passe sont-ils vérifiés et comment ?", "attendu": ["facturo/auth.py::verifier_mot_de_passe"]},
+  {"question": "Comment annule-t-on une facture déjà émise ?", "attendu": ["facturo/api.py::annuler_facture"]},
+  {"question": "Où est fait le rapprochement entre le relevé bancaire et les factures ?", "attendu": ["facturo/paiements.py::rapprocher"]},
+  {"question": "Quelle variable d'environnement règle le délai de paiement ?", "attendu": ["facturo/config.py::load_settings"]},
+  {"question": "Où est gérée la connexion avec un compte Google (OAuth) ?", "attendu": []},
+  {"question": "Comment le projet génère-t-il les QR codes de paiement ?", "attendu": []}
+]

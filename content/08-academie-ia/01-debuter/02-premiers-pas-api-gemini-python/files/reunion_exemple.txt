@@ -1,0 +1,15 @@
+Réunion hebdo équipe produit, mardi 13 octobre (données fictives)
+Participants : Inès (produit), Karim (dev), Léa (support), Thomas (marketing)
+
+Inès : On commence par la v2 de l'appli. Karim, où en est le module de paiement ?
+Karim : Il reste les tests de bout en bout. Avec deux jours de recette, on ne tiendra pas le 28 octobre.
+Inès : Alors on décale le lancement au 4 novembre. Tout le monde est d'accord ? ... Ok, c'est acté.
+Léa : Le support reçoit beaucoup de questions sur l'export PDF qui plante sur les gros fichiers.
+Karim : Je regarde ça cette semaine, je pense que c'est la limite de mémoire du serveur.
+Thomas : Pour le lancement, il me faut les captures d'écran de la v2 pour la page d'accueil.
+Inès : Karim, tu peux les envoyer à Thomas d'ici vendredi ?
+Karim : Oui, vendredi c'est bon.
+Léa : Il faudra aussi prévenir les clients du nouveau calendrier.
+Inès : Léa, tu prépares le message ? On le valide ensemble lundi.
+Thomas : Dernier point, on garde le budget pub prévu ou on le réduit ?
+Inès : On en reparle la semaine prochaine, je n'ai pas encore les chiffres.

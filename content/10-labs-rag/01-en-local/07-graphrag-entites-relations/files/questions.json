@@ -1,0 +1,17 @@
+[
+ {"question": "Qui dirige le projet Héron ?", "expected": ["Sofia Brenet"], "hops": 1},
+ {"question": "Quels responsables de projet rendent compte à Yasmine Coudray ?", "expected": ["Sofia Brenet", "Lina Ferraz", "Tomas Quérel"], "hops": 1},
+ {"question": "Qui est lié à la fois à Nordhaven Composants et à Tessera Logistique ?", "expected": ["Bastien Rével"], "hops": 1},
+ {"question": "À quel groupe appartient le fournisseur des capteurs du projet Héron ?", "expected": ["Pyralis"], "hops": 2},
+ {"question": "Quels projets sont touchés par le retard annoncé par Nordhaven Composants ?", "expected": ["Lynx", "Altaïr"], "hops": 2},
+ {"question": "Quel projet partage un banc d'essai avec le projet dirigé par Tomas Quérel ?", "expected": ["Lynx"], "hops": 2},
+ {"question": "Quel acheteur négocie avec le fournisseur principal du projet Corail ?", "expected": ["Bastien Rével"], "hops": 2},
+ {"question": "Avec qui Maëlle Ostin a-t-elle travaillé avant son projet actuel, et sur quel projet ?", "expected": ["Sofia Brenet", "Héron"], "hops": 2},
+ {"question": "Quel prestataire relie le site du projet Lynx à celui du projet Altaïr ?", "expected": ["Tessera"], "hops": 2},
+ {"question": "Quel cabinet a audité à la fois un projet et un prestataire logistique ?", "expected": ["Orvale"], "hops": 2},
+ {"question": "Qui dirige les projets qui intègrent les cartes NC-7 ?", "expected": ["Lina Ferraz", "Maëlle Ostin"], "hops": 3},
+ {"question": "Qui a formé le technicien qui a réparé le banc d'essai B2 ?", "expected": ["Karim Delaunoy"], "hops": 2},
+ {"question": "À qui rend compte la supérieure de Karim Delaunoy ?", "expected": ["Yasmine Coudray"], "hops": 2},
+ {"question": "Quels sites ou projets dépendent de Pyralis Énergie, directement ou par une filiale ?", "expected": ["Metz", "Héron"], "hops": 3},
+ {"question": "Par quels intermédiaires Sofia Brenet est-elle liée à Pyralis Énergie ?", "expected": ["Héron", "Ilex"], "hops": 3}
+]

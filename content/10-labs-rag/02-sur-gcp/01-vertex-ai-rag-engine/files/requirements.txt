@@ -1,0 +1,7 @@
+google-adk>=2.10
+google-genai
+google-cloud-aiplatform>=1.120
+google-cloud-storage
+google-cloud-resource-manager
+python-dotenv
+pytest

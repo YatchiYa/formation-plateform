@@ -1,0 +1,277 @@
+{
+  "resume": [
+    {
+      "strategie": "router",
+      "n": 16,
+      "ttft_p50": 0.877414958999907,
+      "ttft_p95": 1.1559162890005155,
+      "lat_p50": 0.9672127874996477,
+      "lat_p95": 1.3212254659999871,
+      "debit_rps": 3.1683178612297507,
+      "qualite": 0.9375,
+      "cout_usd": 0.0061157999999999985,
+      "appels_llm": 14,
+      "tokens_entree": 14441,
+      "tokens_caches": 0,
+      "tokens_sortie": 693,
+      "cache": 2,
+      "escalades": 0
+    }
+  ],
+  "details": {
+    "router": [
+      {
+        "id": "q01",
+        "route": "small",
+        "ok": true,
+        "latency": 0.8650952830003007,
+        "ttft": 0.7804118659996675,
+        "cost": 0.0004096,
+        "n_calls": 1,
+        "prompt_tokens": 1032,
+        "cached_tokens": 0,
+        "output_tokens": 40,
+        "confidence": [
+          1.0
+        ],
+        "answer": "La livraison standard en France métropolitaine coûte 4,90 € et elle est offerte dès 60 € d'achat."
+      },
+      {
+        "id": "q02",
+        "route": "small",
+        "ok": true,
+        "latency": 0.9093746930002453,
+        "ttft": 0.766489225999976,
+        "cost": 0.000435,
+        "n_calls": 1,
+        "prompt_tokens": 1025,
+        "cached_tokens": 0,
+        "output_tokens": 51,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Vous disposez d'un délai de rétractation de 30 jours après réception pour retourner un article non utilisé, dans son emballage d'origine."
+      },
+      {
+        "id": "q03",
+        "route": "small",
+        "ok": true,
+        "latency": 1.3193475409998427,
+        "ttft": 1.15338661000078,
+        "cost": 0.00045309999999999995,
+        "n_calls": 1,
+        "prompt_tokens": 1027,
+        "cached_tokens": 0,
+        "output_tokens": 58,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Oui, nous livrons en Suisse pour un montant de 12,00 € avec un délai de 5 à 8 jours ouvrés, et cette livraison n'est jamais offerte."
+      },
+      {
+        "id": "q04",
+        "route": "small",
+        "ok": true,
+        "latency": 1.1933439150006961,
+        "ttft": 1.068845026999952,
+        "cost": 0.00041559999999999996,
+        "n_calls": 1,
+        "prompt_tokens": 1027,
+        "cached_tokens": 0,
+        "output_tokens": 43,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Oui, la lampe « Nomade » possède un indice IP54 et peut donc être utilisée en extérieur sur votre terrasse."
+      },
+      {
+        "id": "q05",
+        "route": "small",
+        "ok": true,
+        "latency": 1.2969739000000118,
+        "ttft": 1.1635053259997221,
+        "cost": 0.00040219999999999996,
+        "n_calls": 1,
+        "prompt_tokens": 1024,
+        "cached_tokens": 0,
+        "output_tokens": 38,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Oui, le paiement en 3 fois sans frais par carte est possible à partir de 150 € d'achat."
+      },
+      {
+        "id": "q06",
+        "route": "small",
+        "ok": true,
+        "latency": 1.2073117059999277,
+        "ttft": 1.0723969470000156,
+        "cost": 0.0003993,
+        "n_calls": 1,
+        "prompt_tokens": 1031,
+        "cached_tokens": 0,
+        "output_tokens": 36,
+        "confidence": [
+          1.0
+        ],
+        "answer": "La gamme « Atelier Pro » bénéficie d'une garantie commerciale de 5 ans."
+      },
+      {
+        "id": "q07",
+        "route": "small",
+        "ok": true,
+        "latency": 0.7884223579994796,
+        "ttft": 0.709941494999839,
+        "cost": 0.0003959,
+        "n_calls": 1,
+        "prompt_tokens": 1028,
+        "cached_tokens": 0,
+        "output_tokens": 35,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Un produit arrivé cassé doit être signalé sous 48 h avec une photo."
+      },
+      {
+        "id": "q08",
+        "route": "small",
+        "ok": true,
+        "latency": 0.9739041160000852,
+        "ttft": 0.8907831289998285,
+        "cost": 0.000414,
+        "n_calls": 1,
+        "prompt_tokens": 1030,
+        "cached_tokens": 0,
+        "output_tokens": 42,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Les rubans LED « Fil » se coupent tous les 5 cm, au niveau des repères ciseaux."
+      },
+      {
+        "id": "q09",
+        "route": "small",
+        "ok": true,
+        "latency": 0.8380854690003616,
+        "ttft": 0.6996300139999221,
+        "cost": 0.000473,
+        "n_calls": 1,
+        "prompt_tokens": 1035,
+        "cached_tokens": 0,
+        "output_tokens": 65,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Si le suivi de votre colis n'a pas bougé depuis 7 jours ouvrés, notre support ouvre une enquête auprès du transporteur. Nous procédons ensuite à un renvoi ou à un remboursement sous 10 jours."
+      },
+      {
+        "id": "q10",
+        "route": "small",
+        "ok": true,
+        "latency": 1.3268592410004203,
+        "ttft": 1.062979635999909,
+        "cost": 0.0005422000000000001,
+        "n_calls": 1,
+        "prompt_tokens": 1049,
+        "cached_tokens": 0,
+        "output_tokens": 91,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Pour un achat de 2 suspensions Halo à 80 € pièce, le total des luminaires est de 160 € avec une remise pro de 15 %, soit 136 €. La livraison standard en France métropolitaine est offerte dès 60 € d'achat, le total est donc de 136,00 €."
+      },
+      {
+        "id": "q11",
+        "route": "small",
+        "ok": true,
+        "latency": 1.2229685800002699,
+        "ttft": 1.0763830480000252,
+        "cost": 0.0004107,
+        "n_calls": 1,
+        "prompt_tokens": 1044,
+        "cached_tokens": 0,
+        "output_tokens": 39,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Non, les codes promo ne se cumuls pas chez Lumen & Co. Un seul code par commande est autorisé."
+      },
+      {
+        "id": "q12",
+        "route": "small",
+        "ok": false,
+        "latency": 1.3152702190000127,
+        "ttft": 1.115612014999897,
+        "cost": 0.0005064,
+        "n_calls": 1,
+        "prompt_tokens": 1038,
+        "cached_tokens": 0,
+        "output_tokens": 78,
+        "confidence": [
+          0.9
+        ],
+        "answer": "La livraison express est en 24 h ouvrées pour toute commande passée avant 13 h, du lundi au vendredi. Votre commande ayant été passée un vendredi à 15 h, elle sera traitée le jour ouvré suivant et vous sera livrée dans un délai de 24 h ouvrées."
+      },
+      {
+        "id": "r01",
+        "route": "cache",
+        "ok": true,
+        "latency": 8.407400036958279e-05,
+        "ttft": 8.407400036958279e-05,
+        "cost": 0,
+        "n_calls": 0,
+        "prompt_tokens": 0,
+        "cached_tokens": 0,
+        "output_tokens": 0,
+        "confidence": [],
+        "answer": "La livraison standard en France métropolitaine coûte 4,90 € et elle est offerte dès 60 € d'achat."
+      },
+      {
+        "id": "r02",
+        "route": "cache",
+        "ok": true,
+        "latency": 4.395599989948096e-05,
+        "ttft": 4.395599989948096e-05,
+        "cost": 0,
+        "n_calls": 0,
+        "prompt_tokens": 0,
+        "cached_tokens": 0,
+        "output_tokens": 0,
+        "confidence": [],
+        "answer": "Vous disposez d'un délai de rétractation de 30 jours après réception pour retourner un article non utilisé, dans son emballage d'origine."
+      },
+      {
+        "id": "r03",
+        "route": "small",
+        "ok": true,
+        "latency": 0.7398555070003567,
+        "ttft": 0.6251324479999312,
+        "cost": 0.00041,
+        "n_calls": 1,
+        "prompt_tokens": 1025,
+        "cached_tokens": 0,
+        "output_tokens": 41,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Oui, il est possible de payer en 3 fois sans frais par carte bancaire à partir de 150 € d'achat."
+      },
+      {
+        "id": "r04",
+        "route": "small",
+        "ok": true,
+        "latency": 0.9605214589992102,
+        "ttft": 0.8640467889999854,
+        "cost": 0.0003978,
+        "n_calls": 1,
+        "prompt_tokens": 1026,
+        "cached_tokens": 0,
+        "output_tokens": 36,
+        "confidence": [
+          1.0
+        ],
+        "answer": "Les rubans LED « Fil » se coupent tous les 5 cm, au niveau des repères ciseaux."
+      }
+    ]
+  }
+}

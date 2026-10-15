@@ -1,0 +1,6 @@
+# Exclus de l'image par `adk deploy cloud_run`
+.env
+test_*.py
+*.sh
+__pycache__/
+.pytest_cache/

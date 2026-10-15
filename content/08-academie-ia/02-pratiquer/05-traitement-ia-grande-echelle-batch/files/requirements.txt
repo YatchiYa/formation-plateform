@@ -1,0 +1,4 @@
+google-genai==2.31.0
+python-dotenv==1.2.4
+# seulement pour le mode Vertex AI de batch_api.py
+google-cloud-storage

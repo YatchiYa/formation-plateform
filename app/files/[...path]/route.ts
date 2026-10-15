@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { Readable } from 'node:stream'
-import { safeContentPath } from '@/lib/content'
+import { safeContentPath, SAFE_DOTFILES } from '@/lib/content'
 import { recordServerEvent } from '@/lib/track'
 
 const TYPES: Record<string, string> = {
@@ -23,7 +23,7 @@ const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
 function listing(dir: string, urlPath: string) {
   const base = urlPath.endsWith('/') ? urlPath : urlPath + '/'
   const rows = fs.readdirSync(dir, { withFileTypes: true })
-    .filter((e) => !e.name.startsWith('.') || e.name === '.gitignore' || e.name === '.dockerignore')
+    .filter((e) => !e.name.startsWith('.') || SAFE_DOTFILES.has(e.name))
     .sort((a, b) => Number(b.isDirectory()) - Number(a.isDirectory()) || a.name.localeCompare(b.name, undefined, { numeric: true }))
     .map((e) => `<li><a href="${esc(base + encodeURIComponent(e.name))}">${e.isDirectory() ? '📁' : '📄'} ${esc(e.name)}${e.isDirectory() ? '/' : ''}</a></li>`)
     .join('')
@@ -36,6 +36,31 @@ a{text-decoration:none;color:#2b45c8}code{font:13px ui-monospace,monospace}</sty
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'" } })
 }
 
+const LANG: Record<string, string> = { '.py': 'python', '.tf': 'hcl', '.hcl': 'hcl', '.sh': 'bash', '.yaml': 'yaml', '.yml': 'yaml', '.json': 'json', '.toml': 'toml', '.ts': 'typescript', '.tsx': 'tsx', '.js': 'javascript', '.mjs': 'javascript', '.sql': 'sql', '.md': 'markdown', '.ini': 'ini', '.csv': 'csv', '.rego': 'rego', '.go': 'go', '.rs': 'rust', '.java': 'java' }
+
+/** Source file shown with syntax highlighting (?view), with raw and download links. */
+async function codeView(abs: string, urlPath: string) {
+  const { codeToHtml } = await import('shiki')
+  const base = path.basename(abs)
+  const lang = LANG[path.extname(abs).toLowerCase()] ?? (base === 'Dockerfile' ? 'docker' : 'text')
+  const code = fs.readFileSync(abs, 'utf8')
+  let body: string
+  try {
+    body = await codeToHtml(code, { lang, themes: { light: 'github-light', dark: 'github-dark-dimmed' }, defaultColor: false })
+  } catch {
+    body = `<pre>${esc(code)}</pre>`
+  }
+  const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(base)}</title>
+<style>:root{color-scheme:light dark}body{margin:0;font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f5f2;color:#16202a}
+header{position:sticky;top:0;display:flex;gap:14px;align-items:center;padding:10px 16px;background:#fff;border-bottom:1px solid #d7ddd8;font-family:system-ui,sans-serif}
+header b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}a{color:#2b45c8;text-decoration:none}
+pre{margin:0;padding:16px 20px;overflow:auto;counter-reset:l}pre code{display:block}.line{counter-increment:l}.line::before{content:counter(l);display:inline-block;width:3.5ch;margin-right:2ch;text-align:right;color:#8a96a0}
+.shiki span{color:var(--shiki-light)}.shiki{background:transparent!important}
+@media(prefers-color-scheme:dark){body{background:#121a22;color:#e6ebee}header{background:#18222c;border-color:#2a3843}a{color:#91a4ff}.shiki span{color:var(--shiki-dark)}}</style>
+<header><b>${esc(base)}</b><a href="${esc(urlPath)}">Brut</a><a href="${esc(urlPath)}?dl=1">Télécharger</a></header>${body}`
+  return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'", 'Cache-Control': 'public, max-age=300' } })
+}
+
 export async function GET(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   const abs = safeContentPath((await ctx.params).path)
   if (!abs || !fs.existsSync(abs)) return new Response('Not found', { status: 404 })
@@ -43,6 +68,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ path: string[] 
   const { size, mtimeMs } = fs.statSync(abs)
   const ext = path.extname(abs).toLowerCase()
   const url = new URL(req.url)
+  if (url.searchParams.has('view') && (TEXT.test(abs) || ext === '.md') && size < 512_000) return codeView(abs, url.pathname)
   const headers: Record<string, string> = {
     'Content-Type': TYPES[ext] ?? (TEXT.test(abs) ? 'text/plain; charset=utf-8' : 'application/octet-stream'),
     'Accept-Ranges': 'bytes',

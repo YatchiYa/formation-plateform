@@ -1,0 +1,6 @@
+{
+  "agents": [
+    {"name": "stock_agent", "url": "http://localhost:8101"},
+    {"name": "pricing_agent", "url": "http://localhost:8102"}
+  ]
+}

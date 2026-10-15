@@ -1,0 +1,422 @@
+[
+ {
+  "id": "P001",
+  "categorie": "Chaussures",
+  "nom": "Trailrun Gecko",
+  "description": "Chaussure de trail à crampons de 5 mm pour terrains boueux et rocailleux, membrane respirante.",
+  "prix": 129
+ },
+ {
+  "id": "P002",
+  "categorie": "Chaussures",
+  "nom": "Asphalte Flow",
+  "description": "Chaussure de running route très amortie pour les longues sorties sur bitume, drop 8 mm.",
+  "prix": 115
+ },
+ {
+  "id": "P003",
+  "categorie": "Chaussures",
+  "nom": "Randonnée Cimes Mid",
+  "description": "Chaussure de randonnée tige mi-haute, imperméable, semelle adhérente pour la montagne.",
+  "prix": 149
+ },
+ {
+  "id": "P004",
+  "categorie": "Chaussures",
+  "nom": "Sandale Rivière",
+  "description": "Sandale de marche à séchage rapide, idéale pour traverser les cours d'eau en été.",
+  "prix": 49
+ },
+ {
+  "id": "P005",
+  "categorie": "Chaussures",
+  "nom": "Indoor Court",
+  "description": "Chaussure de salle pour badminton et squash, semelle gomme qui ne marque pas le sol.",
+  "prix": 69
+ },
+ {
+  "id": "P006",
+  "categorie": "Chaussures",
+  "nom": "Pantoufle Nuage",
+  "description": "Chausson d'intérieur en laine bouillie, semelle souple antidérapante, très chaud.",
+  "prix": 35
+ },
+ {
+  "id": "P007",
+  "categorie": "Cuisine",
+  "nom": "Bouilloire Thermia 1,7 L",
+  "description": "Bouilloire électrique en inox avec réglage de température de 40 à 100 °C pour le thé.",
+  "prix": 59
+ },
+ {
+  "id": "P008",
+  "categorie": "Cuisine",
+  "nom": "Friteuse à air Croustia",
+  "description": "Friteuse sans huile de 5 litres : frites et légumes croustillants avec une cuillère d'huile.",
+  "prix": 99
+ },
+ {
+  "id": "P009",
+  "categorie": "Cuisine",
+  "nom": "Blender Vortex",
+  "description": "Blender haute vitesse 1200 W pour smoothies, soupes et glace pilée, bol en verre.",
+  "prix": 89
+ },
+ {
+  "id": "P010",
+  "categorie": "Cuisine",
+  "nom": "Machine à pain Mie d'Or",
+  "description": "Machine à pain programmable, 12 programmes dont sans gluten, départ différé 13 h.",
+  "prix": 79
+ },
+ {
+  "id": "P011",
+  "categorie": "Cuisine",
+  "nom": "Cafetière à piston Bistro",
+  "description": "Cafetière à piston en verre borosilicate de 1 litre, filtre inox, sans électricité.",
+  "prix": 29
+ },
+ {
+  "id": "P012",
+  "categorie": "Cuisine",
+  "nom": "Balance culinaire Précise",
+  "description": "Balance de cuisine numérique, précision au gramme jusqu'à 5 kg, fonction tare.",
+  "prix": 19
+ },
+ {
+  "id": "P013",
+  "categorie": "Bureau",
+  "nom": "Fauteuil Ergo Dos+",
+  "description": "Fauteuil de bureau ergonomique avec soutien lombaire réglable et accoudoirs 4D.",
+  "prix": 289
+ },
+ {
+  "id": "P014",
+  "categorie": "Bureau",
+  "nom": "Bureau assis-debout Élévo",
+  "description": "Bureau à hauteur réglable électriquement, deux moteurs, mémoire de 3 positions.",
+  "prix": 399
+ },
+ {
+  "id": "P015",
+  "categorie": "Bureau",
+  "nom": "Repose-pieds Pivot",
+  "description": "Repose-pieds inclinable qui soulage le bas du dos et les jambes en position assise.",
+  "prix": 39
+ },
+ {
+  "id": "P016",
+  "categorie": "Bureau",
+  "nom": "Lampe de bureau Halo",
+  "description": "Lampe LED à intensité et température de couleur réglables, port USB de recharge.",
+  "prix": 45
+ },
+ {
+  "id": "P017",
+  "categorie": "Bureau",
+  "nom": "Support écran double Duo",
+  "description": "Bras articulé pour deux moniteurs jusqu'à 32 pouces, fixation par pince.",
+  "prix": 79
+ },
+ {
+  "id": "P018",
+  "categorie": "Bureau",
+  "nom": "Tapis de souris XXL Plaine",
+  "description": "Grand sous-main en tissu 90 x 40 cm, bords cousus, base caoutchouc.",
+  "prix": 22
+ },
+ {
+  "id": "P019",
+  "categorie": "Audio",
+  "nom": "Casque Silence Pro",
+  "description": "Casque sans fil à réduction active de bruit, 40 heures d'autonomie, idéal en avion.",
+  "prix": 249
+ },
+ {
+  "id": "P020",
+  "categorie": "Audio",
+  "nom": "Écouteurs Sport Fil-Libre",
+  "description": "Écouteurs sans fil résistants à la sueur avec crochets d'oreille pour courir.",
+  "prix": 79
+ },
+ {
+  "id": "P021",
+  "categorie": "Audio",
+  "nom": "Enceinte Galet",
+  "description": "Petite enceinte Bluetooth étanche IP67 qui flotte, pour la plage ou la piscine.",
+  "prix": 59
+ },
+ {
+  "id": "P022",
+  "categorie": "Audio",
+  "nom": "Barre de son Cinéma 2.1",
+  "description": "Barre de son avec caisson de basses sans fil pour améliorer le son de la télévision.",
+  "prix": 199
+ },
+ {
+  "id": "P023",
+  "categorie": "Audio",
+  "nom": "Platine vinyle Sillon",
+  "description": "Tourne-disque à entraînement par courroie avec préampli intégré et sortie USB.",
+  "prix": 179
+ },
+ {
+  "id": "P024",
+  "categorie": "Audio",
+  "nom": "Micro USB Podcast",
+  "description": "Microphone USB cardioïde pour podcast et visioconférence, prise casque intégrée.",
+  "prix": 89
+ },
+ {
+  "id": "P025",
+  "categorie": "Jardin",
+  "nom": "Tondeuse sans fil Herbo 40",
+  "description": "Tondeuse à batterie 40 V, coupe 42 cm, pour jardins jusqu'à 500 m².",
+  "prix": 329
+ },
+ {
+  "id": "P026",
+  "categorie": "Jardin",
+  "nom": "Tuyau extensible Flexi 30 m",
+  "description": "Tuyau d'arrosage extensible léger avec pistolet 7 jets, se rétracte après usage.",
+  "prix": 39
+ },
+ {
+  "id": "P027",
+  "categorie": "Jardin",
+  "nom": "Composteur Humus 400 L",
+  "description": "Composteur en plastique recyclé avec trappe de récolte, pour déchets de cuisine et de jardin.",
+  "prix": 69
+ },
+ {
+  "id": "P028",
+  "categorie": "Jardin",
+  "nom": "Sécateur Coupe-Net",
+  "description": "Sécateur à lames franches en acier forgé pour branches jusqu'à 22 mm.",
+  "prix": 34
+ },
+ {
+  "id": "P029",
+  "categorie": "Jardin",
+  "nom": "Récupérateur d'eau 300 L",
+  "description": "Cuve de récupération d'eau de pluie avec robinet et kit de raccordement à la gouttière.",
+  "prix": 89
+ },
+ {
+  "id": "P030",
+  "categorie": "Jardin",
+  "nom": "Hôtel à insectes Ruche",
+  "description": "Abri en bois pour abeilles solitaires et coccinelles, favorise la pollinisation.",
+  "prix": 25
+ },
+ {
+  "id": "P031",
+  "categorie": "Bébé",
+  "nom": "Poussette Citadine Plume",
+  "description": "Poussette compacte de 6 kg qui se plie d'une main, acceptée en cabine d'avion.",
+  "prix": 259
+ },
+ {
+  "id": "P032",
+  "categorie": "Bébé",
+  "nom": "Babyphone Vidéo Veille",
+  "description": "Écoute-bébé avec caméra, vision nocturne et capteur de température de la chambre.",
+  "prix": 119
+ },
+ {
+  "id": "P033",
+  "categorie": "Bébé",
+  "nom": "Porte-bébé Kangou",
+  "description": "Porte-bébé physiologique ventral et dorsal, de la naissance à 15 kg.",
+  "prix": 99
+ },
+ {
+  "id": "P034",
+  "categorie": "Bébé",
+  "nom": "Chaise haute Évolutive",
+  "description": "Chaise haute en bois réglable qui se transforme en chaise pour enfant jusqu'à 10 ans.",
+  "prix": 149
+ },
+ {
+  "id": "P035",
+  "categorie": "Bébé",
+  "nom": "Tapis d'éveil Jungle",
+  "description": "Tapis de jeu matelassé avec arche et jouets suspendus pour stimuler bébé.",
+  "prix": 55
+ },
+ {
+  "id": "P036",
+  "categorie": "Bébé",
+  "nom": "Gigoteuse Douillette TOG 2.5",
+  "description": "Turbulette en coton bio pour dormir au chaud sans couverture, de 6 à 18 mois.",
+  "prix": 39
+ },
+ {
+  "id": "P037",
+  "categorie": "Camping",
+  "nom": "Tente Dôme 3 places",
+  "description": "Tente de camping 3 places montage en 5 minutes, double toit imperméable 3000 mm.",
+  "prix": 159
+ },
+ {
+  "id": "P038",
+  "categorie": "Camping",
+  "nom": "Sac de couchage Grand Froid",
+  "description": "Duvet sarcophage confort -5 °C, garnissage synthétique, compressible.",
+  "prix": 89
+ },
+ {
+  "id": "P039",
+  "categorie": "Camping",
+  "nom": "Réchaud gaz Mini-Flamme",
+  "description": "Réchaud de randonnée ultraléger 80 g à visser sur cartouche de gaz.",
+  "prix": 29
+ },
+ {
+  "id": "P040",
+  "categorie": "Camping",
+  "nom": "Lampe frontale Lumen 400",
+  "description": "Frontale rechargeable 400 lumens avec faisceau rouge, étanche à la pluie.",
+  "prix": 39
+ },
+ {
+  "id": "P041",
+  "categorie": "Camping",
+  "nom": "Matelas autogonflant Repos",
+  "description": "Matelas de sol autogonflant de 5 cm, isolant, se roule dans un sac compact.",
+  "prix": 69
+ },
+ {
+  "id": "P042",
+  "categorie": "Camping",
+  "nom": "Gourde filtrante Source",
+  "description": "Bouteille avec filtre intégré qui rend potable l'eau des ruisseaux et des lacs.",
+  "prix": 45
+ },
+ {
+  "id": "P043",
+  "categorie": "Bagagerie",
+  "nom": "Valise cabine Escale 55",
+  "description": "Valise rigide 4 roues aux dimensions cabine, serrure TSA, 38 litres.",
+  "prix": 129
+ },
+ {
+  "id": "P044",
+  "categorie": "Bagagerie",
+  "nom": "Sac à dos urbain Navette",
+  "description": "Sac à dos 20 L avec compartiment ordinateur 15 pouces et poche anti-vol au dos.",
+  "prix": 69
+ },
+ {
+  "id": "P045",
+  "categorie": "Bagagerie",
+  "nom": "Sac de voyage Weekend",
+  "description": "Sac polochon en toile cirée de 45 L, idéal pour deux ou trois jours.",
+  "prix": 79
+ },
+ {
+  "id": "P046",
+  "categorie": "Bagagerie",
+  "nom": "Cubes de rangement Ordre",
+  "description": "Set de 6 pochettes de compression pour organiser les vêtements dans la valise.",
+  "prix": 25
+ },
+ {
+  "id": "P047",
+  "categorie": "Bagagerie",
+  "nom": "Pèse-bagage Envol",
+  "description": "Balance numérique à crochet pour vérifier le poids des bagages avant l'aéroport.",
+  "prix": 12
+ },
+ {
+  "id": "P048",
+  "categorie": "Bagagerie",
+  "nom": "Sac à dos randonnée Crête 45",
+  "description": "Sac de trek 45 litres avec dos ventilé, ceinture rembourrée et housse de pluie.",
+  "prix": 119
+ },
+ {
+  "id": "P049",
+  "categorie": "Informatique",
+  "nom": "Clavier mécanique Frappe",
+  "description": "Clavier mécanique compact rétroéclairé, switchs silencieux, connexion Bluetooth et USB-C.",
+  "prix": 99
+ },
+ {
+  "id": "P050",
+  "categorie": "Informatique",
+  "nom": "Souris verticale Poignet",
+  "description": "Souris ergonomique verticale qui réduit les tensions du poignet et du canal carpien.",
+  "prix": 45
+ },
+ {
+  "id": "P051",
+  "categorie": "Informatique",
+  "nom": "Webcam Full HD Visio",
+  "description": "Webcam 1080p avec micro stéréo et cache de confidentialité pour les réunions en ligne.",
+  "prix": 59
+ },
+ {
+  "id": "P052",
+  "categorie": "Informatique",
+  "nom": "Hub USB-C 7 en 1",
+  "description": "Adaptateur USB-C avec HDMI 4K, lecteur de cartes SD, 3 ports USB et charge 100 W.",
+  "prix": 49
+ },
+ {
+  "id": "P053",
+  "categorie": "Informatique",
+  "nom": "Disque SSD externe Rapide 1 To",
+  "description": "SSD portable 1 To jusqu'à 1000 Mo/s, résistant aux chutes, pour sauvegardes.",
+  "prix": 109
+ },
+ {
+  "id": "P054",
+  "categorie": "Informatique",
+  "nom": "Support PC portable Alu",
+  "description": "Support en aluminium qui surélève l'ordinateur portable à hauteur des yeux.",
+  "prix": 35
+ },
+ {
+  "id": "P055",
+  "categorie": "Maison",
+  "nom": "Aspirateur robot Furet",
+  "description": "Robot aspirateur laveur avec cartographie laser, programmable depuis le smartphone.",
+  "prix": 299
+ },
+ {
+  "id": "P056",
+  "categorie": "Maison",
+  "nom": "Purificateur d'air Brise",
+  "description": "Purificateur avec filtre HEPA pour pièces de 40 m², réduit pollens et poussières.",
+  "prix": 149
+ },
+ {
+  "id": "P057",
+  "categorie": "Maison",
+  "nom": "Ampoule connectée Teinte",
+  "description": "Ampoule LED Wi-Fi à couleurs variables, pilotable à la voix ou par application.",
+  "prix": 19
+ },
+ {
+  "id": "P058",
+  "categorie": "Chaussures",
+  "nom": "Trail Gecko (coloris forêt)",
+  "description": "Chaussure de trail running avec crampons de 5 mm, pensée pour la boue et les rochers, tige respirante.",
+  "prix": 129
+ },
+ {
+  "id": "P059",
+  "categorie": "Audio",
+  "nom": "Casque Silence Pro - édition noire",
+  "description": "Casque Bluetooth à annulation active du bruit, autonomie 40 h, parfait pour les voyages en avion.",
+  "prix": 249
+ },
+ {
+  "id": "P060",
+  "categorie": "Camping",
+  "nom": "Tente Dôme 3 personnes",
+  "description": "Tente 3 personnes qui se monte en cinq minutes, double toit étanche 3000 mm.",
+  "prix": 159
+ }
+]

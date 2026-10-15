@@ -1,0 +1,13 @@
+{
+  "role_agent": "spk:0",
+  "motif": "Retard de livraison de la commande de lampe de bureau",
+  "numero_commande": "4521",
+  "sentiment_client": "satisfait",
+  "actions": [
+    "Vérification du statut du colis",
+    "Expédition d'une nouvelle lampe en livraison express offerte",
+    "Envoi du numéro de suivi par email le soir même"
+  ],
+  "resume": "Le client appelle pour signaler le retard de la commande 4521. L'agent constate que le colis est bloqué à Lyon et propose de réexpédier une nouvelle lampe en livraison express gratuite aujourd'hui même avec suivi par email, afin qu'elle arrive avant vendredi. Le client accepte.",
+  "reponse_vocale": "Bonjour Monsieur Martin. Comme convenu, nous vous renvoyons dès aujourd'hui une nouvelle lampe en livraison express et sans frais. Je vous enverrai votre numéro de suivi par email ce soir. Très bonne journée à vous."
+}

@@ -214,7 +214,8 @@ kbd { font: 500 0.72rem var(--font-code); border: 1px solid var(--line-strong); 
 .level i { width: 4px; border-radius: 1px; background: var(--line-strong); display: inline-block; }
 .level i:nth-child(1) { height: 6px; } .level i:nth-child(2) { height: 9px; } .level i:nth-child(3) { height: 12px; margin-inline-end: 4px; }
 .level { align-items: flex-end !important; gap: 2px !important; }
-.level-beginner i:nth-child(1), .level-intermediate i:nth-child(-n + 2), .level-advanced i { background: var(--ink-2); }
+.level-beginner i:nth-child(1), .level-intermediate i:nth-child(-n + 2), .level-advanced i, .level-expert i { background: var(--ink-2); }
+.level-expert i { background: var(--k-video) !important; }
 .premium { color: var(--warn); font-weight: 600; }
 .tags { list-style: none; padding: 0; margin: 24px 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .tags a { font-size: 0.85rem; color: var(--ink-2); text-decoration: none; background: var(--surface-2); padding: 3px 10px; border-radius: 999px; }
@@ -798,4 +799,14 @@ dialog { color: var(--ink); }
   .tn-row { grid-template-columns: 22px minmax(0, 1fr) auto; }
   .format-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ftile a { grid-template-columns: auto minmax(0, 1fr); }
+}
+
+/* Resource list: download card + "view" for source files */
+.file-item { position: relative; }
+.file-view { position: absolute; top: 8px; inset-inline-end: 8px; font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--accent); text-decoration: none; }
+.file-view:hover { background: var(--k-course-bg); }
+.file-item .file-size { margin-top: 14px; }
+@media (max-width: 720px) {
+  .intent-row { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none; }
+  .intent-row .chip, .intent-label { white-space: nowrap; flex: none; }
 }

@@ -1,0 +1,6 @@
+google-genai>=1.30
+pydantic>=2
+python-dotenv
+pillow
+reportlab
+pytest

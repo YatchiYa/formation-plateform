@@ -32,6 +32,7 @@ const fr = {
   beginner: 'Débutant',
   intermediate: 'Intermédiaire',
   advanced: 'Avancé',
+  expert: 'Expert',
   premium: 'Premium',
   minRead: 'min de lecture',
   startCourse: 'Commencer la formation',
@@ -102,6 +103,7 @@ const en: Dict = {
   beginner: 'Beginner',
   intermediate: 'Intermediate',
   advanced: 'Advanced',
+  expert: 'Expert',
   premium: 'Premium',
   minRead: 'min read',
   startCourse: 'Start the course',
@@ -171,6 +173,7 @@ const ar: Dict = {
   beginner: 'مبتدئ',
   intermediate: 'متوسط',
   advanced: 'متقدم',
+  expert: 'خبير',
   premium: 'مميز',
   minRead: 'دقائق قراءة',
   startCourse: 'ابدأ الدورة',
@@ -240,6 +243,7 @@ const es: Dict = {
   beginner: 'Principiante',
   intermediate: 'Intermedio',
   advanced: 'Avanzado',
+  expert: 'Experto',
   premium: 'Premium',
   minRead: 'min de lectura',
   startCourse: 'Empezar el curso',
@@ -283,6 +287,7 @@ const es: Dict = {
 }
 
 const fr2 = {
+  view: 'Voir',
   quiz: 'Quiz', quizMulti: 'Plusieurs réponses possibles', quizCheck: 'Vérifier', quizRight: 'Bonne réponse !', quizWrong: 'Pas tout à fait.', quizRetry: 'Réessayer', quizScore: 'Quiz réussis',
   platform: 'Plateforme', usecase: "Cas d'usage", pl_platform: 'Plateformes', pl_usecase: "Cas d'usage",
   desc_platform: 'Les outils et plateformes où ces connaissances s’appliquent.', desc_usecase: 'Partir d’un besoin concret et trouver quoi apprendre.',
@@ -318,6 +323,7 @@ const fr2 = {
 }
 type Dict2 = typeof fr2
 const en2: Dict2 = {
+  view: 'View',
   quiz: 'Quiz', quizMulti: 'Several answers possible', quizCheck: 'Check', quizRight: 'Correct!', quizWrong: 'Not quite.', quizRetry: 'Try again', quizScore: 'Quizzes passed',
   platform: 'Platform', usecase: 'Use case', pl_platform: 'Platforms', pl_usecase: 'Use cases',
   desc_platform: 'The tools and platforms where this knowledge applies.', desc_usecase: 'Start from a concrete need and find what to learn.',
@@ -352,6 +358,7 @@ const en2: Dict2 = {
   latestSkills: 'Latest skills',
 }
 const ar2: Dict2 = {
+  view: 'عرض',
   quiz: 'اختبار', quizMulti: 'عدة إجابات ممكنة', quizCheck: 'تحقّق', quizRight: 'إجابة صحيحة!', quizWrong: 'ليس تمامًا.', quizRetry: 'أعد المحاولة', quizScore: 'اختبارات ناجحة',
   platform: 'منصة', usecase: 'حالة استخدام', pl_platform: 'المنصات', pl_usecase: 'حالات الاستخدام',
   desc_platform: 'الأدوات والمنصات التي تُطبَّق فيها هذه المعارف.', desc_usecase: 'انطلق من حاجة ملموسة واعرف ماذا تتعلّم.',
@@ -386,6 +393,7 @@ const ar2: Dict2 = {
   latestSkills: 'أحدث المهارات',
 }
 const es2: Dict2 = {
+  view: 'Ver',
   quiz: 'Quiz', quizMulti: 'Varias respuestas posibles', quizCheck: 'Comprobar', quizRight: '¡Correcto!', quizWrong: 'No del todo.', quizRetry: 'Reintentar', quizScore: 'Quiz superados',
   platform: 'Plataforma', usecase: 'Caso de uso', pl_platform: 'Plataformas', pl_usecase: 'Casos de uso',
   desc_platform: 'Las herramientas y plataformas donde se aplica este conocimiento.', desc_usecase: 'Parte de una necesidad concreta y encuentra qué aprender.',

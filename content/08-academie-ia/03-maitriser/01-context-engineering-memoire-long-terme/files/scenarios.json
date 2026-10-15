@@ -1,0 +1,31 @@
+{
+  "session_1": {
+    "camille": [
+      "Bonjour ! Je m'appelle Camille, je viens d'arriver chez Atelier.",
+      "Petite info utile : je suis allergique aux arachides, pense-y si tu me proposes un traiteur un jour.",
+      "Au travail je code surtout en Go, c'est mon langage principal.",
+      "J'habite à Nantes et je viens au bureau en vélo.",
+      "Je fais partie de l'équipe Paiements.",
+      "Quand tu me parles de prix, donne-les toujours hors taxe (HT), c'est ce qu'on utilise en interne.",
+      "Je ne suis jamais disponible le mercredi, c'est mon jour de télétravail sans réunion.",
+      "Chez nous les tickets de bug se créent dans Jira, projet PAY.",
+      "Tu peux me rappeler ce qu'est un webhook en une phrase ?",
+      "Ah, et changement depuis lundi : j'ai quitté l'équipe Paiements, je suis maintenant dans l'équipe Logistique."
+    ],
+    "bob": [
+      "Salut, moi c'est Bob, je m'occupe du support client niveau 2."
+    ]
+  },
+  "questions": [
+    {"id": 1, "user": "camille", "q": "Comment je m'appelle ?", "expect": ["Camille"], "fait": "Camille"},
+    {"id": 2, "user": "camille", "q": "Le traiteur du séminaire demande si j'ai une allergie alimentaire. Que dois-je lui répondre ?", "expect": ["arachide|cacahu"], "fait": "arachide"},
+    {"id": 3, "user": "camille", "q": "Écris-moi une fonction qui additionne deux entiers, dans mon langage habituel. Juste le code.", "expect": ["func "], "fait": "Go"},
+    {"id": 4, "user": "camille", "q": "Je veux vérifier la météo de demain chez moi : pour quelle ville ?", "expect": ["Nantes"], "fait": "Nantes"},
+    {"id": 5, "user": "camille", "q": "Dans quelle équipe suis-je actuellement ?", "expect": ["Logistique"], "fait": "Logistique"},
+    {"id": 6, "user": "camille", "q": "Le fournisseur annonce 1 200 euros TTC pour un bureau. Comment dois-tu m'indiquer ce prix, selon mes habitudes ?", "expect": ["\\bHT\\b|hors taxe"], "fait": "HT|hors taxe"},
+    {"id": 7, "user": "camille", "q": "Quel jour de la semaine faut-il éviter pour me proposer une réunion ?", "expect": ["mercredi"], "fait": "mercredi"},
+    {"id": 8, "user": "camille", "q": "J'ai trouvé un bug, où est-ce que je crée le ticket ?", "expect": ["Jira"], "fait": "Jira"},
+    {"id": 9, "user": "bob", "q": "Dans quel langage est-ce que je code au travail ?", "expect": [], "forbid": ["\\bGo\\b"], "fait": null},
+    {"id": 10, "user": "camille", "q": "De quelle couleur est ma voiture ?", "expect": [], "forbid": ["rouge", "bleue", "noire", "blanche", "grise", "verte"], "fait": null}
+  ]
+}

@@ -1,0 +1,201 @@
+id,produit,note,texte,sentiment_attendu,categorie_attendue
+A0001,grille-pain Nimbus,1,"Génial, mon grille-pain Nimbus est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0002,ventilateur Lumo,1,"Colis du ventilateur Lumo perdu par le transporteur, toujours pas de nouvelles.",negatif,livraison
+A0003,grille-pain Nimbus,2,"Le grille-pain Nimbus est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0004,grille-pain Nimbus,4,"Le grille-pain Nimbus est solide et très agréable à utiliser, je recommande.",positif,qualite_produit
+A0005,casque audio Kappa,3,"Le site est un peu lent pour commander le casque audio Kappa, mais on finit par y arriver.",neutre,site_web
+A0006,haut-parleur Pulse,2,Commande du haut-parleur Pulse reçue avec dix jours de retard et un carton écrasé.,negatif,livraison
+A0007,thermos Iso 750,5,"Reçu le thermos Iso 750 avant la date prévue, rien à redire sur l'expédition.",positif,livraison
+A0008,ventilateur Lumo,5,"Livraison du ventilateur Lumo en 24 h, colis parfaitement emballé.",positif,livraison
+A0009,thermos Iso 750,1,"Plastique fragile, le thermos Iso 750 s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0010,moulin à café Moka+,4,"Conseillère très patiente, elle m'a aidé à configurer le moulin à café Moka+.",positif,service_client
+A0011,grille-pain Nimbus,3,"Le site est un peu lent pour commander le grille-pain Nimbus, mais on finit par y arriver.",neutre,site_web
+A0012,moulin à café Moka+,3,"Le site est un peu lent pour commander le moulin à café Moka+, mais on finit par y arriver.",neutre,site_web
+A0013,grille-pain Nimbus,3,"Le grille-pain Nimbus est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0014,grille-pain Nimbus,1,"Trois e-mails au service client à propos du grille-pain Nimbus, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0015,moulin à café Moka+,3,J'ai vu le même moulin à café Moka+ 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0016,clavier Orion,5,"Livraison du clavier Orion en 24 h, colis parfaitement emballé.",positif,livraison
+A0017,moulin à café Moka+,1,"Génial, mon moulin à café Moka+ est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0018,ventilateur Lumo,3,"Le site est un peu lent pour commander le ventilateur Lumo, mais on finit par y arriver.",neutre,site_web
+A0019,moulin à café Moka+,2,J'ai vu le même moulin à café Moka+ 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0020,ventilateur Lumo,4,"Excellent ventilateur Lumo, finitions impeccables, il fait exactement ce qui est annoncé.",positif,qualite_produit
+A0021,moulin à café Moka+,2,Le moulin à café Moka+ est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0022,clavier Orion,1,"Impossible de payer mon clavier Orion sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0023,haut-parleur Pulse,2,J'ai vu le même haut-parleur Pulse 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0024,ventilateur Lumo,5,"Reçu le ventilateur Lumo avant la date prévue, rien à redire sur l'expédition.",positif,livraison
+A0025,thermos Iso 750,2,"Impossible de payer mon thermos Iso 750 sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0026,haut-parleur Pulse,4,"Livraison du haut-parleur Pulse en 24 h, colis parfaitement emballé.",positif,livraison
+A0027,sac à dos Trek 30,1,"Le sac à dos Trek 30 ne tient pas ses promesses, la batterie ne dure pas une heure.",negatif,qualite_produit
+A0028,grille-pain Nimbus,3,J'ai vu le même grille-pain Nimbus 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0029,haut-parleur Pulse,2,"Impossible de payer mon haut-parleur Pulse sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0030,grille-pain Nimbus,1,"Génial, mon grille-pain Nimbus est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0031,moulin à café Moka+,2,"Le moulin à café Moka+ est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0032,casque audio Kappa,3,"Le casque audio Kappa fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0033,grille-pain Nimbus,3,"Le site est un peu lent pour commander le grille-pain Nimbus, mais on finit par y arriver.",neutre,site_web
+A0034,clavier Orion,4,"Livraison du clavier Orion en 24 h, colis parfaitement emballé.",positif,livraison
+A0035,clavier Orion,2,"Impossible de payer mon clavier Orion sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0036,clavier Orion,2,"Le clavier Orion est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0037,ventilateur Lumo,4,"Le ventilateur Lumo est solide et très agréable à utiliser, je recommande.",positif,qualite_produit
+A0038,haut-parleur Pulse,3,"Le haut-parleur Pulse est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0039,haut-parleur Pulse,4,"Reçu le haut-parleur Pulse avant la date prévue, rien à redire sur l'expédition.",positif,livraison
+A0040,thermos Iso 750,3,"Le site est un peu lent pour commander le thermos Iso 750, mais on finit par y arriver.",neutre,site_web
+A0041,moulin à café Moka+,3,"Le moulin à café Moka+ est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0042,haut-parleur Pulse,3,"Le haut-parleur Pulse fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0043,grille-pain Nimbus,2,Commande du grille-pain Nimbus reçue avec dix jours de retard et un carton écrasé.,negatif,livraison
+A0044,ventilateur Lumo,1,"Impossible de payer mon ventilateur Lumo sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0045,casque audio Kappa,1,"Le casque audio Kappa est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0046,clavier Orion,4,"Très content du clavier Orion, la qualité est au rendez-vous pour ce prix.",positif,qualite_produit
+A0047,moulin à café Moka+,2,Commande du moulin à café Moka+ reçue avec dix jours de retard et un carton écrasé.,negatif,livraison
+A0048,sac à dos Trek 30,3,"Le site est un peu lent pour commander le sac à dos Trek 30, mais on finit par y arriver.",neutre,site_web
+A0049,thermos Iso 750,3,"Le thermos Iso 750 fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0050,thermos Iso 750,2,"Plastique fragile, le thermos Iso 750 s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0051,haut-parleur Pulse,2,Le haut-parleur Pulse est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0052,thermos Iso 750,5,"Le thermos Iso 750 est solide et très agréable à utiliser, je recommande.",positif,qualite_produit
+A0053,ventilateur Lumo,1,"Colis du ventilateur Lumo perdu par le transporteur, toujours pas de nouvelles.",negatif,livraison
+A0054,sac à dos Trek 30,3,"Le sac à dos Trek 30 fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0055,haut-parleur Pulse,1,"Trois e-mails au service client à propos du haut-parleur Pulse, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0056,grille-pain Nimbus,3,"Le grille-pain Nimbus fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0057,ventilateur Lumo,1,"Plastique fragile, le ventilateur Lumo s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0058,haut-parleur Pulse,3,haut-parleur Pulse conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0059,sac à dos Trek 30,5,"Le sac à dos Trek 30 est solide et très agréable à utiliser, je recommande.",positif,qualite_produit
+A0060,moulin à café Moka+,3,J'ai vu le même moulin à café Moka+ 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0061,haut-parleur Pulse,2,Le haut-parleur Pulse est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0062,ventilateur Lumo,1,"Trois e-mails au service client à propos du ventilateur Lumo, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0063,clavier Orion,3,"Le clavier Orion est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0064,haut-parleur Pulse,1,"Impossible de payer mon haut-parleur Pulse sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0065,grille-pain Nimbus,3,"Le site est un peu lent pour commander le grille-pain Nimbus, mais on finit par y arriver.",neutre,site_web
+A0066,grille-pain Nimbus,1,"Impossible de payer mon grille-pain Nimbus sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0067,ventilateur Lumo,1,"Le ventilateur Lumo ne tient pas ses promesses, la batterie ne dure pas une heure.",negatif,qualite_produit
+A0068,thermos Iso 750,2,"Plastique fragile, le thermos Iso 750 s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0069,clavier Orion,1,Le suivi indique livré mais je n'ai jamais reçu mon clavier Orion.,negatif,livraison
+A0070,sac à dos Trek 30,3,J'ai vu le même sac à dos Trek 30 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0071,grille-pain Nimbus,4,"Conseillère très patiente, elle m'a aidé à configurer le grille-pain Nimbus.",positif,service_client
+A0072,grille-pain Nimbus,1,"Impossible de payer mon grille-pain Nimbus sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0073,moulin à café Moka+,3,"Le site est un peu lent pour commander le moulin à café Moka+, mais on finit par y arriver.",neutre,site_web
+A0074,ventilateur Lumo,2,"Plastique fragile, le ventilateur Lumo s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0075,haut-parleur Pulse,5,"Livraison du haut-parleur Pulse en 24 h, colis parfaitement emballé.",positif,livraison
+A0076,moulin à café Moka+,1,"Génial, mon moulin à café Moka+ est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0077,grille-pain Nimbus,1,"Trois e-mails au service client à propos du grille-pain Nimbus, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0078,moulin à café Moka+,1,Le conseiller m'a raccroché au nez quand j'ai signalé le défaut du moulin à café Moka+.,negatif,service_client
+A0079,moulin à café Moka+,2,Le suivi indique livré mais je n'ai jamais reçu mon moulin à café Moka+.,negatif,livraison
+A0080,grille-pain Nimbus,5,"Excellent grille-pain Nimbus, finitions impeccables, il fait exactement ce qui est annoncé.",positif,qualite_produit
+A0081,casque audio Kappa,5,"Le casque audio Kappa est solide et très agréable à utiliser, je recommande.",positif,qualite_produit
+A0082,moulin à café Moka+,1,"Génial, mon moulin à café Moka+ est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0083,thermos Iso 750,3,"Le site est un peu lent pour commander le thermos Iso 750, mais on finit par y arriver.",neutre,site_web
+A0084,sac à dos Trek 30,1,"Plastique fragile, le sac à dos Trek 30 s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0085,sac à dos Trek 30,2,"Impossible de payer mon sac à dos Trek 30 sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0086,moulin à café Moka+,5,"Le moulin à café Moka+ est solide et très agréable à utiliser, je recommande.",positif,qualite_produit
+A0087,ventilateur Lumo,4,"Mon ventilateur Lumo avait un défaut, le service client l'a remplacé en deux jours. Bravo.",positif,service_client
+A0088,thermos Iso 750,4,"Mon thermos Iso 750 avait un défaut, le service client l'a remplacé en deux jours. Bravo.",positif,service_client
+A0089,sac à dos Trek 30,5,"Livraison du sac à dos Trek 30 en 24 h, colis parfaitement emballé.",positif,livraison
+A0090,clavier Orion,5,"Livraison du clavier Orion en 24 h, colis parfaitement emballé.",positif,livraison
+A0091,sac à dos Trek 30,1,Le conseiller m'a raccroché au nez quand j'ai signalé le défaut du sac à dos Trek 30.,negatif,service_client
+A0092,haut-parleur Pulse,4,"Le haut-parleur Pulse est solide et très agréable à utiliser, je recommande.",positif,qualite_produit
+A0093,clavier Orion,3,"Le clavier Orion fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0094,casque audio Kappa,1,Le suivi indique livré mais je n'ai jamais reçu mon casque audio Kappa.,negatif,livraison
+A0095,moulin à café Moka+,4,"Conseillère très patiente, elle m'a aidé à configurer le moulin à café Moka+.",positif,service_client
+A0096,thermos Iso 750,5,"Mon thermos Iso 750 avait un défaut, le service client l'a remplacé en deux jours. Bravo.",positif,service_client
+A0097,moulin à café Moka+,1,"Le moulin à café Moka+ ne tient pas ses promesses, la batterie ne dure pas une heure.",negatif,qualite_produit
+A0098,casque audio Kappa,1,Le conseiller m'a raccroché au nez quand j'ai signalé le défaut du casque audio Kappa.,negatif,service_client
+A0099,clavier Orion,5,"Mon clavier Orion avait un défaut, le service client l'a remplacé en deux jours. Bravo.",positif,service_client
+A0100,ventilateur Lumo,3,Le ventilateur Lumo est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0101,thermos Iso 750,3,"Le thermos Iso 750 est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0102,thermos Iso 750,4,"Conseillère très patiente, elle m'a aidé à configurer le thermos Iso 750.",positif,service_client
+A0103,clavier Orion,1,"Impossible de payer mon clavier Orion sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0104,moulin à café Moka+,3,"Le site est un peu lent pour commander le moulin à café Moka+, mais on finit par y arriver.",neutre,site_web
+A0105,moulin à café Moka+,2,Le moulin à café Moka+ est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0106,thermos Iso 750,2,J'ai vu le même thermos Iso 750 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0107,casque audio Kappa,3,J'ai vu le même casque audio Kappa 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0108,thermos Iso 750,2,Le suivi indique livré mais je n'ai jamais reçu mon thermos Iso 750.,negatif,livraison
+A0109,haut-parleur Pulse,3,haut-parleur Pulse conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0110,sac à dos Trek 30,3,"Le sac à dos Trek 30 est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0111,clavier Orion,3,"Le site est un peu lent pour commander le clavier Orion, mais on finit par y arriver.",neutre,site_web
+A0112,moulin à café Moka+,1,"Génial, mon moulin à café Moka+ est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0113,casque audio Kappa,4,"Livraison du casque audio Kappa en 24 h, colis parfaitement emballé.",positif,livraison
+A0114,grille-pain Nimbus,3,grille-pain Nimbus conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0115,ventilateur Lumo,1,"Génial, mon ventilateur Lumo est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0116,ventilateur Lumo,2,Le ventilateur Lumo est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0117,thermos Iso 750,1,"Le thermos Iso 750 est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0118,haut-parleur Pulse,3,"Le haut-parleur Pulse est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0119,haut-parleur Pulse,1,"Plastique fragile, le haut-parleur Pulse s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0120,clavier Orion,1,"Génial, mon clavier Orion est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0121,haut-parleur Pulse,3,"Le site est un peu lent pour commander le haut-parleur Pulse, mais on finit par y arriver.",neutre,site_web
+A0122,moulin à café Moka+,3,moulin à café Moka+ conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0123,haut-parleur Pulse,3,"Le site est un peu lent pour commander le haut-parleur Pulse, mais on finit par y arriver.",neutre,site_web
+A0124,grille-pain Nimbus,3,"Le grille-pain Nimbus fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0125,clavier Orion,2,"Trois e-mails au service client à propos du clavier Orion, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0126,sac à dos Trek 30,4,"Reçu le sac à dos Trek 30 avant la date prévue, rien à redire sur l'expédition.",positif,livraison
+A0127,sac à dos Trek 30,3,"Le sac à dos Trek 30 est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0128,thermos Iso 750,3,J'ai vu le même thermos Iso 750 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0129,casque audio Kappa,2,J'ai vu le même casque audio Kappa 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0130,casque audio Kappa,3,J'ai vu le même casque audio Kappa 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0131,clavier Orion,5,"Excellent clavier Orion, finitions impeccables, il fait exactement ce qui est annoncé.",positif,qualite_produit
+A0132,ventilateur Lumo,3,Le ventilateur Lumo est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0133,thermos Iso 750,2,"Trois e-mails au service client à propos du thermos Iso 750, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0134,clavier Orion,3,Le clavier Orion est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0135,sac à dos Trek 30,3,sac à dos Trek 30 conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0136,casque audio Kappa,1,"Impossible de payer mon casque audio Kappa sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0137,haut-parleur Pulse,4,"Livraison du haut-parleur Pulse en 24 h, colis parfaitement emballé.",positif,livraison
+A0138,thermos Iso 750,2,"Trois e-mails au service client à propos du thermos Iso 750, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0139,clavier Orion,3,clavier Orion conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0140,thermos Iso 750,2,"Trois e-mails au service client à propos du thermos Iso 750, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0141,casque audio Kappa,3,casque audio Kappa conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0142,grille-pain Nimbus,1,Commande du grille-pain Nimbus reçue avec dix jours de retard et un carton écrasé.,negatif,livraison
+A0143,ventilateur Lumo,1,"Colis du ventilateur Lumo perdu par le transporteur, toujours pas de nouvelles.",negatif,livraison
+A0144,ventilateur Lumo,4,"Reçu le ventilateur Lumo avant la date prévue, rien à redire sur l'expédition.",positif,livraison
+A0145,grille-pain Nimbus,1,"Génial, mon grille-pain Nimbus est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0146,moulin à café Moka+,3,"Le moulin à café Moka+ est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0147,grille-pain Nimbus,1,"Impossible de payer mon grille-pain Nimbus sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0148,casque audio Kappa,2,"Le casque audio Kappa ne tient pas ses promesses, la batterie ne dure pas une heure.",negatif,qualite_produit
+A0149,thermos Iso 750,1,"Génial, mon thermos Iso 750 est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0150,ventilateur Lumo,1,"Le ventilateur Lumo ne tient pas ses promesses, la batterie ne dure pas une heure.",negatif,qualite_produit
+A0151,grille-pain Nimbus,1,Le conseiller m'a raccroché au nez quand j'ai signalé le défaut du grille-pain Nimbus.,negatif,service_client
+A0152,thermos Iso 750,3,"Le site est un peu lent pour commander le thermos Iso 750, mais on finit par y arriver.",neutre,site_web
+A0153,clavier Orion,3,"Le site est un peu lent pour commander le clavier Orion, mais on finit par y arriver.",neutre,site_web
+A0154,grille-pain Nimbus,3,grille-pain Nimbus conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0155,haut-parleur Pulse,1,"Génial, mon haut-parleur Pulse est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0156,moulin à café Moka+,5,"Reçu le moulin à café Moka+ avant la date prévue, rien à redire sur l'expédition.",positif,livraison
+A0157,moulin à café Moka+,3,Le moulin à café Moka+ est correct mais beaucoup trop cher pour ce qu'il offre.,negatif,prix
+A0158,moulin à café Moka+,2,"Le moulin à café Moka+ est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0159,thermos Iso 750,3,"Le thermos Iso 750 fait le travail, sans plus. Ni bon ni mauvais.",neutre,qualite_produit
+A0160,clavier Orion,3,clavier Orion conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0161,clavier Orion,2,Le suivi indique livré mais je n'ai jamais reçu mon clavier Orion.,negatif,livraison
+A0162,moulin à café Moka+,1,"Trois e-mails au service client à propos du moulin à café Moka+, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0163,ventilateur Lumo,2,"Plastique fragile, le ventilateur Lumo s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0164,ventilateur Lumo,3,"Le site est un peu lent pour commander le ventilateur Lumo, mais on finit par y arriver.",neutre,site_web
+A0165,casque audio Kappa,3,casque audio Kappa conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0166,thermos Iso 750,1,Le suivi indique livré mais je n'ai jamais reçu mon thermos Iso 750.,negatif,livraison
+A0167,clavier Orion,1,"Génial, mon clavier Orion est arrivé avec trois semaines de retard. Vraiment bravo.",negatif,livraison
+A0168,clavier Orion,3,J'ai vu le même clavier Orion 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0169,moulin à café Moka+,2,"Trois e-mails au service client à propos du moulin à café Moka+, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0170,ventilateur Lumo,2,"Le ventilateur Lumo est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0171,sac à dos Trek 30,3,"Le sac à dos Trek 30 est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0172,haut-parleur Pulse,3,"Le haut-parleur Pulse est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0173,ventilateur Lumo,2,"Le ventilateur Lumo est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0174,sac à dos Trek 30,5,"Mon sac à dos Trek 30 avait un défaut, le service client l'a remplacé en deux jours. Bravo.",positif,service_client
+A0175,sac à dos Trek 30,3,"Le sac à dos Trek 30 est très bien fait, mais le prix est franchement élevé.",neutre,prix
+A0176,moulin à café Moka+,4,"Très content du moulin à café Moka+, la qualité est au rendez-vous pour ce prix.",positif,qualite_produit
+A0177,grille-pain Nimbus,3,grille-pain Nimbus conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0178,haut-parleur Pulse,3,haut-parleur Pulse conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0179,casque audio Kappa,5,"Reçu le casque audio Kappa avant la date prévue, rien à redire sur l'expédition.",positif,livraison
+A0180,grille-pain Nimbus,2,"Plastique fragile, le grille-pain Nimbus s'est fissuré dès la première utilisation.",negatif,qualite_produit
+A0181,casque audio Kappa,1,"Le casque audio Kappa est tombé en panne au bout de deux semaines, très déçu.",negatif,qualite_produit
+A0182,moulin à café Moka+,1,"Impossible de payer mon moulin à café Moka+ sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0183,thermos Iso 750,1,"Le thermos Iso 750 ne tient pas ses promesses, la batterie ne dure pas une heure.",negatif,qualite_produit
+A0184,haut-parleur Pulse,3,J'ai vu le même haut-parleur Pulse 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0185,thermos Iso 750,2,"Impossible de payer mon thermos Iso 750 sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0186,grille-pain Nimbus,1,"Impossible de payer mon grille-pain Nimbus sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0187,grille-pain Nimbus,1,"Trois e-mails au service client à propos du grille-pain Nimbus, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0188,grille-pain Nimbus,4,"Livraison du grille-pain Nimbus en 24 h, colis parfaitement emballé.",positif,livraison
+A0189,haut-parleur Pulse,3,J'ai vu le même haut-parleur Pulse 30 % moins cher ailleurs une semaine après mon achat.,negatif,prix
+A0190,ventilateur Lumo,5,"Très content du ventilateur Lumo, la qualité est au rendez-vous pour ce prix.",positif,qualite_produit
+A0191,haut-parleur Pulse,1,"Trois e-mails au service client à propos du haut-parleur Pulse, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0192,ventilateur Lumo,2,"Trois e-mails au service client à propos du ventilateur Lumo, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0193,ventilateur Lumo,3,"Le site est un peu lent pour commander le ventilateur Lumo, mais on finit par y arriver.",neutre,site_web
+A0194,grille-pain Nimbus,4,"Livraison du grille-pain Nimbus en 24 h, colis parfaitement emballé.",positif,livraison
+A0195,moulin à café Moka+,2,"Trois e-mails au service client à propos du moulin à café Moka+, aucune réponse. Je veux être remboursé.",negatif,service_client
+A0196,moulin à café Moka+,3,moulin à café Moka+ conforme à la description. Rien de particulier à signaler.,neutre,qualite_produit
+A0197,haut-parleur Pulse,3,"Le site est un peu lent pour commander le haut-parleur Pulse, mais on finit par y arriver.",neutre,site_web
+A0198,casque audio Kappa,2,"Impossible de payer mon casque audio Kappa sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0199,moulin à café Moka+,1,"Impossible de payer mon moulin à café Moka+ sur le site, la page de paiement plante à chaque fois.",negatif,site_web
+A0200,casque audio Kappa,2,"Colis du casque audio Kappa perdu par le transporteur, toujours pas de nouvelles.",negatif,livraison

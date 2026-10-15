@@ -1,0 +1,13 @@
+{
+  "commandes_connues": ["4521", "3310", "7788"],
+  "voices": {"Agent": "Kore", "Client": "Puck"},
+  "lines": [
+    {"speaker": "Agent", "text": "Bonjour, service client de la boutique Atelier, Léa à l'appareil. Que puis-je faire pour vous ?", "style": "accueillante, posée"},
+    {"speaker": "Client", "text": "Bonjour. J'ai commandé une lampe de bureau il y a dix jours, la commande 4521, et je n'ai toujours rien reçu.", "style": "agacé"},
+    {"speaker": "Agent", "text": "Je suis désolée pour ce retard. Je regarde tout de suite. Je vois que le colis est bloqué au dépôt de Lyon depuis lundi."},
+    {"speaker": "Client", "text": "Bloqué ? Mais j'en ai besoin pour vendredi, c'est pour un cadeau."},
+    {"speaker": "Agent", "text": "Je comprends. Je vous propose de renvoyer une nouvelle lampe aujourd'hui en livraison express, sans frais, et je vous envoie le numéro de suivi par e-mail ce soir.", "style": "rassurante"},
+    {"speaker": "Client", "text": "D'accord, si elle arrive avant vendredi, ça me va. Merci.", "style": "soulagé"},
+    {"speaker": "Agent", "text": "C'est noté. Bonne journée, monsieur Martin."}
+  ]
+}

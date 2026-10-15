@@ -1,0 +1,17 @@
+description: "Latence des appels LLM (ms), par version de prompt"
+filter: 'jsonPayload.message="llm_call"'
+valueExtractor: EXTRACT(jsonPayload.latency_ms)
+labelExtractors:
+  prompt_version: EXTRACT(jsonPayload.prompt_version)
+metricDescriptor:
+  metricKind: DELTA
+  valueType: DISTRIBUTION
+  unit: ms
+  labels:
+    - key: prompt_version
+      valueType: STRING
+bucketOptions:
+  exponentialBuckets:
+    numFiniteBuckets: 40
+    growthFactor: 1.3
+    scale: 50

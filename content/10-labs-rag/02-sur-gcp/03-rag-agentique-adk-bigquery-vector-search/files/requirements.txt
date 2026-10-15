@@ -1,0 +1,5 @@
+google-adk>=2.10
+google-genai
+google-cloud-bigquery
+python-dotenv
+pytest

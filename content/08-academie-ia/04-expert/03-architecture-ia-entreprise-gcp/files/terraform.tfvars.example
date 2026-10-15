@@ -1,0 +1,12 @@
+# Copiez en terraform.tfvars (jamais commité) et remplacez les valeurs factices.
+project_id  = "mon-projet-ia-dev"
+region      = "europe-west1"
+prefix      = "lab-archi-ia"
+app_domain  = "assistant.exemple.fr"
+iap_members = ["group:assistant-utilisateurs@exemple.fr"]
+
+# Si votre projet est dans une organisation :
+# access_policy_id           = "123456789012"
+# vpcsc_dry_run              = true
+# enforce_eu_location_policy = true
+# billing_account            = "000000-AAAAAA-BBBBBB"

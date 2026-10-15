@@ -1,0 +1,6 @@
+google-genai>=1.30
+pandas
+openpyxl
+pydantic>=2
+python-dotenv
+pytest

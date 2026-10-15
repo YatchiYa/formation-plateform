@@ -1,0 +1,5 @@
+google-genai>=2.31
+pydantic>=2
+python-dotenv
+numpy
+pytest

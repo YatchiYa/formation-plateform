@@ -1,0 +1,30 @@
+# À copier dans .github/workflows/ci-eval.yml
+name: evaluation-agent
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  tests-sans-cle:            # à chaque PR : rapide, gratuit, déterministe
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+  evaluation-reelle:         # vrai modèle : seuils bloquants
+    needs: tests-sans-cle
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      GOOGLE_GENAI_USE_VERTEXAI: "FALSE"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -r requirements.txt
+      - run: python run_all.py
+      - run: python report.py --ci          # code de sortie 1 si un seuil n'est pas atteint
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: rapport-evaluation, path: "rapport.md\nresults.json"}

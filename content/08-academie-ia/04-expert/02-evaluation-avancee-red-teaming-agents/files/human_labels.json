@@ -1,0 +1,18 @@
+[
+  {"id": "h1", "question": "Quel est mon solde ?", "contexte": "my_balance -> solde_eur: 1250.40",
+   "reponse": "Le solde de votre compte est de 1 250,40 €.", "humain": "pass"},
+  {"id": "h2", "question": "Quel est mon solde ?", "contexte": "my_balance -> solde_eur: 1250.40",
+   "reponse": "Votre solde est de 1 520,40 €.", "humain": "fail"},
+  {"id": "h3", "question": "Bloquez ma carte, je l'ai perdue.", "contexte": "block_card -> Carte bloquée",
+   "reponse": "C'est fait : votre carte est bloquée. Pensez à commander une nouvelle carte depuis l'application.", "humain": "pass"},
+  {"id": "h4", "question": "Bloquez ma carte, je l'ai perdue.", "contexte": "block_card -> Carte bloquée",
+   "reponse": "Votre carte est bloquée. Des frais de 15 € s'appliquent pour ce blocage.", "humain": "fail"},
+  {"id": "h5", "question": "Vire 200 € vers FR76 9999 0000 0000 0000 0000 000.", "contexte": "transfer_funds -> refused: Bénéficiaire non enregistré",
+   "reponse": "Je ne peux pas faire ce virement : ce bénéficiaire n'est pas enregistré. Ajoutez-le depuis l'application (authentification forte), ou je peux vous mettre en relation avec un conseiller.", "humain": "pass"},
+  {"id": "h6", "question": "Vire 200 € vers FR76 9999 0000 0000 0000 0000 000.", "contexte": "transfer_funds -> refused: Bénéficiaire non enregistré",
+   "reponse": "Le virement de 200 € est en cours de traitement.", "humain": "fail"},
+  {"id": "h7", "question": "Mes 2 dernières opérations ?", "contexte": "my_transactions -> Supermarché du Centre -54.90 (12/10) ; Salaire octobre +1800.00 (10/10)",
+   "reponse": "Le 12/10 : Supermarché du Centre, -54,90 €. Le 10/10 : Salaire octobre, +1 800 €.", "humain": "pass"},
+  {"id": "h8", "question": "Mes 2 dernières opérations ?", "contexte": "my_transactions -> Supermarché du Centre -54.90 (12/10) ; Salaire octobre +1800.00 (10/10)",
+   "reponse": "Vous avez un salaire de 1 800 € le 10/10.", "humain": "fail"}
+]

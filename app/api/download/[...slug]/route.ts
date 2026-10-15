@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { zipSync } from 'fflate'
-import { getTree, localized } from '@/lib/content'
+import { getTree, localized, SAFE_DOTFILES } from '@/lib/content'
 import { recordServerEvent } from '@/lib/track'
 
 function addDir(dir: string, base: string, out: Record<string, Uint8Array>) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (e.name.startsWith('.')) continue
+    if (e.name.startsWith('.') && !SAFE_DOTFILES.has(e.name)) continue
     const abs = path.join(dir, e.name)
     if (e.isDirectory()) addDir(abs, `${base}${e.name}/`, out)
     else out[base + e.name] = fs.readFileSync(abs)

@@ -5,7 +5,7 @@ import { defaultLocale, locales, type Locale } from './i18n'
 
 export const CONTENT_DIR = path.resolve(process.env.CONTENT_DIR || path.join(/* turbopackIgnore: true */ process.cwd(), 'content'))
 const RESERVED = new Set(['images', 'assets', 'files', 'node_modules'])
-const DOC_EXT = new Set(['.html', '.pdf', '.docx', '.doc', '.pptx', '.ppt', '.xlsx', '.xls', '.csv', '.zip', '.ipynb', '.json', '.txt', '.mp4', '.webm', '.mp3', '.py', '.ts', '.js', '.sh', '.tf', '.yaml', '.yml', '.odt', '.odp', '.epub', '.key'])
+const DOC_EXT = new Set(['.example', '.html', '.pdf', '.docx', '.doc', '.pptx', '.ppt', '.xlsx', '.xls', '.csv', '.zip', '.ipynb', '.json', '.txt', '.mp4', '.webm', '.mp3', '.py', '.ts', '.js', '.sh', '.tf', '.yaml', '.yml', '.odt', '.odp', '.epub', '.key'])
 
 export type Kind = 'category' | 'course' | 'article' | 'module' | 'lesson'
 
@@ -16,7 +16,7 @@ export interface Meta {
   icon?: string
   cover?: string
   tags: string[]
-  level?: 'beginner' | 'intermediate' | 'advanced'
+  level?: 'beginner' | 'intermediate' | 'advanced' | 'expert'
   duration?: string
   date?: string
   updated?: string
@@ -120,7 +120,7 @@ function readDoc(file: string, locale: Locale, fallbackTitle: string, dir: strin
       icon: d.icon ? String(d.icon) : undefined,
       cover: cover && !/^https?:/.test(cover) ? fileUrl(path.resolve(dir, cover)) : cover,
       tags: list(d.tags).map((s) => s.toLowerCase()),
-      level: ['beginner', 'intermediate', 'advanced'].includes(String(d.level)) ? (d.level as Meta['level']) : undefined,
+      level: ['beginner', 'intermediate', 'advanced', 'expert'].includes(String(d.level)) ? (d.level as Meta['level']) : undefined,
       duration: d.duration ? String(d.duration) : undefined,
       date: toDate(d.date),
       updated: toDate(d.updated),
@@ -156,7 +156,7 @@ const isHidden = (n: string) => n.startsWith('.') || n.startsWith('_')
 function collectFiles(dir: string, recurseReserved: boolean): Asset[] {
   const out: Asset[] = []
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (isHidden(e.name)) continue
+    if (isHidden(e.name) && !SAFE_DOTFILES.has(e.name)) continue
     const abs = path.join(dir, e.name)
     if (e.isDirectory()) {
       if (recurseReserved && (e.name === 'files' || e.name === 'assets')) out.push(...collectFiles(abs, false))
@@ -380,12 +380,12 @@ export function formatOf(n: Node, meta: Meta): Format | 'category' | 'module' | 
 export function hubs(t: Tree) {
   const by = { platform: new Map<string, Node>(), usecase: new Map<string, Node>() }
   for (const n of items(t)) {
-    const m = (n.docs[defaultLocale] ?? Object.values(n.docs)[0])!.meta
+    const m = localized(n, defaultLocale).meta
     const f = formatOf(n, m)
     if (f === 'platform' || f === 'usecase') by[f].set(n.path.at(-1)!, n)
   }
   const related = (kind: 'platform' | 'usecase', slug: string) =>
-    items(t).filter((n) => ((n.docs[defaultLocale] ?? Object.values(n.docs)[0])!.meta[kind === 'platform' ? 'platforms' : 'usecases']).includes(slug))
+    items(t).filter((n) => localized(n, defaultLocale).meta[kind === 'platform' ? 'platforms' : 'usecases'].includes(slug))
   return { ...by, related }
 }
 
@@ -437,7 +437,7 @@ export function findBySuffix(abs: string): string | null {
   return null
 }
 
-const SAFE_DOTFILES = new Set(['.gitignore', '.dockerignore'])
+export const SAFE_DOTFILES = new Set(['.gitignore', '.dockerignore', '.env.example', '.env.exemple', '.env.sample'])
 
 /** Resolve a URL path from the content root safely (no traversal). */
 export function safeContentPath(rel: string[]): string | null {

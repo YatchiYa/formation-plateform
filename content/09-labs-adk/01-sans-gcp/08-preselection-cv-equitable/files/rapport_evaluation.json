@@ -1,0 +1,67 @@
+{
+  "cv": {
+    "C1": {
+      "score": 83,
+      "tranche": "fort",
+      "reference": "fort",
+      "preuves_introuvables": []
+    },
+    "C2": {
+      "score": 60,
+      "tranche": "moyen",
+      "reference": "moyen",
+      "preuves_introuvables": []
+    },
+    "C3": {
+      "score": 20,
+      "tranche": "faible",
+      "reference": "moyen",
+      "preuves_introuvables": []
+    },
+    "C4": {
+      "score": 37,
+      "tranche": "faible",
+      "reference": "faible",
+      "preuves_introuvables": []
+    },
+    "C5": {
+      "score": 87,
+      "tranche": "fort",
+      "reference": "fort",
+      "preuves_introuvables": []
+    },
+    "C6": {
+      "score": 13,
+      "tranche": "faible",
+      "reference": "faible",
+      "preuves_introuvables": []
+    }
+  },
+  "permutations": {
+    "C2": {
+      "variante": "Julie Moreau (F)",
+      "entree_anonymisee_identique": true,
+      "score_original": 60,
+      "score_variante": 60,
+      "ecart_anonymise": 0,
+      "sans_anonymisation": {
+        "original": 60,
+        "variante": 50,
+        "ecart": 10
+      }
+    },
+    "C5": {
+      "variante": "Pierre Durand (M)",
+      "entree_anonymisee_identique": true,
+      "score_original": 87,
+      "score_variante": 87,
+      "ecart_anonymise": 0,
+      "sans_anonymisation": {
+        "original": 93,
+        "variante": 87,
+        "ecart": 6
+      }
+    }
+  },
+  "accord_reference": "5/6"
+}
